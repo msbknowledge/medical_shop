@@ -4,9 +4,10 @@
         border-radius: 14px;
         border: 1px solid var(--ss-border, #e2e8f0);
         padding: 24px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         margin-bottom: 24px;
     }
+
     .ss-invoice-header {
         display: flex;
         justify-content: space-between;
@@ -15,6 +16,7 @@
         border-bottom: 1.5px solid var(--ss-border, #e2e8f0);
         margin-bottom: 20px;
     }
+
     .ss-party-card {
         background: var(--ss-bg-soft, #f8fafc);
         border: 1px solid var(--ss-border, #e2e8f0);
@@ -23,8 +25,15 @@
         flex: 1;
         margin: 0 8px;
     }
-    .ss-party-card:first-child { margin-left: 0; }
-    .ss-party-card:last-child { margin-right: 0; }
+
+    .ss-party-card:first-child {
+        margin-left: 0;
+    }
+
+    .ss-party-card:last-child {
+        margin-right: 0;
+    }
+
     .ss-summary-card {
         background: var(--ss-bg-soft, #f8fafc);
         border: 1px solid var(--ss-border, #e2e8f0);
@@ -109,7 +118,7 @@
                     $cgst += $value['sale_cgst'];
                     $sgst += $value['sale_sgst'];
                     $total += $value['sale_total'];
-                    ?>
+                ?>
                     <tr>
                         <td style="text-align: center;"><?= $counter ?></td>
                         <td>
@@ -138,10 +147,10 @@
 
     <!-- Summary Calculation Block -->
     <div class="ss-summary-card">
-        <?php 
-            $saleTotalPayable = ($total + $data[0]['sale_total_previous_due']);
-            $saleTotalDiscPayable = ($saleTotalPayable * $data[0]['sale_grand_discount'] / 100);
-            $wordsVal = function_exists('converted_words') ? converted_words(round($total)) : '';
+        <?php
+        $saleTotalPayable = ($total + $data[0]['sale_total_previous_due']);
+        $saleTotalDiscPayable = ($saleTotalPayable * $data[0]['sale_grand_discount'] / 100);
+        $wordsVal = function_exists('converted_words') ? converted_words(round($total)) : '';
         ?>
         <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
             <div style="flex: 1; min-width: 260px;">
@@ -182,7 +191,8 @@
 
 <?php
 if (!function_exists('converted_words')) {
-    function converted_words($fr){
+    function converted_words($fr)
+    {
         $number = $fr;
         $no = floor($number);
         $point = round($number - $no, 2) * 100;
@@ -190,39 +200,59 @@ if (!function_exists('converted_words')) {
         $digits_1 = strlen($no);
         $i = 0;
         $str = array();
-        $words = array('0' => '', '1' => 'One', '2' => 'Two',
-         '3' => 'Three', '4' => 'Four', '5' => 'Five', '6' => 'Six',
-         '7' => 'Seven', '8' => 'Eight', '9' => 'Nine',
-         '10' => 'Ten', '11' => 'Eleven', '12' => 'Twelve',
-         '13' => 'Thirteen', '14' => 'Fourteen',
-         '15' => 'Fifteen', '16' => 'Sixteen', '17' => 'Seventeen',
-         '18' => 'Eighteen', '19' =>'Nineteen', '20' => 'Twenty',
-         '30' => 'Thirty', '40' => 'Forty', '50' => 'Fifty',
-         '60' => 'Sixty', '70' => 'Seventy',
-         '80' => 'Eighty', '90' => 'Ninety');
+        $words = array(
+            '0' => '',
+            '1' => 'One',
+            '2' => 'Two',
+            '3' => 'Three',
+            '4' => 'Four',
+            '5' => 'Five',
+            '6' => 'Six',
+            '7' => 'Seven',
+            '8' => 'Eight',
+            '9' => 'Nine',
+            '10' => 'Ten',
+            '11' => 'Eleven',
+            '12' => 'Twelve',
+            '13' => 'Thirteen',
+            '14' => 'Fourteen',
+            '15' => 'Fifteen',
+            '16' => 'Sixteen',
+            '17' => 'Seventeen',
+            '18' => 'Eighteen',
+            '19' => 'Nineteen',
+            '20' => 'Twenty',
+            '30' => 'Thirty',
+            '40' => 'Forty',
+            '50' => 'Fifty',
+            '60' => 'Sixty',
+            '70' => 'Seventy',
+            '80' => 'Eighty',
+            '90' => 'Ninety'
+        );
         $digits = array('', 'Hundred', 'Thousand', 'Lakh', 'Crore');
         while ($i < $digits_1) {
-          $divider = ($i == 2) ? 10 : 100;
-          $number = floor($no % $divider);
-          $no = floor($no / $divider);
-          $i += ($divider == 10) ? 1 : 2;
-          if ($number) {
-             $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
-             $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
-             $str [] = ($number < 21) ? $words[$number] .
-                 " " . $digits[$counter] . $plural . " " . $hundred
-                 :
-                 $words[floor($number / 10) * 10]
-                 . " " . $words[$number % 10] . " "
-                 . $digits[$counter] . $plural . " " . $hundred;
-          } else $str[] = null;
-       }
-       $str = array_reverse($str);
-       $result = implode('', $str);
-       $points = ($point) ?
-         "." . $words[$point / 10] . " " . 
-               $words[$point = $point % 10] : '';
-       return($result . " Rupees Only");
+            $divider = ($i == 2) ? 10 : 100;
+            $number = floor($no % $divider);
+            $no = floor($no / $divider);
+            $i += ($divider == 10) ? 1 : 2;
+            if ($number) {
+                $plural = (($counter = count($str)) && $number > 9) ? 's' : null;
+                $hundred = ($counter == 1 && $str[0]) ? ' and ' : null;
+                $str[] = ($number < 21) ? $words[$number] .
+                    " " . $digits[$counter] . $plural . " " . $hundred
+                    :
+                    $words[floor($number / 10) * 10]
+                    . " " . $words[$number % 10] . " "
+                    . $digits[$counter] . $plural . " " . $hundred;
+            } else $str[] = null;
+        }
+        $str = array_reverse($str);
+        $result = implode('', $str);
+        $points = ($point) ?
+            "." . $words[$point / 10] . " " .
+            $words[$point = $point % 10] : '';
+        return ($result . " Rupees Only");
     }
 }
 ?>
