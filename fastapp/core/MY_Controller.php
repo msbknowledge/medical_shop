@@ -658,21 +658,14 @@ class MY_Controller extends CI_Controller {
             $result_array = json_decode(file_get_contents(ROOTPATH . 'fastapp/cachefiles/' . NODE . '/menu_cache.txt'), true);
             return $result_array;
         } else {
-            $condition = NULL;
-            if (isset($this->current_user_session['user_ID']))
-                $condition = array('menu_parent_id' => '0', 'menu_user_type_id' => $this->current_user_session['user_type_id']);
-
-            $menu = $this->menus_model->get_list_for_dropdown(null, $condition);
-
-
             $processedMenu = array();
-
-            foreach ($menu as $key => $value) {
-                $processedMenu[$key] = $value;
-                $subMenu = $this->menus_model->get_list_for_dropdown(null, array('menu_parent_id' => $value['menu_ID'], 'menu_user_type_id' => $this->current_user_session['user_type_id']));
-
-                foreach ($subMenu as $key => $value) {
-                    $processedMenu[$key] = $value;
+            $menuList = $this->menus_model->get_list();
+            if ($menuList) {
+                foreach ($menuList as $mItem) {
+                    if ($mItem['menu_parent_id'] == '0') {
+                        $mItem['menu_parent_id'] = '';
+                    }
+                    $processedMenu[$mItem['menu_ID']] = $mItem;
                 }
             }
 

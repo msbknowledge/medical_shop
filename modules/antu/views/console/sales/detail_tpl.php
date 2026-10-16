@@ -257,13 +257,13 @@
                     <table>
                         <tbody>
                             <tr>
-                                 <td class="totalAmount" colspan="1"><b><? printf('%.2f', round($total_mrp)) ?></b></td>
-                                <td><b><? printf('%.2f', round($total_dist)) ?></b></td>
+                                 <td class="totalAmount" colspan="1"><b><?php printf('%.2f', round($total_mrp)) ?></b></td>
+                                <td><b><?php printf('%.2f', round($total_dist)) ?></b></td>
                                 <td>
-                                    <? printf('%.2f', $total) ?></b>
+                                    <?php printf('%.2f', $total) ?></b>
                                 </td>
-                                <td><b><? printf('%.2f', ($total_return)) ?></b></td>
-                                <td><b><? printf('%.2f', round($total + $total_return)) ?></b></td>
+                                <td><b><?php printf('%.2f', ($total_return)) ?></b></td>
+                                <td><b><?php printf('%.2f', round($total + $total_return)) ?></b></td>
                                 <!--td class="paid"><b>
                                         <?= number_format($data[0]['sale_total_paid'], 2) ?></b>
                                 </td-->

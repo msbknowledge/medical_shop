@@ -1,9 +1,12 @@
 <!-- content ends -->
-</div><!--/#content.span10-->
+            </section><!-- /#content.content -->
+        </div><!-- /.content-wrapper -->
 
-</div><!--/fluid-row-->
-
-<hr>
+        <footer class="main-footer" style="padding: 15px 24px; background: #ffffff; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 13px; display: flex; justify-content: space-between; align-items: center; margin-left: 240px; transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+            <div>© <?=date('Y')?> Medical Shop Billing - All Rights Reserved</div>
+            <div style="text-align: right;">Powered By <a target="_blank" href="https://billings.msbknowledge.in" style="color: #6366f1; font-weight: 600;"><img style="height: 28px; vertical-align: middle; margin-left: 6px;" src="<?= cdn_url() ?>msb/msbbillingslogo.png" alt="MSB Logo" /></a></div>
+        </footer>
+    </div><!-- /.wrapper -->
 
 <!-- ==================================================
      Standard Application Modals (Bootstrap 3 / Flow UI)
@@ -114,13 +117,7 @@
     </div>
 </div>
 
-<footer style="margin-top: 30px; padding: 18px 0; border-top: 1px solid #e2e8f0; color: #64748b; font-size: 13px;">
-    <div class="row-fluid">
-        <div class="span6">© <?=date('Y')?> Medical Shop Billing - All Rights Reserved</div>
-        <div class="span6 text-right" style="text-align: right;">Powered By <a target="_blank" href="https://billings.msbknowledge.in" style="color: #6366f1; font-weight: 600;"><img style="height: 32px; vertical-align: middle; margin-left: 6px;" src="<?= cdn_url() ?>msb/msbbillingslogo.png" alt="MSB Logo" /></a></div>
-    </div>
-</footer>
-</div><!--/.fluid-container-->
+
 
 <!-- ==================================================
      Backend JavaScript Libraries (Bootstrap 3, Select2, Toastr, DatePicker)

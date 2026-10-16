@@ -11430,7 +11430,7 @@ table.notetable tr th {
     width: 60px;
     min-height: 60px;
 }
-
+.top-session-sm{min-height: 40px !important}
 .sidebar-collapse .sessionul li.removehover a span {
     display: none;
 }
@@ -17129,3 +17129,14 @@ input.total_paying:focus,
      margin-left:-10px}
      .main-sidebar {scrollbar-width: thin;scrollbar-color: var(--bs-scroll-bg) transparent;}
 }
+
+@media(min-width:992px) and (max-width:1124px){
+    .headertopmenu>li>a{padding: 10px 10px;}
+}
+@media(max-width:785px){
+    .content-wrapper {padding-top: 100px;}
+}
+.gmeet-live-icon{    
+    font-size: 17px !important;
+    vertical-align: middle;
+    padding-right: 0.25rem;}
