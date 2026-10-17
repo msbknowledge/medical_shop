@@ -290,11 +290,52 @@ if (!function_exists('field_dropdown')) {
 
 if (!function_exists('field_text')) {
     function field_text($t_key = NULL, $table_meta, $table_td) {
+        $isRequired = false;
+        if (!empty($table_meta['config']['validation'])) {
+            $valRules = $table_meta['config']['validation'];
+            if (isset($valRules[$t_key]) && (is_string($valRules[$t_key]) && strpos($valRules[$t_key], 'required') !== false)) {
+                $isRequired = true;
+            } elseif (isset($valRules['required']) && is_array($valRules['required']) && in_array($t_key, $valRules['required'])) {
+                $isRequired = true;
+            }
+        }
+        
+        $label = ucfirst(str_replace('_', ' ', $t_key));
+        if (!empty($table_meta['config']['replace_text'][$t_key])) {
+            $label = $table_meta['config']['replace_text'][$t_key];
+        }
+
+        $type = 'text';
+        $placeholder = '';
+        $extraAttr = '';
+
+        if ($t_key === 'customer_contact') {
+            $type = 'tel';
+            $placeholder = '10-digit mobile number';
+            $extraAttr = 'maxlength="10" pattern="[0-9]{10}"';
+        } elseif ($t_key === 'email') {
+            $type = 'email';
+            $placeholder = 'email@example.com';
+        } elseif ($t_key === 'customer_name') {
+            $placeholder = 'Enter customer / patient name';
+        } elseif ($t_key === 'customer_gst') {
+            $placeholder = '15-digit GSTIN or N/A';
+            $extraAttr = 'style="text-transform:uppercase;"';
+        } elseif ($t_key === 'customer_due') {
+            $type = 'number';
+            $placeholder = '0.00';
+            $extraAttr = 'step="0.01" min="0"';
+        } elseif ($t_key === 'customer_address') {
+            $placeholder = 'Enter full address';
+        } elseif ($t_key === 'doctor_name') {
+            $placeholder = 'Referring doctor name';
+        }
+
         if (is_readonly($t_key, $table_meta) || is_primry_key($t_key, $table_meta)) {
             ?>
             <div class="ss-form-col col-4">
                 <div class="ss-field-card" style="background: var(--ss-bg-soft, #f8fafc);">
-                    <label class="ss-field-label" for="<?= $t_key ?>"><?= ucfirst(str_replace('_', ' ', $t_key)) ?> <span style="font-size:10px; color:var(--ss-text-muted);">(Read Only)</span></label>
+                    <label class="ss-field-label" for="<?= $t_key ?>"><?= $label ?> <span style="font-size:10px; color:var(--ss-text-muted);">(Read Only)</span></label>
                     <input type="text" readonly="readonly" name="<?= $t_key ?>" value="<?= html_escape($table_td) ?>" autocomplete="off" style="background: transparent; border-style: dashed;">
                 </div>
             </div>
@@ -303,8 +344,14 @@ if (!function_exists('field_text')) {
             ?>
             <div class="ss-form-col col-4">
                 <div class="ss-field-card">
-                    <label class="ss-field-label" for="<?= $t_key ?>"><?= ucfirst(str_replace('_', ' ', $t_key)) ?></label>
-                    <input type="text" name="<?= $t_key ?>" value="<?= html_escape($table_td) ?>">
+                    <label class="ss-field-label" for="<?= $t_key ?>">
+                        <?= $label ?>
+                        <?php if ($isRequired): ?>
+                            <span class="text-danger" style="color: #ef4444; font-weight: bold;">*</span>
+                        <?php endif; ?>
+                    </label>
+                    <input type="<?= $type ?>" name="<?= $t_key ?>" value="<?= html_escape($table_td) ?>" placeholder="<?= $placeholder ?>" <?= $extraAttr ?> autocomplete="off">
+                    <div class="help-block-error" style="color: #ef4444; font-size: 11.5px; font-weight: 600; margin-top: 4px; display: none;"></div>
                 </div>
             </div>
             <?php
@@ -348,10 +395,31 @@ if (!function_exists('field_text')) {
 </form>
 
 <script>
-    var validationMeta = $.parseJSON('<?= json_encode($table_meta['config']['validation']); ?>');
+    var validationMeta = <?= !empty($table_meta['config']['validation']) ? json_encode($table_meta['config']['validation']) : '{}' ?>;
     
-    $.each(validationMeta, function (key, value) {
-        $('#addEditForm').find('[name=' + key + ']').attr('from-validation', value);
+    if (typeof validationMeta === 'object' && validationMeta !== null) {
+        $.each(validationMeta, function (key, value) {
+            if ($.isArray(value)) {
+                $.each(value, function(i, fieldName) {
+                    var $f = $('#addEditForm').find('[name="' + fieldName + '"]');
+                    var curr = $f.attr('from-validation') || '';
+                    $f.attr('from-validation', curr ? curr + '|' + key : key);
+                    $f.attr('data-validation', curr ? curr + '|' + key : key);
+                });
+            } else if (typeof value === 'string') {
+                var $f = $('#addEditForm').find('[name="' + key + '"]');
+                $f.attr('from-validation', value);
+                $f.attr('data-validation', value);
+            }
+        });
+    }
+
+    // Real-time clearance of validation errors on user typing
+    $('#addEditForm').on('input change keyup', 'input, textarea, select', function() {
+        var $card = $(this).closest('.ss-field-card, .form-group, .control-group');
+        $card.removeClass('has-error error');
+        $card.find('.help-block-error, .help-block, .help-inline').hide().html('');
+        $(this).css({ 'border-color': '', 'background-color': '', 'box-shadow': '' });
     });
 
     $(document).ready(function() {

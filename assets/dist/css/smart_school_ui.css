@@ -2621,6 +2621,8 @@ body.sidebar-mini.sidebar-collapse .main-footer {
     .smart-stat-grid {
         grid-template-columns: minmax(0, 1fr) !important;
     }
+}
+
 .smart-license-grid {
     display: grid !important;
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -2733,16 +2735,19 @@ body.sidebar-mini.sidebar-collapse .main-footer {
     color: #0f172a !important;
 }
 
-.progress-minibar {
-    height: 4px !important;
+.progress-minibar,
+.smart-progress-track {
+    height: 6px !important;
     margin-bottom: 0 !important;
     border-radius: 9999px !important;
-    background-color: #edf2f7 !important;
+    background-color: #e2e8f0 !important;
     overflow: hidden !important;
     box-shadow: none !important;
+    width: 100% !important;
 }
 
-.progress-minibar .progress-bar {
+.progress-minibar .progress-bar,
+.smart-progress-fill {
     height: 100% !important;
     border-radius: 9999px !important;
     transition: width 0.6s ease !important;

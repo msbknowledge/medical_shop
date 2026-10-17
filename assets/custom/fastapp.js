@@ -480,13 +480,39 @@ $(document).on('submit', '#addEditForm', function (e) {
     var $form = $(this);
     if (typeof validate_form === 'function' && !validate_form($form, {
         beforeValidation: function (targetObject) {
-            $(targetObject).closest('.form-group, .control-group').removeClass('has-error error');
-            $(targetObject).closest('.form-group, .control-group').find('.help-block, .help-inline').html('');
+            var $card = $(targetObject).closest('.ss-field-card, .form-group, .control-group');
+            $card.removeClass('has-error error');
+            $card.find('.help-block-error, .help-block, .help-inline').hide().html('');
+            $(targetObject).css({ 'border-color': '', 'background-color': '', 'box-shadow': '' });
         },
-        onValidationError: function (targetObject, validationType) {
-            $(targetObject).closest('.form-group, .control-group').addClass('has-error error');
-            var msg = (validationType === 'required') ? 'This field is required.' : 'Please enter valid data.';
-            $(targetObject).closest('.form-group, .control-group').find('.help-block, .help-inline').html(msg);
+        onValidationError: function (targetObject, validationType, customMsg) {
+            var $card = $(targetObject).closest('.ss-field-card, .form-group, .control-group');
+            $card.addClass('has-error error');
+            
+            var fieldLabel = $card.find('.ss-field-label, label').first().text().replace('*', '').replace('(Read Only)', '').trim() || 'This field';
+            var msg = customMsg;
+            if (!msg) {
+                if (validationType === 'required') {
+                    msg = fieldLabel + ' is required.';
+                } else if (validationType === 'email') {
+                    msg = 'Please enter a valid email address.';
+                } else if (validationType === 'phone' || validationType === 'mobile') {
+                    msg = 'Please enter a valid 10-digit mobile number.';
+                } else if (validationType === 'gst') {
+                    msg = 'Please enter a valid 15-character GSTIN or N/A.';
+                } else if (validationType === 'numeric') {
+                    msg = fieldLabel + ' must be a valid non-negative number.';
+                } else {
+                    msg = 'Please enter valid data for ' + fieldLabel.toLowerCase() + '.';
+                }
+            }
+
+            var $err = $card.find('.help-block-error, .help-block, .help-inline');
+            if (!$err.length) {
+                $err = $('<div class="help-block-error" style="color:#ef4444; font-size:11.5px; font-weight:600; margin-top:4px;"></div>').appendTo($card);
+            }
+            $err.html('<i class="fa fa-exclamation-circle"></i> ' + msg).show();
+            $(targetObject).css({ 'border-color': '#ef4444', 'background-color': '#fff5f5', 'box-shadow': '0 0 0 3px rgba(239, 68, 68, 0.15)' });
         }
     })) {
         return false;
@@ -544,65 +570,145 @@ $(document).on('submit', '#addEditForm', function (e) {
 */
 function validate_form(targetForm, settings) {
     settings = settings || {};
-    var formInputs = $(targetForm).find('input, textarea, select');
+    var formInputs = $(targetForm).find('input, textarea, select').not('[type="hidden"], [readonly]');
     var passWords = {};
     var isValid = true;
+    var firstInvalid = null;
 
     function beforeValidation(targetObject) {
         if (typeof settings.beforeValidation === 'function') {
             settings.beforeValidation(targetObject);
         } else {
-            $(targetObject).closest('.form-group, .control-group').removeClass('has-error error');
-            $(targetObject).closest('.form-group, .control-group').find('.help-block, .help-inline').html('');
+            var $card = $(targetObject).closest('.ss-field-card, .form-group, .control-group');
+            $card.removeClass('has-error error');
+            $card.find('.help-block-error, .help-block, .help-inline').hide().html('');
+            $(targetObject).css({ 'border-color': '', 'background-color': '', 'box-shadow': '' });
         }
     }
 
-    function onValidationError(targetObject, validationType) {
+    function onValidationError(targetObject, validationType, customMsg) {
         if (typeof settings.onValidationError === 'function') {
-            settings.onValidationError(targetObject, validationType);
+            settings.onValidationError(targetObject, validationType, customMsg);
         } else {
-            $(targetObject).closest('.form-group, .control-group').addClass('has-error error');
-            var message = (validationType === 'required') ? 'This field is required.' : 'Please enter valid data.';
-            $(targetObject).closest('.form-group, .control-group').find('.help-block, .help-inline').html(message);
+            var $card = $(targetObject).closest('.ss-field-card, .form-group, .control-group');
+            $card.addClass('has-error error');
+            var msg = customMsg || ((validationType === 'required') ? 'This field is required.' : 'Please enter valid data.');
+            var $err = $card.find('.help-block-error, .help-block, .help-inline');
+            if (!$err.length) {
+                $err = $('<div class="help-block-error" style="color:#ef4444; font-size:11.5px; font-weight:600; margin-top:4px;"></div>').appendTo($card);
+            }
+            $err.html('<i class="fa fa-exclamation-circle"></i> ' + msg).show();
+            $(targetObject).css({ 'border-color': '#ef4444', 'background-color': '#fff5f5', 'box-shadow': '0 0 0 3px rgba(239, 68, 68, 0.15)' });
         }
     }
 
     $(formInputs).each(function () {
-        beforeValidation($(this));
-        var fromvalidation = $(this).attr('from-validation') || $(this).attr('data-validation');
-        if (typeof fromvalidation !== "undefined" && fromvalidation) {
-            var validationArray = fromvalidation.split('|');
+        var $input = $(this);
+        beforeValidation($input);
+        var fromvalidation = $input.attr('from-validation') || $input.attr('data-validation') || '';
+        var inputName = $input.attr('name') || '';
+        var inputType = $input.attr('type') || '';
+        var val = $.trim($input.val());
 
-            if ($.inArray('required', validationArray) !== -1) {
-                if ($.trim($(this).val()) === '') {
-                    onValidationError($(this), 'required');
+        var validationArray = fromvalidation ? fromvalidation.split('|') : [];
+
+        // Auto-detect rules for customer fields if not explicitly configured
+        if (inputName === 'customer_name' && $.inArray('required', validationArray) === -1) {
+            validationArray.push('required');
+        }
+        if (inputName === 'customer_contact' && $.inArray('phone', validationArray) === -1) {
+            validationArray.push('required');
+            validationArray.push('phone');
+        }
+
+        // 1. Required Check
+        if ($.inArray('required', validationArray) !== -1) {
+            if (val === '') {
+                onValidationError($input, 'required');
+                isValid = false;
+                if (!firstInvalid) firstInvalid = $input;
+                return;
+            }
+        }
+
+        // 2. Phone / Mobile Number Check (10 digits)
+        if ($.inArray('phone', validationArray) !== -1 || $.inArray('mobile', validationArray) !== -1 || inputName === 'customer_contact') {
+            if (val !== '') {
+                var cleaned = val.replace(/[^0-9]/g, '');
+                if (cleaned.length === 12 && cleaned.startsWith('91')) {
+                    cleaned = cleaned.substring(2);
+                } else if (cleaned.length === 11 && cleaned.startsWith('0')) {
+                    cleaned = cleaned.substring(1);
+                }
+                if (cleaned.length !== 10) {
+                    onValidationError($input, 'phone', 'Please enter a valid 10-digit mobile number.');
                     isValid = false;
+                    if (!firstInvalid) firstInvalid = $input;
+                    return;
                 }
             }
+        }
 
-            if ($.inArray('email', validationArray) !== -1) {
-                var emailRegex = /^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$/i;
-                if (!emailRegex.test($.trim($(this).val()))) {
-                    onValidationError($(this), 'email');
+        // 3. Email Check
+        if ($.inArray('email', validationArray) !== -1 || inputType === 'email' || inputName === 'email') {
+            if (val !== '') {
+                var emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+                if (!emailRegex.test(val)) {
+                    onValidationError($input, 'email', 'Please enter a valid email address.');
                     isValid = false;
+                    if (!firstInvalid) firstInvalid = $input;
+                    return;
                 }
             }
+        }
 
-            if ($.inArray('password', validationArray) !== -1) {
-                if ($.inArray('confirm', validationArray) !== -1) {
-                    passWords[1] = $(this);
-                    if ($(passWords[0]).val() !== $(passWords[1]).val()) {
-                        onValidationError($(this), 'password');
-                        isValid = false;
-                    }
-                } else {
-                    passWords[0] = $(this);
+        // 4. Numeric / Amount Check
+        if ($.inArray('numeric', validationArray) !== -1 || inputName === 'customer_due') {
+            if (val !== '') {
+                if (isNaN(val) || parseFloat(val) < 0) {
+                    onValidationError($input, 'numeric', 'Please enter a valid non-negative number.');
+                    isValid = false;
+                    if (!firstInvalid) firstInvalid = $input;
+                    return;
                 }
+            }
+        }
+
+        // 5. GSTIN Check
+        if ($.inArray('gst', validationArray) !== -1 || inputName === 'customer_gst') {
+            if (val !== '' && val.toUpperCase() !== 'N/A') {
+                var gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/i;
+                if (!gstRegex.test(val)) {
+                    onValidationError($input, 'gst', 'Invalid GSTIN format (15 characters alphanumeric) or N/A.');
+                    isValid = false;
+                    if (!firstInvalid) firstInvalid = $input;
+                    return;
+                }
+            }
+        }
+
+        // 6. Password Check
+        if ($.inArray('password', validationArray) !== -1) {
+            if ($.inArray('confirm', validationArray) !== -1) {
+                passWords[1] = $input;
+                if ($(passWords[0]).val() !== $(passWords[1]).val()) {
+                    onValidationError($input, 'password', 'Passwords do not match.');
+                    isValid = false;
+                    if (!firstInvalid) firstInvalid = $input;
+                    return;
+                }
+            } else {
+                passWords[0] = $input;
             }
         }
     });
 
-    if (isValid && typeof settings.onValidationSuccess === 'function') {
+    if (!isValid && firstInvalid) {
+        firstInvalid.focus();
+        if (typeof toastr !== 'undefined') {
+            toastr.warning('Please fix the highlighted required fields.');
+        }
+    } else if (isValid && typeof settings.onValidationSuccess === 'function') {
         settings.onValidationSuccess();
     }
 

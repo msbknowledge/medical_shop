@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,18 +8,18 @@
     <title><?= htmlspecialchars($store_name) ?> - Licensed Pharmacy & Genuine Healthcare Store</title>
     <meta name="description" content="<?= htmlspecialchars($store_name) ?> - Licensed chemist and druggist in <?= htmlspecialchars($store_address) ?>. Over 17,900+ genuine medicines, cold-chain insulin storage, computerized GST billing, and doorstep delivery. Drug License: <?= htmlspecialchars($store_dl) ?>.">
     <meta name="keywords" content="pharmacy, medical store, genuine medicines, chemist, druggist, prescription refill, insulin, midnapore pharmacy, paschim medinipur, medicine delivery">
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="<?= base_url(); ?>img/simplebillingsfav.png">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    
+
     <!-- jQuery -->
     <script src="<?= base_url(); ?>assets/custom/jquery.min.js"></script>
 
@@ -95,7 +96,8 @@
             gap: 10px;
         }
 
-        .top-strip-left, .top-strip-right {
+        .top-strip-left,
+        .top-strip-right {
             display: flex;
             align-items: center;
             gap: 18px;
@@ -235,8 +237,8 @@
         .hero-section {
             position: relative;
             background: radial-gradient(circle at 10% 20%, rgba(13, 148, 136, 0.08) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
-                        linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+                radial-gradient(circle at 90% 80%, rgba(2, 132, 199, 0.08) 0%, transparent 45%),
+                linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
             padding: 60px 0 70px 0;
             overflow: hidden;
             border-bottom: 1px solid var(--med-slate-200);
@@ -392,9 +394,17 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+            }
         }
 
         .hero-features-list {
@@ -523,7 +533,8 @@
             transition: all 0.2s;
         }
 
-        .category-pill:hover, .category-pill.active {
+        .category-pill:hover,
+        .category-pill.active {
             background: var(--med-primary-light);
             color: var(--med-primary-dark);
             border-color: rgba(13, 148, 136, 0.3);
@@ -832,21 +843,27 @@
             .hero-grid {
                 grid-template-columns: 1fr;
             }
+
             .categories-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .services-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .rx-upload-grid {
                 grid-template-columns: 1fr;
             }
+
             .doctors-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .footer-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .results-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -856,30 +873,38 @@
             .header-nav-menu {
                 display: none;
             }
+
             .categories-grid {
                 grid-template-columns: 1fr;
             }
+
             .services-grid {
                 grid-template-columns: 1fr;
             }
+
             .hero-metrics-strip {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .doctors-grid {
                 grid-template-columns: 1fr;
             }
+
             .footer-grid {
                 grid-template-columns: 1fr;
             }
+
             .results-grid {
                 grid-template-columns: 1fr;
             }
+
             .hero-title {
                 font-size: 32px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- 1. Top Emergency Strip & License Authority -->
@@ -927,7 +952,7 @@
                     <a href="https://wa.me/919382509991?text=Hello%20<?= urlencode($store_name) ?>%2C%20I%20would%20like%20to%20order%20medicines" target="_blank" class="btn-whatsapp-order">
                         <i class="fa fa-whatsapp" style="font-size: 16px;"></i> WhatsApp Order
                     </a>
-                    <a href="<?= console_url('login') ?>" class="btn-portal-login" title="Authorized Pharmacist & Admin Login">
+                    <a href="<?= console_url('user/login') ?>" class="btn-portal-login" title="Authorized Pharmacist & Admin Login">
                         <i class="fa fa-lock" style="color: var(--med-primary);"></i> Portal Login
                     </a>
                 </div>
@@ -1464,7 +1489,7 @@
                     <p style="font-size: 12.5px; line-height: 1.6; margin-bottom: 16px;">
                         Authorized pharmacists, billing executives, and administrators can access the backoffice system below:
                     </p>
-                    <a href="<?= console_url('login') ?>" class="btn-portal-login" style="background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: #ffffff; width: 100%; justify-content: center;">
+                    <a href="<?= console_url('user/login') ?>" class="btn-portal-login" style="background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.2); color: #ffffff; width: 100%; justify-content: center;">
                         <i class="fa fa-lock" style="color: #2dd4bf;"></i> Access Staff POS & Portal
                     </a>
                 </div>
@@ -1483,147 +1508,150 @@
 
     <!-- Interactive Live Search & Prescription JS -->
     <script type="text/javascript">
-    $(document).ready(function() {
-        var searchTimer = null;
-        var activeCategory = '';
+        $(document).ready(function() {
+            var searchTimer = null;
+            var activeCategory = '';
 
-        // Category pills click handler
-        $('.category-pill').on('click', function() {
-            $('.category-pill').removeClass('active');
-            $(this).addClass('active');
-            activeCategory = $(this).data('category');
-            triggerMedicineSearch();
-        });
-
-        // Search field input with debounce
-        $('#liveMedSearch').on('keyup input', function() {
-            clearTimeout(searchTimer);
-            searchTimer = setTimeout(function() {
+            // Category pills click handler
+            $('.category-pill').on('click', function() {
+                $('.category-pill').removeClass('active');
+                $(this).addClass('active');
+                activeCategory = $(this).data('category');
                 triggerMedicineSearch();
-            }, 300);
-        });
+            });
 
-        $('#btnSearchTrigger').on('click', function(e) {
-            e.preventDefault();
-            triggerMedicineSearch();
-        });
+            // Search field input with debounce
+            $('#liveMedSearch').on('keyup input', function() {
+                clearTimeout(searchTimer);
+                searchTimer = setTimeout(function() {
+                    triggerMedicineSearch();
+                }, 300);
+            });
 
-        $('#closeSearchResults').on('click', function() {
-            $('#searchResultsBox').slideUp(200);
-        });
+            $('#btnSearchTrigger').on('click', function(e) {
+                e.preventDefault();
+                triggerMedicineSearch();
+            });
 
-        function triggerMedicineSearch() {
-            var q = $.trim($('#liveMedSearch').val());
-            if (q.length < 2 && activeCategory === '') {
+            $('#closeSearchResults').on('click', function() {
                 $('#searchResultsBox').slideUp(200);
-                return;
-            }
+            });
 
-            $.ajax({
-                url: '<?= base_url("landing/search_medicines") ?>',
-                type: 'GET',
-                data: { q: q },
-                dataType: 'json',
-                success: function(data) {
-                    var $container = $('#resultsGridContainer');
-                    $container.empty();
+            function triggerMedicineSearch() {
+                var q = $.trim($('#liveMedSearch').val());
+                if (q.length < 2 && activeCategory === '') {
+                    $('#searchResultsBox').slideUp(200);
+                    return;
+                }
 
-                    var filtered = data;
-                    if (activeCategory !== '') {
-                        filtered = data.filter(function(item) {
-                            return (item.medicine_category || '').toUpperCase().indexOf(activeCategory.toUpperCase()) !== -1;
-                        });
-                    }
+                $.ajax({
+                    url: '<?= base_url("landing/search_medicines") ?>',
+                    type: 'GET',
+                    data: {
+                        q: q
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        var $container = $('#resultsGridContainer');
+                        $container.empty();
 
-                    if (filtered.length === 0) {
-                        $('#searchResultSummary').text('No matching medicines found for: "' + q + '"');
-                        $container.html('<div style="grid-column: 1 / -1; padding: 20px; text-align: center; color: #64748b;">Medicine not found in catalog preview? Please send your prescription photo on WhatsApp at +91 9382509991 and we will source it for you!</div>');
-                    } else {
-                        $('#searchResultSummary').text('Found ' + filtered.length + ' Available Formulations:');
-                        $.each(filtered, function(i, med) {
-                            var waUrl = 'https://wa.me/919382509991?text=' + encodeURIComponent('Hello <?= addslashes($store_name) ?>, I want to order ' + med.medicine_name + ' (' + (med.medicine_unit || '') + ')');
-                            var cardHtml = 
-                                '<div class="med-result-card">' +
+                        var filtered = data;
+                        if (activeCategory !== '') {
+                            filtered = data.filter(function(item) {
+                                return (item.medicine_category || '').toUpperCase().indexOf(activeCategory.toUpperCase()) !== -1;
+                            });
+                        }
+
+                        if (filtered.length === 0) {
+                            $('#searchResultSummary').text('No matching medicines found for: "' + q + '"');
+                            $container.html('<div style="grid-column: 1 / -1; padding: 20px; text-align: center; color: #64748b;">Medicine not found in catalog preview? Please send your prescription photo on WhatsApp at +91 9382509991 and we will source it for you!</div>');
+                        } else {
+                            $('#searchResultSummary').text('Found ' + filtered.length + ' Available Formulations:');
+                            $.each(filtered, function(i, med) {
+                                var waUrl = 'https://wa.me/919382509991?text=' + encodeURIComponent('Hello <?= addslashes($store_name) ?>, I want to order ' + med.medicine_name + ' (' + (med.medicine_unit || '') + ')');
+                                var cardHtml =
+                                    '<div class="med-result-card">' +
                                     '<div>' +
-                                        '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">' +
-                                            '<strong style="font-size:14px; color:#0f172a; line-height:1.3;">' + escapeHtml(med.medicine_name) + '</strong>' +
-                                            '<span style="background:#ccfbf1; color:#0f766e; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; flex-shrink:0; margin-left:6px;">In Stock</span>' +
-                                        '</div>' +
-                                        '<div style="font-size:11.5px; color:#64748b; margin-bottom:6px;"><i class="fa fa-building-o"></i> ' + escapeHtml(med.medicine_manufacturer || 'Certified Pharma') + '</div>' +
-                                        '<div style="display:flex; gap:6px; margin-bottom:10px;">' +
-                                            '<span style="background:#f1f5f9; color:#475569; font-size:10.5px; padding:2px 6px; border-radius:4px;">' + escapeHtml(med.medicine_category || 'Medicine') + '</span>' +
-                                            (med.medicine_unit ? '<span style="background:#f1f5f9; color:#475569; font-size:10.5px; padding:2px 6px; border-radius:4px;">Pack: ' + escapeHtml(med.medicine_unit) + '</span>' : '') +
-                                        '</div>' +
+                                    '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:4px;">' +
+                                    '<strong style="font-size:14px; color:#0f172a; line-height:1.3;">' + escapeHtml(med.medicine_name) + '</strong>' +
+                                    '<span style="background:#ccfbf1; color:#0f766e; font-size:10.5px; font-weight:700; padding:2px 6px; border-radius:4px; flex-shrink:0; margin-left:6px;">In Stock</span>' +
+                                    '</div>' +
+                                    '<div style="font-size:11.5px; color:#64748b; margin-bottom:6px;"><i class="fa fa-building-o"></i> ' + escapeHtml(med.medicine_manufacturer || 'Certified Pharma') + '</div>' +
+                                    '<div style="display:flex; gap:6px; margin-bottom:10px;">' +
+                                    '<span style="background:#f1f5f9; color:#475569; font-size:10.5px; padding:2px 6px; border-radius:4px;">' + escapeHtml(med.medicine_category || 'Medicine') + '</span>' +
+                                    (med.medicine_unit ? '<span style="background:#f1f5f9; color:#475569; font-size:10.5px; padding:2px 6px; border-radius:4px;">Pack: ' + escapeHtml(med.medicine_unit) + '</span>' : '') +
+                                    '</div>' +
                                     '</div>' +
                                     '<div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:8px; margin-top:4px;">' +
-                                        '<span style="font-size:11px; color:#059669; font-weight:700;"><i class="fa fa-shield"></i> Verified Drug</span>' +
-                                        '<a href="' + waUrl + '" target="_blank" style="background:#10b981; color:#ffffff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">' +
-                                            '<i class="fa fa-whatsapp"></i> Order' +
-                                        '</a>' +
+                                    '<span style="font-size:11px; color:#059669; font-weight:700;"><i class="fa fa-shield"></i> Verified Drug</span>' +
+                                    '<a href="' + waUrl + '" target="_blank" style="background:#10b981; color:#ffffff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:6px; display:inline-flex; align-items:center; gap:4px;">' +
+                                    '<i class="fa fa-whatsapp"></i> Order' +
+                                    '</a>' +
                                     '</div>' +
-                                '</div>';
-                            $container.append(cardHtml);
-                        });
+                                    '</div>';
+                                $container.append(cardHtml);
+                            });
+                        }
+                        $('#searchResultsBox').slideDown(250);
+                    },
+                    error: function() {
+                        $('#searchResultsBox').slideUp(200);
                     }
-                    $('#searchResultsBox').slideDown(250);
-                },
-                error: function() {
-                    $('#searchResultsBox').slideUp(200);
-                }
+                });
+            }
+
+            // Prescription Order Submission
+            $('#rxOrderForm').on('submit', function(e) {
+                e.preventDefault();
+                var $btn = $(this).find('button[type="submit"]');
+                var $status = $('#rxSubmitStatus');
+                $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
+
+                var pName = $('#patientName').val();
+                var pPhone = $('#patientPhone').val();
+                var pAddr = $('#deliveryAddress').val();
+                var pList = $('#medicineList').val();
+
+                $.ajax({
+                    url: '<?= base_url("landing/upload_prescription") ?>',
+                    type: 'POST',
+                    data: {
+                        patient_name: pName,
+                        patient_phone: pPhone,
+                        delivery_address: pAddr,
+                        medicine_list: pList
+                    },
+                    dataType: 'json',
+                    success: function(resp) {
+                        $status.show().html('<span style="color:#2dd4bf; font-weight:700;"><i class="fa fa-check-circle"></i> ' + resp.message + '</span>');
+                        // Also trigger WhatsApp with pre-filled prescription order
+                        var waMsg = 'Hello <?= addslashes($store_name) ?>, I have submitted a prescription order:\n' +
+                            'Patient: ' + pName + '\n' +
+                            'Phone: ' + pPhone + '\n' +
+                            'Address: ' + pAddr + '\n' +
+                            'Medicines: ' + pList;
+                        var waWindow = window.open('https://wa.me/919382509991?text=' + encodeURIComponent(waMsg), '_blank');
+                        $('#rxOrderForm')[0].reset();
+                        $btn.prop('disabled', false).html('<i class="fa fa-paper-plane"></i> Submit Prescription Order');
+                    },
+                    error: function() {
+                        $status.show().html('<span style="color:#ef4444;"><i class="fa fa-exclamation-triangle"></i> Submission error. Please call us directly at <?= htmlspecialchars($store_mobile) ?>.</span>');
+                        $btn.prop('disabled', false).html('<i class="fa fa-paper-plane"></i> Submit Prescription Order');
+                    }
+                });
             });
-        }
 
-        // Prescription Order Submission
-        $('#rxOrderForm').on('submit', function(e) {
-            e.preventDefault();
-            var $btn = $(this).find('button[type="submit"]');
-            var $status = $('#rxSubmitStatus');
-            $btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Submitting...');
-
-            var pName = $('#patientName').val();
-            var pPhone = $('#patientPhone').val();
-            var pAddr = $('#deliveryAddress').val();
-            var pList = $('#medicineList').val();
-
-            $.ajax({
-                url: '<?= base_url("landing/upload_prescription") ?>',
-                type: 'POST',
-                data: {
-                    patient_name: pName,
-                    patient_phone: pPhone,
-                    delivery_address: pAddr,
-                    medicine_list: pList
-                },
-                dataType: 'json',
-                success: function(resp) {
-                    $status.show().html('<span style="color:#2dd4bf; font-weight:700;"><i class="fa fa-check-circle"></i> ' + resp.message + '</span>');
-                    // Also trigger WhatsApp with pre-filled prescription order
-                    var waMsg = 'Hello <?= addslashes($store_name) ?>, I have submitted a prescription order:\n' +
-                                'Patient: ' + pName + '\n' +
-                                'Phone: ' + pPhone + '\n' +
-                                'Address: ' + pAddr + '\n' +
-                                'Medicines: ' + pList;
-                    var waWindow = window.open('https://wa.me/919382509991?text=' + encodeURIComponent(waMsg), '_blank');
-                    $('#rxOrderForm')[0].reset();
-                    $btn.prop('disabled', false).html('<i class="fa fa-paper-plane"></i> Submit Prescription Order');
-                },
-                error: function() {
-                    $status.show().html('<span style="color:#ef4444;"><i class="fa fa-exclamation-triangle"></i> Submission error. Please call us directly at <?= htmlspecialchars($store_mobile) ?>.</span>');
-                    $btn.prop('disabled', false).html('<i class="fa fa-paper-plane"></i> Submit Prescription Order');
-                }
-            });
+            function escapeHtml(text) {
+                if (!text) return '';
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
         });
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        }
-    });
     </script>
 </body>
+
 </html>

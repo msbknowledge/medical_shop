@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Smart School Flow UI Dashboard - 100% Medical & Pharmacy Specification
  * Exact 3-Column Progress Cards & 2-Column Graph Layout
@@ -6,6 +7,7 @@
  * 2. 2-Column Pharmacy Graphs (Monthly Sales & Stock Purchases Days 01-31 + Semi-Doughnut Payment Mode Gauge)
  * 3. Store Performance Metrics, Inventory Health Audit & Operations Launchpad
  */
+
 $CI = &get_instance();
 
 // 1. Days of Current Month & Daily Graph Arrays (01 to 31)
@@ -32,7 +34,7 @@ try {
     if (isset($CI->db)) {
         $cur_m = date('m');
         $cur_y = date('Y');
-        
+
         $res_s = $CI->db->query("SELECT DAY(sale_date) as d, COALESCE(SUM(sale_total), 0) as tot FROM sales WHERE MONTH(sale_date) = '$cur_m' AND YEAR(sale_date) = '$cur_y' GROUP BY DAY(sale_date)")->result_array();
         if (!empty($res_s)) {
             $has_db_sales = false;
@@ -132,7 +134,8 @@ try {
             $total_doctors = (int)$res_doc['cnt'];
         }
     }
-} catch (Exception $e) {}
+} catch (Exception $e) {
+}
 
 if (function_exists('medicine_count')) {
     $mc = medicine_count();
@@ -170,232 +173,346 @@ try {
             }
         }
     }
-} catch (Exception $e) {}
+} catch (Exception $e) {
+}
+
+// Smart formatting for customer dues to prevent card overflow
+$customer_dues_num = (float)str_replace(',', '', $customer_dues_total);
+if ($customer_dues_num >= 10000000) {
+    $customer_dues_short = 'Rs. ' . number_format($customer_dues_num / 10000000, 2) . ' Cr';
+} elseif ($customer_dues_num >= 100000) {
+    $customer_dues_short = 'Rs. ' . number_format($customer_dues_num / 100000, 2) . ' L';
+} else {
+    $customer_dues_short = 'Rs. ' . $customer_dues_total;
+}
 ?>
 
 <style>
-/* Guaranteed 3-Column x 2-Row Layout for Medical Cards */
-.smart-progress-grid {
-    display: grid !important;
-    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    margin-bottom: 24px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-.smart-card-link {
-    display: block !important;
-    text-decoration: none !important;
-    color: inherit !important;
-    height: 100% !important;
-}
-
-.smart-card-link:hover, .smart-card-link:focus {
-    text-decoration: none !important;
-    color: inherit !important;
-}
-
-.smart-progress-grid .topprograssstart {
-    margin-bottom: 0 !important;
-    height: 100% !important;
-}
-
-/* 2-Column Grid for Middle Charts */
-.smart-graph-grid {
-    display: grid !important;
-    grid-template-columns: 58% calc(42% - 16px) !important;
-    gap: 16px !important;
-    margin-bottom: 24px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-.smart-graph-grid .box {
-    margin-bottom: 0 !important;
-    height: 100% !important;
-}
-
-/* 4-Column Grid for Lifetime Stats */
-.smart-stat-grid {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    margin-bottom: 24px !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-/* 4-Column Grid for System Notice & Subscription License */
-.smart-license-grid {
-    display: grid !important;
-    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-    gap: 16px !important;
-    align-items: stretch !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
-}
-
-.smart-license-card {
-    background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    border-radius: 10px !important;
-    padding: 16px 18px !important;
-    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
-    height: 100% !important;
-    box-sizing: border-box !important;
-    min-height: 105px !important;
-}
-
-@media (max-width: 991px) {
+    /* Guaranteed 3-Column x 2-Row Layout for Medical Cards */
     .smart-progress-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        margin-bottom: 24px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
+
+    .smart-card-link {
+        display: block !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        height: 100% !important;
+    }
+
+    .smart-card-link:hover,
+    .smart-card-link:focus {
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    .smart-progress-grid .topprograssstart {
+        margin-bottom: 0 !important;
+        height: 100% !important;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        padding: 14px 18px !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        min-height: 84px !important;
+        box-sizing: border-box !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+
+    .smart-progress-grid .topprograssstart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08) !important;
+        border-color: #cbd5e1 !important;
+    }
+
+    .smart-card-kpi-row {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        width: 100% !important;
+        margin-bottom: 12px !important;
+    }
+
+    .smart-card-kpi-title {
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        min-width: 0 !important;
+        flex: 1 !important;
+    }
+
+    .smart-card-kpi-title span {
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        font-size: 13.5px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+    }
+
+    .smart-card-kpi-val {
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 4px !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    .smart-card-kpi-val strong {
+        font-size: 13.5px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+
+    .smart-card-kpi-val small {
+        font-size: 11px !important;
+        font-weight: 500 !important;
+        color: #64748b !important;
+    }
+
+    .smart-progress-track {
+        height: 6px !important;
+        background: #e2e8f0 !important;
+        border-radius: 9999px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .smart-progress-fill {
+        height: 100% !important;
+        border-radius: 9999px !important;
+        transition: width 0.6s ease !important;
+    }
+
+    .progress-bar-aqua {
+        background-color: #00c0ef !important;
+    }
+
+    .progress-bar-lris-blue {
+        background-color: #17a2b8 !important;
+    }
+
+    .progress-bar-blue {
+        background-color: #3b82f6 !important;
+    }
+
+    .progress-bar-red {
+        background-color: #ef4444 !important;
+    }
+
+    .progress-bar-green {
+        background-color: #10b981 !important;
+    }
+
+    .progress-bar-yellow {
+        background-color: #f59e0b !important;
+    }
+
+    /* 2-Column Grid for Middle Charts */
     .smart-graph-grid {
-        grid-template-columns: 1fr !important;
+        display: grid !important;
+        grid-template-columns: 58% calc(42% - 16px) !important;
+        gap: 16px !important;
+        margin-bottom: 24px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-    .smart-stat-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-    .smart-license-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-    }
-}
 
-@media (max-width: 640px) {
-    .smart-progress-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
+    .smart-graph-grid .box {
+        margin-bottom: 0 !important;
+        height: 100% !important;
     }
+
+    /* 4-Column Grid for Lifetime Stats */
     .smart-stat-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        margin-bottom: 24px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
+
+    /* 4-Column Grid for System Notice & Subscription License */
     .smart-license-grid {
-        grid-template-columns: minmax(0, 1fr) !important;
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        align-items: stretch !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-}
+
+    .smart-license-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        padding: 16px 18px !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        height: 100% !important;
+        box-sizing: border-box !important;
+        min-height: 105px !important;
+    }
+
+    @media (max-width: 991px) {
+        .smart-progress-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .smart-graph-grid {
+            grid-template-columns: 1fr !important;
+        }
+
+        .smart-stat-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .smart-license-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .smart-progress-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+
+        .smart-stat-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+
+        .smart-license-grid {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+    }
 </style>
 
 <!-- 1. Top Section: 3 Columns Per Row (6 Cards Total = 2 Rows x 3 Cards) -->
 <div class="smart-progress-grid">
     <!-- Card 1: Medicine Bills Due Awaiting Payment -->
-    <a href="<?= console_url('customer_payment') ?>" class="smart-card-link">
+    <a href="<?= console_url('customer_payment') ?>" class="smart-card-link" title="Customer Outstanding Dues: Rs. <?= $customer_dues_total ?>">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-file-text-o ftlayer" style="color: #00c0ef;"></i> Medicine Bills Due
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= $customer_dues_cnt ?> Bills</strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">(Rs. <?= $customer_dues_total ?>)</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-aqua" style="width: 66.66%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-file-text-o ftlayer" style="color: #00c0ef; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Medicine Bills Due</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= $customer_dues_cnt ?> Bills</strong>
+                    <small style="color: #64748b;">(<?= $customer_dues_short ?>)</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-aqua" style="width: 66.6%; background-color: #00c0ef !important;"></div>
             </div>
         </div>
     </a>
 
     <!-- Card 2: Today's Medicine Sales Dispensed -->
-    <a href="<?= console_url('sale') ?>" class="smart-card-link">
+    <a href="<?= console_url('sale') ?>" class="smart-card-link" title="Today's Dispensed Medicine Sales">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-shopping-cart ftlayer" style="color: #17a2b8;"></i> Today's Sales Dispensed
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= $sales_today_cnt > 0 ? $sales_today_cnt . ' / 25' : '18 / 25' ?></strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">(Rs. <?= number_format((float)$sales_today_val > 0 ? (float)$sales_today_val : 7450, 2) ?>)</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-lris-blue" style="width: <?= min(100, max(25, (float)$sales_today_val > 0 ? 66 : 72)) ?>%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-shopping-cart ftlayer" style="color: #17a2b8; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Today's Sales</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= $sales_today_cnt > 0 ? $sales_today_cnt . ' / 25' : '18 / 25' ?></strong>
+                    <small style="color: #64748b;">(Rs. <?= number_format((float)$sales_today_val > 0 ? (float)$sales_today_val : 7450) ?>)</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-lris-blue" style="width: <?= min(100, max(25, (float)$sales_today_val > 0 ? 66 : 72)) ?>%; background-color: #17a2b8 !important;"></div>
             </div>
         </div>
     </a>
 
     <!-- Card 3: Drug Stock Inwards Received -->
-    <a href="<?= console_url('purchase') ?>" class="smart-card-link">
+    <a href="<?= console_url('purchase') ?>" class="smart-card-link" title="Today's Drug Stock Inwards">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-truck ftlayer" style="color: #3b82f6;"></i> Drug Stock Inwards
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= $purchase_today_cnt > 0 ? $purchase_today_cnt . ' / 6' : '4 / 6' ?></strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">(Rs. <?= number_format((float)$purchase_today_val > 0 ? (float)$purchase_today_val : 920, 2) ?>)</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-blue" style="width: <?= min(100, max(15, (float)$purchase_today_val > 0 ? 45 : 66.6)) ?>%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-truck ftlayer" style="color: #3b82f6; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Drug Stock Inwards</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= $purchase_today_cnt > 0 ? $purchase_today_cnt . ' / 6' : '4 / 6' ?></strong>
+                    <small style="color: #64748b;">(Rs. <?= number_format((float)$purchase_today_val > 0 ? (float)$purchase_today_val : 920) ?>)</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-blue" style="width: <?= min(100, max(15, (float)$purchase_today_val > 0 ? 45 : 66.6)) ?>%; background-color: #3b82f6 !important;"></div>
             </div>
         </div>
     </a>
 
     <!-- Card 4: Near-Expiry Drug Alert (< 90 Days) -->
-    <a href="<?= console_url('medicine_stock/expired_view') ?>" class="smart-card-link">
+    <a href="<?= console_url('medicine_stock/expired_view') ?>" class="smart-card-link" title="Drug Batches Expiring Within 90 Days">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-calendar-times-o ftlayer" style="color: #ef4444;"></i> Near-Expiry Drug Alert (&lt; 90 Days)
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= $expiring_cnt > 12 ? number_format($expiring_cnt) : ($expiring_cnt > 0 ? $expiring_cnt : '3') . ' / 12' ?></strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">Batches</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-red" style="width: 25%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-calendar-times-o ftlayer" style="color: #ef4444; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Expiry Alert (&lt; 90D)</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= $expiring_cnt > 12 ? number_format($expiring_cnt) : ($expiring_cnt > 0 ? $expiring_cnt : '3') . ' / 12' ?></strong>
+                    <small style="color: #64748b;">Batches</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-red" style="width: 65%; background-color: #ef4444 !important;"></div>
             </div>
         </div>
     </a>
 
     <!-- Card 5: Low Stock Shortage Alert (< 3 Units) -->
-    <a href="<?= console_url('medicine_stock/shortage') ?>" class="smart-card-link">
+    <a href="<?= console_url('medicine_stock/shortage') ?>" class="smart-card-link" title="Medicines With Stock Shortage Under 3 Units">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-exclamation-triangle ftlayer" style="color: #10b981;"></i> Low Stock Shortage (&lt; 3 Units)
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= $shortage_cnt > 0 ? $shortage_cnt . ' / 45' : '8 / 45' ?></strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">Items</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-green" style="width: 18%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-exclamation-triangle ftlayer" style="color: #10b981; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Low Stock Shortage</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= $shortage_cnt > 0 ? $shortage_cnt . ' / 45' : '8 / 45' ?></strong>
+                    <small style="color: #64748b;">Items</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-green" style="width: 40%; background-color: #10b981 !important;"></div>
             </div>
         </div>
     </a>
 
     <!-- Card 6: Active Medicine Formulary in Store -->
-    <a href="<?= console_url('medicine') ?>" class="smart-card-link">
+    <a href="<?= console_url('medicine') ?>" class="smart-card-link" title="Active Medicines Formulary Catalog">
         <div class="topprograssstart">
-            <p class="clearfix">
-                <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    <i class="fa fa-medkit ftlayer" style="color: #f59e0b;"></i> Active Medicine Formulary
-                </span>
-                <span class="pull-right" style="white-space:nowrap; flex-shrink:0;">
-                    <strong style="color: #0f172a;"><?= number_format($med_count_val) ?></strong>
-                    <small style="color: #64748b; font-weight: 500; font-size: 11px;">Drugs</small>
-                </span>
-            </p>
-            <div class="progress-group">
-                <div class="progress progress-minibar">
-                    <div class="progress-bar progress-bar-yellow" style="width: 88%;"></div>
+            <div class="smart-card-kpi-row">
+                <div class="smart-card-kpi-title">
+                    <i class="fa fa-medkit ftlayer" style="color: #f59e0b; font-size: 15px; flex-shrink: 0;"></i>
+                    <span>Active Formulary</span>
                 </div>
+                <div class="smart-card-kpi-val">
+                    <strong><?= number_format($med_count_val) ?></strong>
+                    <small style="color: #64748b;">Drugs</small>
+                </div>
+            </div>
+            <div class="smart-progress-track">
+                <div class="smart-progress-fill progress-bar-yellow" style="width: 88%; background-color: #f59e0b !important;"></div>
             </div>
         </div>
     </a>
@@ -547,7 +664,7 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
                 <div style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(14, 165, 233, 0.05)); border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 14px; overflow: hidden;">
                     <span style="background: var(--ss-primary, #6366f1); color: #fff; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; letter-spacing: 0.5px;">Notice</span>
                     <div style="flex: 1; min-width: 0; overflow: hidden;">
-                        <marquee direction="left" style="font-size: 13.5px; font-weight: 500; color: #334155; margin: 0; display: block;" scrolldelay="120">   
+                        <marquee direction="left" style="font-size: 13.5px; font-weight: 500; color: #334155; margin: 0; display: block;" scrolldelay="120">
                             Medical Shop & Pharmacy Billing System is active with Smart School Flow UI. For billing assistance, GST filing support or subscription renewal, please contact Support at +91 9382509991.
                         </marquee>
                     </div>
@@ -634,119 +751,120 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
 
 <!-- Initialize Chart.js with Medical & Pharmacy Specifications Matching Screenshot -->
 <script type="text/javascript">
-$(document).ready(function() {
-    // 1. Bar Chart: Pharmacy Sales & Purchases For Current Month (Days 01 to 31)
-    var barCtx = document.getElementById('barChart');
-    if (barCtx) {
-        var barChart = new Chart(barCtx.getContext('2d'), {
-            type: 'bar',
-            data: {
-                labels: <?= json_encode($day_labels) ?>,
-                datasets: [
-                    {
-                        label: 'Sales Collection',
-                        backgroundColor: '#8bc34a', // Emerald / Light Green from screenshot
-                        borderColor: '#7cb342',
-                        borderWidth: 1,
-                        data: <?= json_encode($daily_collection) ?>,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.8
-                    },
-                    {
-                        label: 'Stock Purchases',
-                        backgroundColor: '#e91e63', // Red / Pink from screenshot
-                        borderColor: '#d81b60',
-                        borderWidth: 1,
-                        data: <?= json_encode($daily_expenses) ?>,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.8
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                legend: {
-                    display: false // No legend inside card matching screenshot
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: { display: false },
-                        ticks: {
-                            autoSkip: false,
-                            maxRotation: 45,
-                            minRotation: 45,
-                            fontSize: 10,
-                            fontColor: '#64748b'
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true,
-                            stepSize: 2000,
-                            fontSize: 11,
-                            fontColor: '#64748b',
-                            callback: function(value) {
-                                return value >= 1000 ? (value / 1000) + 'k' : value;
-                            }
+    $(document).ready(function() {
+        // 1. Bar Chart: Pharmacy Sales & Purchases For Current Month (Days 01 to 31)
+        var barCtx = document.getElementById('barChart');
+        if (barCtx) {
+            var barChart = new Chart(barCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: <?= json_encode($day_labels) ?>,
+                    datasets: [{
+                            label: 'Sales Collection',
+                            backgroundColor: '#8bc34a', // Emerald / Light Green from screenshot
+                            borderColor: '#7cb342',
+                            borderWidth: 1,
+                            data: <?= json_encode($daily_collection) ?>,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
                         },
-                        gridLines: {
-                            color: '#f1f5f9'
+                        {
+                            label: 'Stock Purchases',
+                            backgroundColor: '#e91e63', // Red / Pink from screenshot
+                            borderColor: '#d81b60',
+                            borderWidth: 1,
+                            data: <?= json_encode($daily_expenses) ?>,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.8
                         }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false // No legend inside card matching screenshot
+                    },
+                    scales: {
+                        xAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45,
+                                fontSize: 10,
+                                fontColor: '#64748b'
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 2000,
+                                fontSize: 11,
+                                fontColor: '#64748b',
+                                callback: function(value) {
+                                    return value >= 1000 ? (value / 1000) + 'k' : value;
+                                }
+                            },
+                            gridLines: {
+                                color: '#f1f5f9'
+                            }
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                return data.datasets[tooltipItem.datasetIndex].label + ': Rs. ' + Number(tooltipItem.yLabel).toLocaleString('en-IN');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. Semi-Doughnut (Half-Circle Gauge) Chart: Pharmacy Sales By Payment Mode
+        var doughCtx = document.getElementById('doughnut-chart');
+        if (doughCtx) {
+            var doughnutChart = new Chart(doughCtx.getContext('2d'), {
+                type: 'doughnut',
+                data: {
+                    labels: <?= json_encode($doughnut_labels) ?>,
+                    datasets: [{
+                        data: <?= json_encode($doughnut_data) ?>,
+                        backgroundColor: ['#689f38', '#fbc02d', '#26a69a'], // Exact Green, Yellow, Teal from screenshot
+                        hoverBackgroundColor: ['#558b2f', '#f9a825', '#00897b'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
                     }]
                 },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            return data.datasets[tooltipItem.datasetIndex].label + ': Rs. ' + Number(tooltipItem.yLabel).toLocaleString('en-IN');
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    circumference: Math.PI, // 180 degrees (half circle)
+                    rotation: -Math.PI, // Starts from 9 o'clock to 3 o'clock
+                    cutoutPercentage: 62,
+                    legend: {
+                        display: false // Top custom legend handles this
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(tooltipItem, data) {
+                                var label = data.labels[tooltipItem.index] || '';
+                                var val = data.datasets[0].data[tooltipItem.index] || 0;
+                                return label + ': ' + val + '%';
+                            }
                         }
                     }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    // 2. Semi-Doughnut (Half-Circle Gauge) Chart: Pharmacy Sales By Payment Mode
-    var doughCtx = document.getElementById('doughnut-chart');
-    if (doughCtx) {
-        var doughnutChart = new Chart(doughCtx.getContext('2d'), {
-            type: 'doughnut',
-            data: {
-                labels: <?= json_encode($doughnut_labels) ?>,
-                datasets: [{
-                    data: <?= json_encode($doughnut_data) ?>,
-                    backgroundColor: ['#689f38', '#fbc02d', '#26a69a'], // Exact Green, Yellow, Teal from screenshot
-                    hoverBackgroundColor: ['#558b2f', '#f9a825', '#00897b'],
-                    borderWidth: 2,
-                    borderColor: '#ffffff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                circumference: Math.PI,    // 180 degrees (half circle)
-                rotation: -Math.PI,        // Starts from 9 o'clock to 3 o'clock
-                cutoutPercentage: 62,
-                legend: {
-                    display: false          // Top custom legend handles this
-                },
-                tooltips: {
-                    callbacks: {
-                        label: function(tooltipItem, data) {
-                            var label = data.labels[tooltipItem.index] || '';
-                            var val = data.datasets[0].data[tooltipItem.index] || 0;
-                            return label + ': ' + val + '%';
-                        }
-                    }
-                }
-            }
+        // 3. Pay now modal trigger
+        $('#paynow').on('click', function(e) {
+            e.preventDefault();
+            $('#paynowModal').modal('show');
         });
-    }
-
-    // 3. Pay now modal trigger
-    $('#paynow').on('click', function(e) {
-        e.preventDefault();
-        $('#paynowModal').modal('show');
     });
-});
 </script>
