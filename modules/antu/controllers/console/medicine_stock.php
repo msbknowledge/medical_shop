@@ -527,4 +527,27 @@ class medicine_stock extends MY_Controller
         }
         pr(($mapped));
     }
+
+    /**
+     * Dashboard period filter endpoint for Antu Medical module
+     */
+    public function filter_dashboard()
+    {
+        $from  = $this->input->post('from');
+        $to    = $this->input->post('to');
+        $label = $this->input->post('label');
+        if (empty($from)) $from = date('Y-m-01');
+        if (empty($to))   $to   = date('Y-m-d');
+
+        if (function_exists('get_pharmacy_custom_range_data')) {
+            $data = get_pharmacy_custom_range_data($from, $to, $label);
+            header('Content-Type: application/json');
+            echo json_encode($data);
+            exit;
+        }
+
+        header('Content-Type: application/json');
+        echo json_encode(['error' => 'Handler function not found']);
+        exit;
+    }
 }

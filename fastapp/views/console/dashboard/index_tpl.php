@@ -1,192 +1,3 @@
-<?php
-
-/**
- * Smart School Flow UI Dashboard - 100% Medical & Pharmacy Specification
- * Exact 3-Column Progress Cards & 2-Column Graph Layout
- * 1. 3-Column Medical Progress Cards (Row 1 & Row 2)
- * 2. 2-Column Pharmacy Graphs (Monthly Sales & Stock Purchases Days 01-31 + Semi-Doughnut Payment Mode Gauge)
- * 3. Store Performance Metrics, Inventory Health Audit & Operations Launchpad
- */
-
-$CI = &get_instance();
-
-// 1. Days of Current Month & Daily Graph Arrays (01 to 31)
-$days_in_month = (int)date('t');
-$day_labels = array();
-for ($d = 1; $d <= $days_in_month; $d++) {
-    $day_labels[] = sprintf('%02d', $d);
-}
-
-// Baseline sample data for visual demonstration
-$daily_collection = array_fill(0, $days_in_month, 0);
-$daily_expenses = array_fill(0, $days_in_month, 0);
-
-$daily_collection[0] = 7450;
-$daily_expenses[0] = 920;
-if ($days_in_month >= 7)  $daily_expenses[6] = 320;
-if ($days_in_month >= 12) $daily_expenses[11] = 430;
-if ($days_in_month >= 17) $daily_expenses[16] = 260;
-if ($days_in_month >= 26) $daily_expenses[25] = 310;
-if ($days_in_month >= 30) $daily_expenses[29] = 210;
-
-// Query live sales & purchases for current month if database contains transactions
-try {
-    if (isset($CI->db)) {
-        $cur_m = date('m');
-        $cur_y = date('Y');
-
-        $res_s = $CI->db->query("SELECT DAY(sale_date) as d, COALESCE(SUM(sale_total), 0) as tot FROM sales WHERE MONTH(sale_date) = '$cur_m' AND YEAR(sale_date) = '$cur_y' GROUP BY DAY(sale_date)")->result_array();
-        if (!empty($res_s)) {
-            $has_db_sales = false;
-            foreach ($res_s as $r) {
-                $idx = (int)$r['d'] - 1;
-                if ($idx >= 0 && $idx < $days_in_month && (float)$r['tot'] > 0) {
-                    if (!$has_db_sales) {
-                        $daily_collection = array_fill(0, $days_in_month, 0);
-                        $has_db_sales = true;
-                    }
-                    $daily_collection[$idx] = round((float)$r['tot'], 2);
-                }
-            }
-        }
-
-        $res_p = $CI->db->query("SELECT DAY(purchase_date) as d, COALESCE(SUM(purchase_total), 0) as tot FROM purchases WHERE MONTH(purchase_date) = '$cur_m' AND YEAR(purchase_date) = '$cur_y' GROUP BY DAY(purchase_date)")->result_array();
-        if (!empty($res_p)) {
-            $has_db_pur = false;
-            foreach ($res_p as $r) {
-                $idx = (int)$r['d'] - 1;
-                if ($idx >= 0 && $idx < $days_in_month && (float)$r['tot'] > 0) {
-                    if (!$has_db_pur) {
-                        $daily_expenses = array_fill(0, $days_in_month, 0);
-                        $has_db_pur = true;
-                    }
-                    $daily_expenses[$idx] = round((float)$r['tot'], 2);
-                }
-            }
-        }
-    }
-} catch (Exception $e) {
-    // Graceful fallback
-}
-
-// 2. Realtime Daily Metrics & Lifetime Store Stats
-$sales_today_val = '0.00';
-$sales_today_cnt = 0;
-$purchase_today_val = '0.00';
-$purchase_today_cnt = 0;
-$customer_dues_total = '48,250.00';
-$customer_dues_cnt = 38;
-
-$med_count_val = 17945;
-$shortage_cnt = 0;
-$expiring_cnt = 0;
-
-$lifetime_bills = 31664;
-$lifetime_amount = '75,79,853.67';
-$total_customers = 2694;
-$total_suppliers = 215;
-$total_doctors = 622;
-
-try {
-    if (isset($CI->db)) {
-        $q_ts = $CI->db->query("SELECT COUNT(DISTINCT sale_invoice) as cnt, COALESCE(SUM(sale_total), 0) as tot FROM sales WHERE DATE(sale_date) = CURRENT_DATE")->row_array();
-        if (!empty($q_ts['tot']) && (float)$q_ts['tot'] > 0) {
-            $sales_today_val = $q_ts['tot'];
-            $sales_today_cnt = (int)$q_ts['cnt'];
-        } elseif (function_exists('total_sale_today')) {
-            $st = total_sale_today();
-            if (!empty($st[0]['sale'])) $sales_today_val = $st[0]['sale'];
-        }
-
-        $q_tp = $CI->db->query("SELECT COUNT(DISTINCT purchase_invoice) as cnt, COALESCE(SUM(purchase_total), 0) as tot FROM purchases WHERE DATE(purchase_date) = CURRENT_DATE")->row_array();
-        if (!empty($q_tp['tot']) && (float)$q_tp['tot'] > 0) {
-            $purchase_today_val = $q_tp['tot'];
-            $purchase_today_cnt = (int)$q_tp['cnt'];
-        } elseif (function_exists('total_purchase_today')) {
-            $pt = total_purchase_today();
-            if (!empty($pt[0]['purchase'])) $purchase_today_val = $pt[0]['purchase'];
-        }
-
-        $res_dues = $CI->db->query("SELECT COUNT(DISTINCT sale_customer) as cust_cnt, COALESCE(SUM(sale_total_current_due), 0) as tot_dues FROM sales WHERE sale_total_current_due > 0")->row_array();
-        if (!empty($res_dues['tot_dues']) && (float)$res_dues['tot_dues'] > 0) {
-            $customer_dues_total = number_format((float)$res_dues['tot_dues'], 2);
-            $customer_dues_cnt = (int)$res_dues['cust_cnt'];
-        }
-
-        $res_sales = $CI->db->query("SELECT COUNT(DISTINCT sale_invoice) as cnt, COALESCE(SUM(sale_total), 0) as tot FROM sales")->row_array();
-        if (!empty($res_sales['cnt']) && (int)$res_sales['cnt'] > 0) {
-            $lifetime_bills = (int)$res_sales['cnt'];
-            $lifetime_amount = number_format($res_sales['tot'], 2);
-        }
-
-        $res_cust = $CI->db->query("SELECT COUNT(*) as cnt FROM customers")->row_array();
-        if (!empty($res_cust['cnt']) && (int)$res_cust['cnt'] > 0) {
-            $total_customers = (int)$res_cust['cnt'];
-        }
-
-        $res_supp = $CI->db->query("SELECT COUNT(*) as cnt FROM suppliers")->row_array();
-        if (!empty($res_supp['cnt']) && (int)$res_supp['cnt'] > 0) {
-            $total_suppliers = (int)$res_supp['cnt'];
-        }
-
-        $res_doc = $CI->db->query("SELECT COUNT(*) as cnt FROM doctors")->row_array();
-        if (!empty($res_doc['cnt']) && (int)$res_doc['cnt'] > 0) {
-            $total_doctors = (int)$res_doc['cnt'];
-        }
-    }
-} catch (Exception $e) {
-}
-
-if (function_exists('medicine_count')) {
-    $mc = medicine_count();
-    if (!empty($mc[0]['medicine_count'])) $med_count_val = $mc[0]['medicine_count'];
-}
-if (function_exists('shortage')) {
-    $sc = shortage();
-    $shortage_cnt = is_array($sc) ? count($sc) : (int)$sc;
-}
-if (function_exists('expiring')) {
-    $ec = expiring();
-    $expiring_cnt = is_array($ec) ? count($ec) : (int)$ec;
-}
-
-// Right Semi-Doughnut Chart Data: Medical Pharmacy Payment Distribution
-$doughnut_labels = array('Cash Counter', 'UPI / Online QR', 'Cheque / Card');
-$doughnut_data = array(76, 18, 6); // Cash (76%), UPI (18%), Card (6%)
-
-try {
-    if (isset($CI->db)) {
-        $q_modes = $CI->db->query("SELECT COALESCE(NULLIF(TRIM(sale_paid_by), ''), 'Cash') as mode_name, COALESCE(SUM(sale_total), 0) as mode_sum FROM sales WHERE sale_total > 0 GROUP BY mode_name ORDER BY mode_sum DESC LIMIT 3")->result_array();
-        if (!empty($q_modes)) {
-            $tot_mode_amount = 0;
-            foreach ($q_modes as $pm) {
-                $tot_mode_amount += (float)$pm['mode_sum'];
-            }
-            if ($tot_mode_amount > 0) {
-                $d_pcts = array();
-                foreach ($q_modes as $pm) {
-                    $d_pcts[] = round(((float)$pm['mode_sum'] / $tot_mode_amount) * 100);
-                }
-                if (count($d_pcts) == 3) {
-                    $doughnut_data = $d_pcts;
-                }
-            }
-        }
-    }
-} catch (Exception $e) {
-}
-
-// Smart formatting for customer dues to prevent card overflow
-$customer_dues_num = (float)str_replace(',', '', $customer_dues_total);
-if ($customer_dues_num >= 10000000) {
-    $customer_dues_short = 'Rs. ' . number_format($customer_dues_num / 10000000, 2) . ' Cr';
-} elseif ($customer_dues_num >= 100000) {
-    $customer_dues_short = 'Rs. ' . number_format($customer_dues_num / 100000, 2) . ' L';
-} else {
-    $customer_dues_short = 'Rs. ' . $customer_dues_total;
-}
-?>
-
 <style>
     /* Guaranteed 3-Column x 2-Row Layout for Medical Cards */
     .smart-progress-grid {
@@ -368,8 +179,155 @@ if ($customer_dues_num >= 10000000) {
         min-height: 105px !important;
     }
 
+    /* Modern Period Filter Toolbar */
+    .smart-filter-toolbar {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 12px !important;
+        padding: 12px 18px !important;
+        margin-bottom: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04) !important;
+    }
+
+    .smart-period-pills {
+        display: inline-flex !important;
+        background: #f1f5f9 !important;
+        padding: 4px !important;
+        border-radius: 10px !important;
+        gap: 4px !important;
+    }
+
+    .smart-period-btn {
+        border: none !important;
+        background: transparent !important;
+        color: #64748b !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        padding: 6px 18px !important;
+        border-radius: 8px !important;
+        cursor: pointer !important;
+        transition: all 0.2s ease !important;
+        outline: none !important;
+    }
+
+    .smart-period-btn:hover {
+        color: #1e293b !important;
+        background: rgba(255, 255, 255, 0.7) !important;
+    }
+
+    .smart-period-btn.active {
+        background: #ffffff !important;
+        color: var(--ss-primary, #6366f1) !important;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.08) !important;
+    }
+
+    /* 4-Column Grid for Top Metrics (Screenshot Row 1) */
+    .smart-metric-grid-4 {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 3-Column Grid for Balances & Health (Screenshot Row 2 & Row 3) */
+    .smart-metric-grid-3 {
+        display: grid !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 16px !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Modern Metric Card (Matching Screenshot exactly) */
+    .smart-metric-card {
+        background: #ffffff !important;
+        border: 1px solid #edf2f7 !important;
+        border-radius: 12px !important;
+        padding: 18px 20px !important;
+        box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease !important;
+        text-decoration: none !important;
+        color: inherit !important;
+        box-sizing: border-box !important;
+        min-height: 120px !important;
+    }
+
+    .smart-metric-card:hover,
+    .smart-metric-card:focus {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08) !important;
+        border-color: #cbd5e1 !important;
+        text-decoration: none !important;
+        color: inherit !important;
+    }
+
+    .smart-metric-header {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        margin-bottom: 8px !important;
+    }
+
+    .smart-metric-title {
+        font-size: 13.5px !important;
+        font-weight: 600 !important;
+        color: #475569 !important;
+        margin: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
+    .smart-metric-icon-wrap {
+        width: 42px !important;
+        height: 42px !important;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 16px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .smart-metric-value {
+        font-size: 22px !important;
+        font-weight: 800 !important;
+        color: #0f172a !important;
+        letter-spacing: -0.4px !important;
+        line-height: 1.25 !important;
+        margin-bottom: 4px !important;
+    }
+
+    .smart-metric-subtext {
+        font-size: 11.5px !important;
+        color: #94a3b8 !important;
+        font-weight: 500 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+
     @media (max-width: 991px) {
         .smart-progress-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .smart-metric-grid-4 {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .smart-metric-grid-3 {
             grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
         }
 
@@ -391,6 +349,14 @@ if ($customer_dues_num >= 10000000) {
             grid-template-columns: minmax(0, 1fr) !important;
         }
 
+        .smart-metric-grid-4 {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+
+        .smart-metric-grid-3 {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+
         .smart-stat-grid {
             grid-template-columns: minmax(0, 1fr) !important;
         }
@@ -398,265 +364,123 @@ if ($customer_dues_num >= 10000000) {
         .smart-license-grid {
             grid-template-columns: minmax(0, 1fr) !important;
         }
+
+        .smart-filter-toolbar {
+            flex-direction: column !important;
+            align-items: stretch !important;
+        }
+
+        .smart-period-pills {
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+
+        .smart-period-btn {
+            flex: 1 !important;
+            text-align: center !important;
+            padding: 6px 6px !important;
+            font-size: 12px !important;
+        }
     }
 </style>
 
-<!-- 1. Top Section: 3 Columns Per Row (6 Cards Total = 2 Rows x 3 Cards) -->
-<div class="smart-progress-grid">
-    <!-- Card 1: Medicine Bills Due Awaiting Payment -->
-    <a href="<?= console_url('customer_payment') ?>" class="smart-card-link" title="Customer Outstanding Dues: Rs. <?= $customer_dues_total ?>">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-file-text-o ftlayer" style="color: #00c0ef; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Medicine Bills Due</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= $customer_dues_cnt ?> Bills</strong>
-                    <small style="color: #64748b;">(<?= $customer_dues_short ?>)</small>
-                </div>
-            </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-aqua" style="width: 66.6%; background-color: #00c0ef !important;"></div>
-            </div>
-        </div>
-    </a>
 
-    <!-- Card 2: Today's Medicine Sales Dispensed -->
-    <a href="<?= console_url('sale') ?>" class="smart-card-link" title="Today's Dispensed Medicine Sales">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-shopping-cart ftlayer" style="color: #17a2b8; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Today's Sales</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= $sales_today_cnt > 0 ? $sales_today_cnt . ' / 25' : '18 / 25' ?></strong>
-                    <small style="color: #64748b;">(Rs. <?= number_format((float)$sales_today_val > 0 ? (float)$sales_today_val : 7450) ?>)</small>
-                </div>
-            </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-lris-blue" style="width: <?= min(100, max(25, (float)$sales_today_val > 0 ? 66 : 72)) ?>%; background-color: #17a2b8 !important;"></div>
-            </div>
-        </div>
-    </a>
+<div id="paynowModal1" class="modal fade">
 
-    <!-- Card 3: Drug Stock Inwards Received -->
-    <a href="<?= console_url('purchase') ?>" class="smart-card-link" title="Today's Drug Stock Inwards">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-truck ftlayer" style="color: #3b82f6; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Drug Stock Inwards</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= $purchase_today_cnt > 0 ? $purchase_today_cnt . ' / 6' : '4 / 6' ?></strong>
-                    <small style="color: #64748b;">(Rs. <?= number_format((float)$purchase_today_val > 0 ? (float)$purchase_today_val : 920) ?>)</small>
-                </div>
-            </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-blue" style="width: <?= min(100, max(15, (float)$purchase_today_val > 0 ? 45 : 66.6)) ?>%; background-color: #3b82f6 !important;"></div>
-            </div>
-        </div>
-    </a>
+    <div class="modal-dialog">
 
-    <!-- Card 4: Near-Expiry Drug Alert (< 90 Days) -->
-    <a href="<?= console_url('medicine_stock/expired_view') ?>" class="smart-card-link" title="Drug Batches Expiring Within 90 Days">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-calendar-times-o ftlayer" style="color: #ef4444; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Expiry Alert (&lt; 90D)</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= $expiring_cnt > 12 ? number_format($expiring_cnt) : ($expiring_cnt > 0 ? $expiring_cnt : '3') . ' / 12' ?></strong>
-                    <small style="color: #64748b;">Batches</small>
-                </div>
-            </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-red" style="width: 65%; background-color: #ef4444 !important;"></div>
-            </div>
-        </div>
-    </a>
+        <div class="modal-content">
 
-    <!-- Card 5: Low Stock Shortage Alert (< 3 Units) -->
-    <a href="<?= console_url('medicine_stock/shortage') ?>" class="smart-card-link" title="Medicines With Stock Shortage Under 3 Units">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-exclamation-triangle ftlayer" style="color: #10b981; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Low Stock Shortage</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= $shortage_cnt > 0 ? $shortage_cnt . ' / 45' : '8 / 45' ?></strong>
-                    <small style="color: #64748b;">Items</small>
-                </div>
-            </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-green" style="width: 40%; background-color: #10b981 !important;"></div>
-            </div>
-        </div>
-    </a>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 style="text-align: center;">Payment</h3>
 
-    <!-- Card 6: Active Medicine Formulary in Store -->
-    <a href="<?= console_url('medicine') ?>" class="smart-card-link" title="Active Medicines Formulary Catalog">
-        <div class="topprograssstart">
-            <div class="smart-card-kpi-row">
-                <div class="smart-card-kpi-title">
-                    <i class="fa fa-medkit ftlayer" style="color: #f59e0b; font-size: 15px; flex-shrink: 0;"></i>
-                    <span>Active Formulary</span>
-                </div>
-                <div class="smart-card-kpi-val">
-                    <strong><?= number_format($med_count_val) ?></strong>
-                    <small style="color: #64748b;">Drugs</small>
-                </div>
+
             </div>
-            <div class="smart-progress-track">
-                <div class="smart-progress-fill progress-bar-yellow" style="width: 88%; background-color: #f59e0b !important;"></div>
-            </div>
+
+            <table style="width:97%;height: 200px;margin:10px">
+                <tr>
+                    <td style="border: 1px dotted black;text-align: center;font-weight: bold">
+                        <!-- <h2>Googlepay QR Code...!!</h2> -->
+                        <img src="<?= base_url(); ?>msb/g-pay4500.jpeg" alt="msbbilings QR code" height="400">
+                    </td>
+                    <td style="border: 1px dotted black;text-align: center;font-weight: bold">
+                        <!--<h2>Bank Transaction...!!</h2>-->
+                        <!--<p><b>Bank: </b>Bank of Baroda</p>-->
+                        <!--<p><b>A/C Name: </b>Logicmystery Technologies LLP</p>-->
+                        <!--<p><b>A/C No: </b>36240200000161</p>-->
+                        <!--<p><b>IFSC Code: </b>BARB0MEDINI</p>-->
+                        <!--<p><b>A/C Type: </b>Current Account</p>-->
+
+
+                    </td>
+                </tr>
+                <!--tr>
+                    <td style="border: 1px dotted black;text-align: center;font-weight: bold">Online Transaction..!!</td>
+                    <td style="border: 1px dotted black;text-align: center;">
+                <center>
+                    <p><a href="https://www.instamojo.com/@logicmystery" target="_blank" class="btn btn-success" style="margin: 20px" >Pay Now</a></p>
+                    <p style="font-size: 10px">* Gateway Charges apply...!!</p>
+                </center>
+                </td>
+
+                </tr-->
+
+
+            </table>
         </div>
-    </a>
+
+    </div>
+
 </div>
+<div id="renewSubscription" class="modal fade">
 
-<!-- 2. Middle Section: Two-Column Medical Graphs (58% Left + 42% Right) -->
-<div class="smart-graph-grid">
-    <!-- Left Column: Pharmacy Sales & Stock Purchases For Current Month (Days 01 to 31 Bar Chart) -->
-    <div>
-        <div class="box box-primary borderwhite" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05); margin-bottom: 0;">
-            <div class="box-header with-border" style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; background: #ffffff; border-radius: 8px 8px 0 0;">
-                <h3 class="box-title" style="font-size: 16px; font-weight: 500; color: #1e293b; margin: 0;">
-                    Pharmacy Sales & Expenses For <?= date('F Y') ?>
-                </h3>
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h3 style="text-align: center;">Your Subscription Will Expire 20/02/2026...!</h3>
             </div>
-            <div class="box-body" style="padding: 18px;">
-                <div class="chart" style="height: 250px; position: relative;">
-                    <canvas id="barChart" height="250"></canvas>
-                </div>
-            </div>
+            <!-- <div class="modal-body">
+            <p>Please Renew Your Subscription</p>
+            </div> -->
+            <script type="text/javascript">
+                atOptions = {
+                    'key': 'fe2fba551331bbf1ef39fcbf15780b0d',
+                    'format': 'iframe',
+                    'height': 50,
+                    'width': 320,
+                    'params': {}
+                };
+            </script>
+            <table style="width:96%;height: 50px;margin:10px">
+                <tr>
+                    <td style="border: 1px dotted black;text-align: center;font-weight: bold">
+                        <p>Please Renew Your Subscription before expire date</p>
+                        <img src="<?= base_url(); ?>msb/g-pay4500.jpeg" alt="msbbillings QR code" height="400">
+                    </td>
+                </tr>
+            </table>
         </div>
+
     </div>
 
-    <!-- Right Column: Pharmacy Sales By Payment Mode (Semi-Doughnut Gauge Chart with Top Legend) -->
-    <div>
-        <div class="box box-primary borderwhite" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05); margin-bottom: 0;">
-            <div class="box-header with-border" style="padding: 14px 18px; border-bottom: 1px solid #f1f5f9; background: #ffffff; border-radius: 8px 8px 0 0;">
-                <h3 class="box-title" style="font-size: 16px; font-weight: 500; color: #1e293b; margin: 0;">
-                    Pharmacy Sales By Payment Mode - <?= date('F Y') ?>
-                </h3>
-            </div>
-            <div class="box-body" style="padding: 18px;">
-                <!-- Exact Top Legend with Medical Payment Channels -->
-                <div style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 15px; font-size: 13px; color: #475569;">
-                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                        <span style="display: inline-block; width: 26px; height: 12px; background: #689f38; border-radius: 2px;"></span> Cash Counter
-                    </span>
-                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                        <span style="display: inline-block; width: 26px; height: 12px; background: #fbc02d; border-radius: 2px;"></span> UPI / Online QR
-                    </span>
-                    <span style="display: inline-flex; align-items: center; gap: 8px;">
-                        <span style="display: inline-block; width: 26px; height: 12px; background: #26a69a; border-radius: 2px;"></span> Cheque / Card
-                    </span>
-                </div>
-                <!-- Semi-Doughnut Gauge Canvas -->
-                <div class="chart-responsive" style="height: 200px; position: relative;">
-                    <canvas id="doughnut-chart" height="200"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-
-<!-- 3. Bottom Section: Pharmacy Lifetime Store Overview (4 Stat Cards) -->
-<div class="smart-stat-grid">
-    <div>
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px 18px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; align-items:center; gap:14px; height:100%;">
-            <div style="width:44px; height:44px; border-radius:10px; background:rgba(99,102,241,0.1); color:#6366f1; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
-                <i class="fa fa-file-text-o"></i>
-            </div>
-            <div>
-                <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Prescriptions Billed</div>
-                <div style="font-size:18px; font-weight:800; color:#0f172a; margin-top:2px;"><?= number_format($lifetime_bills) ?> Bills</div>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px 18px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; align-items:center; gap:14px; height:100%;">
-            <div style="width:44px; height:44px; border-radius:10px; background:rgba(16,185,129,0.1); color:#10b981; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
-                <i class="fa fa-inr"></i>
-            </div>
-            <div>
-                <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Lifetime Pharmacy Sales</div>
-                <div style="font-size:18px; font-weight:800; color:#0f172a; margin-top:2px;">Rs. <?= $lifetime_amount ?></div>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px 18px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; align-items:center; gap:14px; height:100%;">
-            <div style="width:44px; height:44px; border-radius:10px; background:rgba(14,165,233,0.1); color:#0ea5e9; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
-                <i class="fa fa-users"></i>
-            </div>
-            <div>
-                <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Registered Patients</div>
-                <div style="font-size:18px; font-weight:800; color:#0f172a; margin-top:2px;"><?= number_format($total_customers) ?> Patients</div>
-            </div>
-        </div>
-    </div>
-
-    <div>
-        <div style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:16px 18px; box-shadow:0 1px 3px rgba(15,23,42,0.04); display:flex; align-items:center; gap:14px; height:100%;">
-            <div style="width:44px; height:44px; border-radius:10px; background:rgba(245,158,11,0.1); color:#f59e0b; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">
-                <i class="fa fa-user-md"></i>
-            </div>
-            <div>
-                <div style="font-size:11.5px; font-weight:700; color:#64748b; text-transform:uppercase;">Doctors & Suppliers</div>
-                <div style="font-size:18px; font-weight:800; color:#0f172a; margin-top:2px;"><?= number_format($total_doctors) ?> Docs / <?= number_format($total_suppliers) ?> Vendors</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 4. Store Inventory Health Audit & Operations Launchpad (Hook Output) -->
+<!-- Module Dashboard Injected via Hook (e.g. antu/medical_helper.php for pharmacy) -->
 <div class="row">
     <div class="col-lg-12">
         <?= execute_hook('dashboard'); ?>
     </div>
 </div>
 
-<!-- 5. System Notice & Subscription License -->
-<?php
-$display_plan = 'Pharmacy Professional';
-if (defined('PLAN_NAME') && !empty(PLAN_NAME)) {
-    $p = trim(PLAN_NAME);
-    if (strtolower($p) === 'medical') {
-        $display_plan = 'Pharmacy Professional';
-    } else {
-        $display_plan = ucwords(str_replace('_', ' ', $p)) . ' Edition';
-    }
-}
-
-$display_packages = 'Billing, Inventory, POS & GST';
-if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
-    $pk = PLAN_PACKAGES;
-    $decoded = json_decode($pk, true);
-    if (is_array($decoded)) {
-        if (in_array('antu', $decoded)) {
-            $display_packages = 'Billing, Inventory, POS, GST';
-        } else {
-            $display_packages = ucwords(implode(', ', str_replace('_', ' ', $decoded)));
-        }
-    } elseif (strpos($pk, '[') === false) {
-        $display_packages = ucwords(str_replace(['_', ','], [' ', ', '], $pk));
-    }
-}
-?>
 <div class="row">
     <div class="col-lg-12">
         <div class="box box-primary borderwhite" style="margin-bottom: 24px; border-radius: 8px; background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);">
             <div class="box-header with-border" style="padding: 14px 20px; border-bottom: 1px solid #f1f5f9; text-align: center;">
                 <h3 class="box-title" style="font-size: 16px; font-weight: 700; color: #1e293b; margin: 0; display: inline-block;">
-                    Pharmacy Billing License & System Notice
+                    Software License & Subscription Notice
                 </h3>
             </div>
             <div class="box-body" style="padding: 18px 20px;">
@@ -665,7 +489,7 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
                     <span style="background: var(--ss-primary, #6366f1); color: #fff; padding: 4px 12px; border-radius: 9999px; font-size: 11px; font-weight: 700; text-transform: uppercase; flex-shrink: 0; letter-spacing: 0.5px;">Notice</span>
                     <div style="flex: 1; min-width: 0; overflow: hidden;">
                         <marquee direction="left" style="font-size: 13.5px; font-weight: 500; color: #334155; margin: 0; display: block;" scrolldelay="120">
-                            Medical Shop & Pharmacy Billing System is active with Smart School Flow UI. For billing assistance, GST filing support or subscription renewal, please contact Support at +91 9382509991.
+                            System is active with Smart Flow UI. For billing assistance, technical support or subscription renewal, please contact Support at +91 9382509991.
                         </marquee>
                     </div>
                 </div>
@@ -678,8 +502,8 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
                             <i class="fa fa-cube" style="color: #6366f1; font-size: 14px;"></i> Active Software Plan
                         </div>
                         <div>
-                            <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px;"><?= $display_plan ?></div>
-                            <div style="font-size: 12px; color: #64748b;"><i class="fa fa-check-circle" style="color: #10b981;"></i> <?= $display_packages ?></div>
+                            <div style="font-size: 17px; font-weight: 800; color: #0f172a; margin-bottom: 4px;"><?= PLAN_NAME ?></div>
+                            <div style="font-size: 12px; color: #64748b;"><i class="fa fa-check-circle" style="color: #10b981;"></i> <?= str_ireplace(",", ", ", PLAN_PACKAGES) ?></div>
                         </div>
                     </div>
 
@@ -707,7 +531,7 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
                                     <i class="fa fa-check"></i> Active & Verified
                                 </span>
                             </div>
-                            <div style="font-size: 11.5px; color: #64748b;">Live Pharmacy License</div>
+                            <div style="font-size: 11.5px; color: #64748b;">Live Software License</div>
                         </div>
                     </div>
 
@@ -724,6 +548,7 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
                         </div>
                     </div>
                 </div>
+                <input type="text" id="deactive_date" value="<?= defined('DEACTIVATION_DATE') ? DEACTIVATION_DATE : '' ?>" style="display:none">
             </div>
         </div>
     </div>
@@ -748,120 +573,21 @@ if (defined('PLAN_PACKAGES') && !empty(PLAN_PACKAGES)) {
         </div>
     </div>
 </div>
-
-<!-- Initialize Chart.js with Medical & Pharmacy Specifications Matching Screenshot -->
 <script type="text/javascript">
     $(document).ready(function() {
-        // 1. Bar Chart: Pharmacy Sales & Purchases For Current Month (Days 01 to 31)
-        var barCtx = document.getElementById('barChart');
-        if (barCtx) {
-            var barChart = new Chart(barCtx.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: <?= json_encode($day_labels) ?>,
-                    datasets: [{
-                            label: 'Sales Collection',
-                            backgroundColor: '#8bc34a', // Emerald / Light Green from screenshot
-                            borderColor: '#7cb342',
-                            borderWidth: 1,
-                            data: <?= json_encode($daily_collection) ?>,
-                            barPercentage: 0.6,
-                            categoryPercentage: 0.8
-                        },
-                        {
-                            label: 'Stock Purchases',
-                            backgroundColor: '#e91e63', // Red / Pink from screenshot
-                            borderColor: '#d81b60',
-                            borderWidth: 1,
-                            data: <?= json_encode($daily_expenses) ?>,
-                            barPercentage: 0.6,
-                            categoryPercentage: 0.8
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    legend: {
-                        display: false // No legend inside card matching screenshot
-                    },
-                    scales: {
-                        xAxes: [{
-                            gridLines: {
-                                display: false
-                            },
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                fontSize: 10,
-                                fontColor: '#64748b'
-                            }
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                stepSize: 2000,
-                                fontSize: 11,
-                                fontColor: '#64748b',
-                                callback: function(value) {
-                                    return value >= 1000 ? (value / 1000) + 'k' : value;
-                                }
-                            },
-                            gridLines: {
-                                color: '#f1f5f9'
-                            }
-                        }]
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                return data.datasets[tooltipItem.datasetIndex].label + ': Rs. ' + Number(tooltipItem.yLabel).toLocaleString('en-IN');
-                            }
-                        }
-                    }
-                }
-            });
+        var nextmonth = "<?= date("Y-m-d", strtotime('+1 months')) ?>"
+        var deactive_date = $('#deactive_date').val();
+        $("#renewSubscription").modal('show');
+        $("#renewSubscription").modal('hide');
+        if (deactive_date <= nextmonth) {
+            $("#renewSubscription").modal('show');
         }
+        $("#paynowModal").modal('show');
+        $("#paynowModal").modal('hide');
+        $("#paynow").click(function() {
+            $("#paynowModal").modal('show');
+        });
 
-        // 2. Semi-Doughnut (Half-Circle Gauge) Chart: Pharmacy Sales By Payment Mode
-        var doughCtx = document.getElementById('doughnut-chart');
-        if (doughCtx) {
-            var doughnutChart = new Chart(doughCtx.getContext('2d'), {
-                type: 'doughnut',
-                data: {
-                    labels: <?= json_encode($doughnut_labels) ?>,
-                    datasets: [{
-                        data: <?= json_encode($doughnut_data) ?>,
-                        backgroundColor: ['#689f38', '#fbc02d', '#26a69a'], // Exact Green, Yellow, Teal from screenshot
-                        hoverBackgroundColor: ['#558b2f', '#f9a825', '#00897b'],
-                        borderWidth: 2,
-                        borderColor: '#ffffff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    circumference: Math.PI, // 180 degrees (half circle)
-                    rotation: -Math.PI, // Starts from 9 o'clock to 3 o'clock
-                    cutoutPercentage: 62,
-                    legend: {
-                        display: false // Top custom legend handles this
-                    },
-                    tooltips: {
-                        callbacks: {
-                            label: function(tooltipItem, data) {
-                                var label = data.labels[tooltipItem.index] || '';
-                                var val = data.datasets[0].data[tooltipItem.index] || 0;
-                                return label + ': ' + val + '%';
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 3. Pay now modal trigger
         $('#paynow').on('click', function(e) {
             e.preventDefault();
             $('#paynowModal').modal('show');
