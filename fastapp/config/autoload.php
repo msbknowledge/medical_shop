@@ -122,7 +122,10 @@ $autoload['model'] = array(
     'user_types_model',
     'options_model',
     'enquiry_model',
-    'activity_logs_model'
+    'activity_logs_model',
+    'capabilities_model',
+    'permissions_model',
+    'modules_model'
 );
 
 

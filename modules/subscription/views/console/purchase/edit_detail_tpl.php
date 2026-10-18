@@ -1,283 +1,1249 @@
-
+<?php
+// Purchase Edit Detail Template - Compact ERP Grid & Smart School Upgrade
+?>
 <style>
-    table{
+    :root {
+        --pur-primary: #4f46e5;
+        --pur-primary-hover: #4338ca;
+        --pur-success: #10b981;
+        --pur-success-hover: #059669;
+        --pur-danger: #ef4444;
+        --pur-warning: #f59e0b;
+        --pur-bg: #f8fafc;
+        --pur-card: #ffffff;
+        --pur-border: #e2e8f0;
+        --pur-border-focus: #4f46e5;
+        --pur-text: #1e293b;
+        --pur-text-muted: #64748b;
+        --pur-font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    .purchase-wrapper {
+        font-family: var(--pur-font);
+        color: var(--pur-text);
+        padding-bottom: 90px;
+    }
+
+    /* Page Header */
+    .purchase-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding: 4px 0;
+    }
+    .purchase-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .purchase-title-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 17px;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+    }
+    .purchase-title {
+        font-size: 19px;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        line-height: 1.2;
+    }
+    .purchase-subtitle {
+        font-size: 12px;
+        color: var(--pur-text-muted);
+        margin: 2px 0 0 0;
+    }
+
+    /* Cards */
+    .pur-card {
+        background: var(--pur-card);
+        border: 1px solid var(--pur-border);
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        margin-bottom: 16px;
+        overflow: hidden;
+    }
+    .pur-card-header {
+        background: #ffffff;
+        padding: 10px 16px;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    .pur-card-title {
+        font-size: 13px;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .pur-card-title i {
+        color: var(--pur-primary);
+        font-size: 13px;
+    }
+    .pur-card-body {
+        padding: 14px 16px;
+    }
+
+    /* Top Form Grid */
+    .pur-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px 16px;
+    }
+    .pur-form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    .pur-form-group.col-span-2 {
+        grid-column: span 2;
+    }
+    .pur-form-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #475569;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .pur-form-label .req {
+        color: var(--pur-danger);
+    }
+    .pur-input-wrap {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+    .pur-input-icon {
+        position: absolute !important;
+        left: 11px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        color: #94a3b8 !important;
+        font-size: 13px !important;
+        pointer-events: none !important;
+        z-index: 5 !important;
+    }
+    .pur-input-wrap input,
+    .pur-input-wrap input[type="text"],
+    .pur-input-wrap .pur-control {
+        padding-left: 36px !important;
+    }
+    .pur-control {
+        width: 100% !important;
+        height: 32px !important;
+        min-height: 32px !important;
+        padding: 4px 10px 4px 10px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        color: #1e293b !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 5px !important;
+        outline: none !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+        transition: border-color 0.15s ease !important;
+    }
+    .pur-control:focus {
+        border-color: var(--pur-border-focus) !important;
+        box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+    }
+    .pur-control[readonly] {
+        background: #f8fafc !important;
+        color: #64748b !important;
+        border-color: #e2e8f0 !important;
+    }
+
+    /* Items Table Container */
+    .pur-table-container {
+        border: 1px solid var(--pur-border);
+        border-radius: 6px;
+        overflow-x: auto;
+        background: #ffffff;
+    }
+    .pur-items-table {
         width: 100%;
+        border-collapse: collapse;
+        font-size: 11.5px;
+        margin-bottom: 0;
+    }
+    .pur-items-table thead th {
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        font-weight: 700 !important;
+        font-size: 10.5px !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.03em !important;
+        padding: 6px 4px !important;
+        border: 1px solid #cbd5e1 !important;
+        white-space: nowrap !important;
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+    .pur-items-table tbody td {
+        padding: 2px 2px !important;
+        border: 1px solid #e2e8f0 !important;
+        vertical-align: middle !important;
+        background: #ffffff;
+    }
+    .pur-items-table tbody tr.rowline:hover td {
+        background: #faf5ff !important;
+    }
+    .pur-items-table tbody tr.rowline:focus-within td {
+        background: #f0fdf4 !important;
+    }
+    .pur-items-table tbody tr.expiry-warning td {
+        background: #fff1f2 !important;
+    }
+    .pur-items-table tbody tr.expiry-warning td:first-child {
+        border-left: 3px solid #ef4444 !important;
+    }
+
+    /* COMPACT Table Cell Inputs - ZERO EXTRA PADDING */
+    .pur-items-table input.pur-cell-input,
+    .pur-items-table input[type="text"],
+    .pur-items-table input[type="number"] {
+        border-radius: 2px !important;
+        padding: 2px 4px !important;
+        height: 25px !important;
+        min-height: 25px !important;
+        max-height: 25px !important;
+        font-size: 11.5px !important;
+        border: 1px solid #cbd5e1 !important;
+        background: #ffffff !important;
+        box-shadow: none !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        margin: 0 !important;
+        outline: none !important;
+        line-height: normal !important;
+    }
+    .pur-items-table input.pur-cell-input:focus,
+    .pur-items-table input[type="text"]:focus,
+    .pur-items-table input[type="number"]:focus {
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 1px #4f46e5 !important;
+        background: #ffffff !important;
+    }
+    .pur-cell-input.text-right {
+        text-align: right !important;
+    }
+    .pur-cell-input.text-center {
+        text-align: center !important;
+    }
+    .pur-cell-input[readonly] {
+        background: #f8fafc !important;
+        color: #475569 !important;
+        border-color: #e2e8f0 !important;
+        font-weight: 600 !important;
+    }
+    .pur-cell-input.highlight-total {
+        background: #ecfdf5 !important;
+        color: #065f46 !important;
+        border-color: #a7f3d0 !important;
+        font-weight: 700 !important;
+    }
+
+    /* COMPACT Expiry Split Container */
+    .pur-exp-wrap {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 2px !important;
+        padding: 0 !important;
+        height: 25px !important;
+        min-height: 25px !important;
+        max-height: 25px !important;
+        width: 60px !important;
+        min-width: 60px !important;
+        max-width: 60px !important;
+        box-sizing: border-box !important;
+        margin: 0 auto !important;
+    }
+    .pur-exp-wrap:focus-within {
+        border-color: #4f46e5 !important;
+        box-shadow: 0 0 0 1px #4f46e5 !important;
+    }
+    .pur-exp-wrap input,
+    .pur-exp-wrap input[type="text"],
+    .pur-exp-wrap input.pur-exp-input {
+        width: 24px !important;
+        min-width: 24px !important;
+        max-width: 24px !important;
+        height: 23px !important;
+        min-height: 23px !important;
+        max-height: 23px !important;
+        border: none !important;
+        border-radius: 0 !important;
+        outline: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center !important;
+        font-size: 11px !important;
+        font-weight: 600 !important;
+        color: #1e293b !important;
+        background: transparent !important;
+        box-shadow: none !important;
+    }
+    .pur-exp-sep {
+        color: #94a3b8 !important;
+        font-weight: 700 !important;
+        font-size: 11px !important;
+        padding: 0 1px !important;
+        line-height: 1 !important;
+        user-select: none !important;
+    }
+
+    /* Row Actions */
+    .pur-row-actions {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        padding: 0 2px;
+    }
+    .pur-row-idx {
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        min-width: 14px;
         text-align: center;
-
+    }
+    .btn-remove-row {
+        width: 20px !important;
+        height: 20px !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        border-radius: 3px !important;
+        background: #fef2f2 !important;
+        border: 1px solid #fecaca !important;
+        color: #ef4444 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        font-size: 10px !important;
+        line-height: 1 !important;
+        transition: all 0.15s ease !important;
+    }
+    .btn-remove-row:hover {
+        background: #ef4444 !important;
+        color: #ffffff !important;
+        border-color: #ef4444 !important;
     }
 
-    th{
-        border: 1px solid black;
-        border-bottom: 1px solid black;
+    /* Summary KPI Grid */
+    .pur-kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+    }
+    .pur-kpi-card {
+        background: #ffffff;
+        border: 1px solid var(--pur-border);
+        border-radius: 8px;
+        padding: 10px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .pur-kpi-info {
+        display: flex;
+        flex-direction: column;
+    }
+    .pur-kpi-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--pur-text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    .pur-kpi-value {
+        font-size: 17px;
+        font-weight: 800;
+        color: #0f172a;
+        margin-top: 2px;
+    }
+    .pur-kpi-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+    }
+    .pur-kpi-grand {
+        background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+        border: none;
+        color: #ffffff;
+    }
+    .pur-kpi-grand .pur-kpi-label {
+        color: rgba(255, 255, 255, 0.85);
+    }
+    .pur-kpi-grand .pur-kpi-value {
+        color: #ffffff;
+        font-size: 19px;
     }
 
-    td{
-        border: 1px solid black;
+    /* Sticky Bottom Bar */
+    .pur-sticky-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        border-top: 1px solid #cbd5e1;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.07);
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1000;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .pur-sticky-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    .pur-sticky-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 5px;
+        background: #f1f5f9;
+        color: #334155;
+    }
+    .pur-sticky-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    .ui-autocomplete-loading {
-        background: white url('data:image/gif;base64,R0lGODlhEAAQAPMPALu7u5mZmTMzM93d3REREQAAAHd3d1VVVWZmZqqqqoiIiO7u7kRERCIiIgARAAAAACH/C05FVFNDQVBFMi4wAwEAAAAh+QQFBwAPACwAAAAAEAAQAEAEcPDJtyg6dUrFetDTIopMoSyFcxxD1krD8AwCkASDIlPaUDQLR6G1Cy0SgqIkE1IQGMrFAKCcGWSBzwPAnAwarcKQ15MpTMJYd1ZyUDXSDGelBY0qIoBh/ZoYGgELCjoxCRRvIQcGD1kzgSAgAACQDxEAIfkEBQcADwAsAAAAAA8AEAAABF3wyfkMkotOJpscRKJJwtI4Q1MAoxQ0RFBw0xEvhGAVRZZJh4JgMAEQW7TWI4EwGFjKR+CAQECjn8DoN0kwDtvBT8FILAKJgfoo1iAGAPNVY9DGJXNMIHN/HJVqIxEAIfkEBQcADwAsAAAAABAADwAABFrwyfmColgiydpaQiY5x9Ith7hURdIl0wBIhpCAjKIIxaAUPQ0hFQsAC7MJALFSFi4SgC4wyHyuCYNWxH3AuhSEotkNGAALAPqqkigG8MWAjAnM4A8594vPUyIAIfkEBQcADwAsAAAAABAAEAAABF3wySkDvdKsddg+APYIWrcg2DIRQAcU6DJICjIsjBEETLEEBYLqYSDdJoCGiHgZwG4LQCCRECEIBAdoF5hdEIWwgBJqDs7DgcKyRHZl3uUwuhm2AbNNW+LV7yd+FxEAIfkEBQcACAAsAAAAABAADgAABEYQyYmMoVgeWQrP3NYhBCgZBdAFRUkdBIAUguVVo1ZsWFcEGB5GMBkEjiCBL2a5ZAi+m2SAURExwKqPiuCafBkvBSCcmiYRACH5BAUHAA4ALAAAAAAQABAAAARs0MnpAKDYrbSWMp0xZIvBKYrXjNmADOhAKBiQDF5gGcICNAyJTwFYTBaDQ0HAkgwSmAUj0OkMrkZM4HBgKK7YTKDRICAo2clAEIheKc9CISjEVTuEQrJASGcSBQcSUFEUDQUXJBgDBW0Zj34RACH5BAUHAA8ALAAAAAAQABAAAARf8Mn5xqBYgrVC4EEmBcOSfAEjSopJMglmcQlgBYjE5NJgZwjCAbO4YBAJjpIjSiAQh5ayyRAIDKvJIbnIagoFRFdkQDQKC0RBsCIUFAWsT7RwG410R8HiiK0WBwJjFBEAIfkEBQcADgAsAQABAA8ADwAABFrQybEWADXJLUHHAMJxIDAgnrOo2+AOibEMh1LN62gIxphzitRoCDAYNcNN6FBLShao4WzwHDQKvVGhoFAwGgtFgQHENhoB7nCwHRAIC0EyUcC8Zw1ha3NIRgAAIfkEBQcADwAsAAAAABAAEAAABGDwyfnWoljaNYYFV+Zx3hCEGEcuypBtMJBISpClAWLfWODymIFiCJwMDMiZBNAAYFqUAaNQ2E0YBIXGURAMCo1AAsFYBBoIScBJEwgSVcmP0li4FwcHz+FpCCQMPCFINxEAIfkEBQcADgAsAAABABAADwAABFzQyemWXYNqaSXY2vVtw3UNmROM4JQowKKlFOsgRI6ASQ8IhSADFAjAMIMAgSYJtByxyQIhcEoaBcSiwegpDgvAwSBJ0AIHBoCQqIAEi/TCIAABGhLG8MbcKBQgEQAh+QQFBwAPACwAAAEAEAAPAAAEXfDJSd+qeK5RB8fDRRWFspyotAAfQBbfNLCVUSSdKDV89gDAwcFBIBgywMRnkWBgcJUDKSZRIKAPQcGwYByAAYTEEJAAJIGbATEQ+B4ExmK9CDhBd8ThdHw/AmUYEQAh+QQFBwAPACwAAAEADwAPAAAEXvBJQIa8+ILSspdHkXxS9wxF4Q3L2aTBeC0sFjhAtuyLIjAMhYc2GBgaSKGuyNoBDp7czFAgeBIKwC6kWCAMxUSAFjtNCAAFGGF5tCQLAaJnWCTqHoREvQuQJAkyGBEAOw==')
-            right center no-repeat;
+    /* Buttons */
+    .btn-pur-primary {
+        background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+        color: #ffffff !important;
+        border: none;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 8px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+        transition: all 0.15s ease;
+    }
+    .btn-pur-primary:hover {
+        background: linear-gradient(135deg, #4338ca 0%, #4f46e5 100%);
+        box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+        transform: translateY(-1px);
+    }
+    .btn-pur-secondary {
+        background: #ffffff;
+        color: #475569 !important;
+        border: 1px solid #cbd5e1;
+        font-weight: 600;
+        font-size: 12.5px;
+        padding: 7px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+    }
+    .btn-pur-secondary:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #1e293b !important;
+    }
+    .btn-pur-add {
+        background: #eef2ff;
+        color: #4338ca !important;
+        border: 1px solid #c7d2fe;
+        font-weight: 700;
+        font-size: 12px;
+        padding: 6px 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.15s ease;
+    }
+    .btn-pur-add:hover {
+        background: #4f46e5;
+        color: #ffffff !important;
+        border-color: #4f46e5;
+    }
+
+    /* Autocomplete Dropdown - Always on top */
+    .ui-autocomplete {
+        z-index: 9999999 !important;
+        position: absolute !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.18) !important;
+        border-radius: 6px !important;
+        max-height: 280px !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        font-size: 12px !important;
+        font-family: var(--pur-font) !important;
+        padding: 4px 0 !important;
+        list-style: none !important;
+        margin: 0 !important;
+    }
+    .ui-autocomplete .ui-menu-item {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    .ui-autocomplete .ui-menu-item a,
+    .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper,
+    .ui-autocomplete .ui-menu-item > div {
+        display: block !important;
+        padding: 6px 12px !important;
+        color: #1e293b !important;
+        text-decoration: none !important;
+        cursor: pointer !important;
+        line-height: 1.35 !important;
+        font-size: 12px !important;
+        border: none !important;
+    }
+    .ui-autocomplete .ui-menu-item:hover,
+    .ui-autocomplete .ui-menu-item .ui-state-focus,
+    .ui-autocomplete .ui-menu-item .ui-state-active {
+        background: #4f46e5 !important;
+        color: #ffffff !important;
     }
 </style>
-<div id="history" style="
-    position: fixed;
-    width: 96%;
-    top: 10px;
-    background: wheat;
-    left: 2%;
-    font-size: 12px;
-    ">
-</div>
-<?php if (isset($status)): ?>
-    <div class="alert alert-<?= $status ?>" >
-        <button type="button" class="close" data-dismiss="alert">×</button>
-        <?= $message ?>
-    </div>
-<?php endif; ?>
 
-<form method="post" action="" enctype="multipart/form-data">
-    <table style=" border: none;" onmouseover="hide_history()">
-        <tr>
-<th  style=" border: none;">DATE: <input type="text" value="<?= date('m/d/Y', strtotime($data[0]['purchase_date'])) ?>"  required="required" autocomplete="off" name="purchase_date"/></th>
-            <th  style=" border: none;">
-                <p style="text-align: left;">Supplier:<input required="required" value="<?= $data[0]['supplier_name'] ?>" type="text" autocomplete="off" name="supplier_name"/>
-                </p>
-                 <th  style=" border: none;">GSTIN : <input type="text" value="<?= $data[0]['supplier_gst'] ?>"  required="required" autocomplete="off" name="supplier_gst"/></th>
-                <p style="text-align: left;">Address:<input  required="required" value="<?= $data[0]['supplier_address'] ?>" type="text" autocomplete="off" name="supplier_address"/></p>
-            </th>
-           
+<div class="purchase-wrapper">
+
+    <?php if (isset($status)): ?>
+        <div class="alert alert-<?= $status ?> alert-dismissible" style="border-radius: 6px; font-weight: 600; margin-bottom: 14px;">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <i class="fa fa-info-circle"></i> <?= $message ?>
+        </div>
+    <?php endif; ?>
+
+    <!-- Page Header -->
+    <div class="purchase-header">
+        <div class="purchase-title-wrap">
+            <div class="purchase-title-icon">
+                <i class="fa fa-edit"></i>
+            </div>
+            <div>
+                <h1 class="purchase-title">Edit Purchase Entry</h1>
+                <p class="purchase-subtitle">Modify supplier invoice items, batch details, and GST totals</p>
+            </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="pur-sticky-badge" style="background: #fef3c7; color: #b45309; border: 1px solid #fde68a;">
+                <i class="fa fa-hashtag"></i> Entry: <strong><?= isset($data[0]['purchase_entry_number']) ? $data[0]['purchase_entry_number'] : '' ?></strong>
+            </span>
+            <button type="button" onclick="addmore()" class="btn-pur-add">
+                <i class="fa fa-plus-circle"></i> Add Row
+            </button>
+            <a href="<?= console_url() ?>purchase" class="btn-pur-secondary">
+                <i class="fa fa-arrow-left"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <!-- Floating Medicine Purchase History Modal -->
+    <div id="history_modal" style="display:none; position:fixed; top:75px; right:25px; z-index:99999; max-width:620px; width:92%; background:#ffffff; border-radius:10px; box-shadow:0 20px 45px rgba(15,23,42,0.18); border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#f8fafc; border-bottom:1px solid #e2e8f0; padding:10px 16px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-weight:700; font-size:13px; color:#1e293b; display:inline-flex; align-items:center; gap:8px;">
+                <i class="fa fa-history" style="color:#6366f1;"></i> Previous Purchase History
+            </span>
+            <button type="button" onclick="hide_history()" style="background:none; border:none; font-size:16px; color:#94a3b8; cursor:pointer; padding:0 4px; line-height:1;">
+                <i class="fa fa-times"></i>
+            </button>
+        </div>
+        <div id="history_content" style="max-height:360px; overflow-y:auto; padding:12px;"></div>
+    </div>
+
+    <form method="post" action="" id="purchaseForm" enctype="multipart/form-data">
+
+        <!-- Top Information Cards Grid -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; margin-bottom: 16px;">
             
-        </tr>
-    </table>  
-    
-    <table style=" border: none;" onmouseover="hide_history()">
-        <tr>
-            <th  style=" border: none; text-align: left;">Invoice No:<input value="<?= $data[0]['purchase_invoice'] ?>" required="required" type="text" autocomplete="off" name="purchase_invoice"/></th>
-            <th  style=" border: none; text-align: left;">Contact: <input value="<?= $data[0]['supplier_contact'] ?>" required="required" type="text" autocomplete="off" name="supplier_contact"/></th>
-            <th  style=" border: none; text-align: left;">Entry Number: <input readonly="readonly" required="required" value="<?= $data[0]['purchase_entry_number']?>" type="text"  name="purchase_entry_number"/></th>
+            <!-- Card 1: Supplier Details -->
+            <div class="pur-card" style="margin-bottom: 0;">
+                <div class="pur-card-header">
+                    <h3 class="pur-card-title">
+                        <i class="fa fa-user-circle"></i> Supplier Information
+                    </h3>
+                    <span style="font-size: 11px; color: var(--pur-text-muted);">Auto-fills on name selection</span>
+                </div>
+                <div class="pur-card-body">
+                    <div class="pur-form-grid">
+                        <div class="pur-form-group col-span-2">
+                            <label class="pur-form-label">Supplier Name <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-truck pur-input-icon"></i>
+                                <input required="required" type="text" autocomplete="off" name="supplier_name" value="<?= isset($data[0]['supplier_name']) ? htmlspecialchars($data[0]['supplier_name']) : '' ?>" class="pur-control" placeholder="Type supplier name..." style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
 
-        </tr>
-    </table>
+                        <div class="pur-form-group">
+                            <label class="pur-form-label">Contact Number <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-phone pur-input-icon"></i>
+                                <input required="required" type="text" autocomplete="off" name="supplier_contact" value="<?= isset($data[0]['supplier_contact']) ? htmlspecialchars($data[0]['supplier_contact']) : '' ?>" class="pur-control" placeholder="10-digit mobile" style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
 
+                        <div class="pur-form-group">
+                            <label class="pur-form-label">GSTIN / Tax ID</label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-shield pur-input-icon"></i>
+                                <input type="text" autocomplete="off" name="supplier_gst" value="<?= isset($data[0]['supplier_gst']) ? htmlspecialchars($data[0]['supplier_gst']) : '' ?>" class="pur-control" placeholder="GSTIN Number" style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
 
-    <table style="border-top: 1px solid black; border-bottom: 1px solid black;" onmouseover="hide_history()">
-        <thead>
-        <caption><h2>Purchased Items</h2></caption>
-        <tr>
-            <th>Sr</th>
-            <th>Product Name</th>
-            <th>HSN</th>
-            <th>Storage</th>
-            <th>Manufacturer</th>
-            <th>Qty</th>
-            <th>Free Qty</th>
-            <th>Unit</th>
-            <th>Batch</th>
-            <th>Exp date<br/>(MM/YY)</th>
-            <th>MRP</th>
-            <th>Rate</th>
-            <th>Disc<br/>%</th>
-            <th>Taxable</th>
-            <th>CGST<br/>%</th>
-            <th>CGST</th>
-            <th>SGST<br/>%</th>
-            <th>SGST</th>
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tbody class="appendHere">
-            <?php foreach ($data as $k => $value) { ?>
-            <tr class="rowline" onkeyup="get_history(this)" onfocus="get_history(this)" onclick="get_history(this)"  onmouseout="hide_history()">
-                    <td><span><?= $k + 1 ?></span>
-                        <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
-                    <td><input required="required" type="text" value="<?= $value['product_name'] ?>" name="product_name[]"></td>
-                    <td><input required="required"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:40px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['product_storage'] ?>" name="product_storage[]" style="width:60px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['product_manufacturer'] ?>" name="product_manufacturer[]" style="width:80px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['purchase_quantity'] ?>" name="purchase_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['purchase_free_quantity'] ?>" name="purchase_free_quantity[]"  style="width:30px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['purchase_unit'] ?>" name="purchase_unit[]" style="width:30px;"></td>
-                    <td><input required="required" type="text" value="<?= $value['purchase_batch'] ?>"  name="purchase_batch[]" style="width: 90px;"></td>
-                    <td><input required="required" type="text" value="<?= $value['purchase_expire_month'] ?>" name="purchase_expire_month[]" style="width: 20px;margin: 0;padding: 0;float: left;">
-                        <span style="margin: 0;padding: 0;float: left;">/</span>
-                        <input required="required" value="<?= $value['purchase_expire_year'] ?>" type="text" name="purchase_expire_year[]" style="width: 20px;margin: 0;padding: 0;float: left;"> </td>
-                    <td><input required="required" value="<?= $value['purchase_mrp'] ?>" type="text" name="purchase_mrp[]"  style="width: 50px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_rate'] ?>" type="text" name="purchase_rate[]" onkeyup="gst_calculation(this)"  style="width: 50px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_discount_percent'] ?>" type="text" name="purchase_discount_percent[]" onkeyup="gst_calculation(this)"  style="width: 25px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_taxable'] ?>" readonly="readonly" type="text" name="purchase_taxable[]" style="width: 50px;"> </td>
-                    <td><input required="required" value="<?= $value['purchase_cgst_percent'] ?>" type="text" name="purchase_cgst_percent[]"  onkeyup="gst_calculation(this)" style="width: 25px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_cgst'] ?>" readonly="readonly" type="text" name="purchase_cgst[]" style="width: 50px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_sgst_percent'] ?>" readonly="readonly" type="text" name="purchase_sgst_percent[]"  onkeyup="gst_calculation(this)" style="width: 25px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_sgst'] ?>" readonly="readonly" type="text" name="purchase_sgst[]" style="width: 50px;"></td>
-                    <td><input required="required" value="<?= $value['purchase_total'] ?>" readonly="readonly" type="text" name="purchase_total[]" style="width: 50px;"></td>
-                </tr>
-            <?php } ?>
+                        <div class="pur-form-group col-span-2">
+                            <label class="pur-form-label">Supplier Address <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-map-marker pur-input-icon"></i>
+                                <input required="required" type="text" autocomplete="off" name="supplier_address" value="<?= isset($data[0]['supplier_address']) ? htmlspecialchars($data[0]['supplier_address']) : '' ?>" class="pur-control" placeholder="Full address..." style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        </tbody>
-    </table>
-    <a href="javascript:void(0)" onclick="addmore()" onmouseover="hide_history()">Add More</a>
-    <table style="border: 1px solid black;margin-top: 75px;" onmouseover="hide_history()">
+            <!-- Card 2: Invoice & Reference Details -->
+            <div class="pur-card" style="margin-bottom: 0;">
+                <div class="pur-card-header">
+                    <h3 class="pur-card-title">
+                        <i class="fa fa-file-text-o"></i> Invoice & Bill Details
+                    </h3>
+                    <span style="font-size: 11px; color: var(--pur-text-muted);">Bill metadata</span>
+                </div>
+                <div class="pur-card-body">
+                    <div class="pur-form-grid">
+                        <div class="pur-form-group">
+                            <label class="pur-form-label">Supplier Invoice No <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-barcode pur-input-icon"></i>
+                                <input required="required" onkeyup="check_invoice()" onchange="check_invoice()" type="text" autocomplete="off" name="purchase_invoice" value="<?= isset($data[0]['purchase_invoice']) ? htmlspecialchars($data[0]['purchase_invoice']) : '' ?>" class="pur-control" placeholder="e.g. INV-2024-89" style="padding-left: 36px !important;" />
+                            </div>
+                            <span id="invoice_warning" style="display:none; color:#ef4444; font-size:11px; font-weight:600; margin-top:3px;">
+                                <i class="fa fa-exclamation-triangle"></i> Duplicate invoice detected!
+                            </span>
+                        </div>
 
-        <tr>
-            <th>Items</th>
-            <th>CGST</th>
-            <th>SGST</th>
-            <th>Total Gst</th>
-            <th>Grand Total</th>
-        </tr>
-        <tr>
-            <td class="totalItem">0</td>
-            <td class="totalCgst">0</td>
-            <td class="totalSgst">0</td>
-            <td class="totalgst">0</td>
-            <td class="totalAmount">0.00</td>
-        </tr>
-    </table>
-    <div class="form-actions" onmouseover="hide_history()">
-        <button type="submit" class="btn btn-primary">Save changes</button>
-        <button class="btn" onclick="goBack()">Cancel</button>
-    </div>
-</form>
+                        <div class="pur-form-group">
+                            <label class="pur-form-label">Purchase Date <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-calendar pur-input-icon"></i>
+                                <input required="required" type="text" autocomplete="off" name="purchase_date" value="<?= isset($data[0]['purchase_date']) ? date('d-M-Y', strtotime($data[0]['purchase_date'])) : date('d-M-Y') ?>" class="pur-control" style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
+
+                        <div class="pur-form-group col-span-2">
+                            <label class="pur-form-label">Purchase Entry Number <span class="req">*</span></label>
+                            <div class="pur-input-wrap">
+                                <i class="fa fa-hashtag pur-input-icon"></i>
+                                <input required="required" readonly="readonly" value="<?= isset($data[0]['purchase_entry_number']) ? htmlspecialchars($data[0]['purchase_entry_number']) : '' ?>" type="text" name="purchase_entry_number" class="pur-control" style="padding-left: 36px !important;" />
+                            </div>
+                        </div>
+
+                        <div class="pur-form-group col-span-2" style="background:#f8fafc; border:1px dashed #cbd5e1; border-radius:6px; padding:8px 12px; margin-top:2px;">
+                            <div style="display:flex; align-items:center; justify-content:space-between; font-size:11.5px; color:#64748b;">
+                                <span><i class="fa fa-keyboard-o" style="color:#6366f1;"></i> <strong>Keyboard Tip:</strong> Press <kbd style="background:#e2e8f0; color:#334155; padding:1px 5px; border-radius:3px;">Tab</kbd> on Total field to append a new row automatically.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Purchased Items Table Card -->
+        <div class="pur-card">
+            <div class="pur-card-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h3 class="pur-card-title">
+                        <i class="fa fa-list-alt"></i> Purchased Items
+                    </h3>
+                    <span class="pur-sticky-badge" style="background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0;">
+                        <span class="totalItem"><?= count($data) ?></span> item(s) listed
+                    </span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <button type="button" onclick="addmore()" class="btn-pur-add">
+                        <i class="fa fa-plus-circle"></i> Add Row
+                    </button>
+                </div>
+            </div>
+
+            <div class="pur-card-body" style="padding: 10px;">
+                <div class="pur-table-container">
+                    <table class="pur-items-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; min-width: 40px;">#</th>
+                                <th style="min-width: 220px; width: 220px; text-align: left !important;">Product Name</th>
+                                <th style="width: 65px; min-width: 65px;">HSN</th>
+                                <th style="width: 70px; min-width: 70px;">Storage</th>
+                                <th style="width: 75px; min-width: 75px;">Category</th>
+                                <th style="width: 55px; min-width: 55px;">Schedule</th>
+                                <th style="width: 110px; min-width: 110px;">Manufacturer</th>
+                                <th style="width: 50px; min-width: 50px;">Qty</th>
+                                <th style="width: 46px; min-width: 46px;">Free</th>
+                                <th style="width: 48px; min-width: 48px;">Unit</th>
+                                <th style="width: 75px; min-width: 75px;">Batch</th>
+                                <th style="width: 66px; min-width: 66px;">Exp (MM/YY)</th>
+                                <th style="width: 62px; min-width: 62px;">MRP (₹)</th>
+                                <th style="width: 65px; min-width: 65px;">Rate (₹)</th>
+                                <th style="width: 48px; min-width: 48px;">Disc %</th>
+                                <th style="width: 50px; min-width: 50px;">Bonus %</th>
+                                <th style="width: 72px; min-width: 72px;">Taxable</th>
+                                <th style="width: 48px; min-width: 48px;">CGST %</th>
+                                <th style="width: 62px; min-width: 62px;">CGST</th>
+                                <th style="width: 48px; min-width: 48px;">SGST %</th>
+                                <th style="width: 62px; min-width: 62px;">SGST</th>
+                                <th style="width: 78px; min-width: 78px;">Total (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="appendHere">
+                            <?php if (!empty($data)): ?>
+                                <?php foreach ($data as $k => $val): ?>
+                                    <tr class="rowline">
+                                        <td>
+                                            <div class="pur-row-actions">
+                                                <span class="pur-row-idx"><?= $k + 1 ?></span>
+                                                <button type="button" class="btn-remove-row" onclick="removeRow(this);" title="Remove Row"><i class="fa fa-trash"></i></button>
+                                            </div>
+                                        </td>
+                                        <td><input required="required" type="text" name="medicine_name[]" value="<?= htmlspecialchars($val['medicine_name']) ?>" class="pur-cell-input med-name-input" placeholder="Type medicine..." onfocus="get_history(this)" autocomplete="off"></td>
+                                        <td><input required="required" type="text" name="medicine_hsn[]" value="<?= htmlspecialchars($val['medicine_hsn']) ?>" class="pur-cell-input text-center"></td>
+                                        <td><input required="required" type="text" name="medicine_storage[]" value="<?= htmlspecialchars($val['medicine_storage']) ?>" class="pur-cell-input text-center"></td>
+                                        <td><input type="text" name="medicine_category[]" value="<?= htmlspecialchars($val['medicine_category']) ?>" class="pur-cell-input text-center"></td>
+                                        <td><input type="text" name="medicine_schedule[]" value="<?= htmlspecialchars($val['medicine_schedule']) ?>" class="pur-cell-input text-center"></td>
+                                        <td><input required="required" type="text" name="medicine_manufacturer[]" value="<?= htmlspecialchars($val['medicine_manufacturer']) ?>" class="pur-cell-input"></td>
+                                        <td><input required="required" type="number" name="purchase_quantity[]" step="0.01" min="0.01" oninput="gst_calculation(this)" value="<?= $val['purchase_quantity'] ?>" class="pur-cell-input text-right" style="font-weight:700;"></td>
+                                        <td><input required="required" type="number" name="purchase_free_quantity[]" step="0.01" value="<?= $val['purchase_free_quantity'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" type="number" name="medicine_unit[]" value="<?= isset($val['purchase_unit']) ? $val['purchase_unit'] : (isset($val['medicine_unit']) ? $val['medicine_unit'] : '10') ?>" class="pur-cell-input text-center"></td>
+                                        <td><input required="required" type="text" name="purchase_batch[]" value="<?= htmlspecialchars($val['purchase_batch']) ?>" pattern="^\S+$" class="pur-cell-input text-center"></td>
+                                        <td>
+                                            <div class="pur-exp-wrap">
+                                                <input required="required" type="text" name="purchase_expire_month[]" maxlength="2" placeholder="MM" value="<?= htmlspecialchars($val['purchase_expire_month']) ?>" class="pur-exp-input exp-m" oninput="handleExpMonth(this)">
+                                                <span class="pur-exp-sep">/</span>
+                                                <input required="required" type="text" name="purchase_expire_year[]" maxlength="2" placeholder="YY" value="<?= htmlspecialchars($val['purchase_expire_year']) ?>" class="pur-exp-input exp-y" oninput="handleExpYear(this)">
+                                            </div>
+                                        </td>
+                                        <td><input required="required" type="text" name="purchase_mrp[]" value="<?= $val['purchase_mrp'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" type="text" name="purchase_rate[]" oninput="gst_calculation(this)" value="<?= $val['purchase_rate'] ?>" class="pur-cell-input text-right" style="font-weight:700; color:#4338ca;"></td>
+                                        <td><input required="required" type="text" name="purchase_discount_percent[]" oninput="gst_calculation(this)" value="<?= $val['purchase_discount_percent'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" type="number" name="purchase_bonus[]" oninput="gst_calculation(this)" value="<?= isset($val['purchase_bonus']) ? $val['purchase_bonus'] : '0.00' ?>" step="0.01" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" readonly="readonly" type="text" name="purchase_taxable[]" value="<?= $val['purchase_taxable'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" type="text" name="purchase_cgst_percent[]" value="<?= $val['purchase_cgst_percent'] ?>" oninput="gst_calculation(this)" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" readonly="readonly" type="text" name="purchase_cgst[]" value="<?= $val['purchase_cgst'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" readonly="readonly" type="text" name="purchase_sgst_percent[]" value="<?= $val['purchase_sgst_percent'] ?>" oninput="gst_calculation(this)" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" readonly="readonly" type="text" name="purchase_sgst[]" value="<?= $val['purchase_sgst'] ?>" class="pur-cell-input text-right"></td>
+                                        <td><input required="required" readonly="readonly" type="text" name="purchase_total[]" value="<?= $val['purchase_total'] ?>" class="pur-cell-input text-right highlight-total"></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="margin-top: 10px; display: flex; align-items: center; justify-content: space-between;">
+                    <button type="button" onclick="addmore()" class="btn-pur-add">
+                        <i class="fa fa-plus-circle"></i> Add Another Medicine Row
+                    </button>
+                    <span style="font-size: 11px; color: var(--pur-text-muted);">
+                        <i class="fa fa-info-circle text-primary"></i> Expiring items (< 30 days) are highlighted in soft red.
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Financial Summary KPI Grid -->
+        <div class="pur-kpi-grid">
+            <div class="pur-kpi-card">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">Total Items</span>
+                    <span class="pur-kpi-value totalItem">0</span>
+                </div>
+                <div class="pur-kpi-icon" style="background:#eef2ff; color:#6366f1;">
+                    <i class="fa fa-cubes"></i>
+                </div>
+            </div>
+
+            <div class="pur-kpi-card">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">Taxable Amount</span>
+                    <span class="pur-kpi-value">₹<span class="totalTaxable">0.00</span></span>
+                </div>
+                <div class="pur-kpi-icon" style="background:#f0fdf4; color:#10b981;">
+                    <i class="fa fa-calculator"></i>
+                </div>
+            </div>
+
+            <div class="pur-kpi-card">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">CGST Total</span>
+                    <span class="pur-kpi-value">₹<span class="totalCgst">0.00</span></span>
+                </div>
+                <div class="pur-kpi-icon" style="background:#fef3c7; color:#d97706;">
+                    <i class="fa fa-percent"></i>
+                </div>
+            </div>
+
+            <div class="pur-kpi-card">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">SGST Total</span>
+                    <span class="pur-kpi-value">₹<span class="totalSgst">0.00</span></span>
+                </div>
+                <div class="pur-kpi-icon" style="background:#fef3c7; color:#d97706;">
+                    <i class="fa fa-percent"></i>
+                </div>
+            </div>
+
+            <div class="pur-kpi-card">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">Total GST Tax</span>
+                    <span class="pur-kpi-value">₹<span class="totalgst">0.00</span></span>
+                </div>
+                <div class="pur-kpi-icon" style="background:#ede9fe; color:#8b5cf6;">
+                    <i class="fa fa-bank"></i>
+                </div>
+            </div>
+
+            <div class="pur-kpi-card pur-kpi-grand">
+                <div class="pur-kpi-info">
+                    <span class="pur-kpi-label">Grand Total Payable</span>
+                    <span class="pur-kpi-value">₹<span class="totalAmount">0.00</span></span>
+                </div>
+                <div class="pur-kpi-icon" style="background:rgba(255,255,255,0.2); color:#ffffff;">
+                    <i class="fa fa-check-circle"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Floating Action Bar at Bottom -->
+        <div class="pur-sticky-bar">
+            <div class="pur-sticky-left">
+                <span class="pur-sticky-badge">
+                    <i class="fa fa-shopping-basket text-primary"></i> Items: <strong class="totalItem">0</strong>
+                </span>
+                <span class="pur-sticky-badge">
+                    <i class="fa fa-percent text-warning"></i> GST: ₹<strong class="totalgst">0.00</strong>
+                </span>
+                <span class="pur-sticky-badge" style="background:#ecfdf5; color:#065f46; border:1px solid #a7f3d0;">
+                    <i class="fa fa-money text-success"></i> Payable: ₹<strong class="totalAmount">0.00</strong>
+                </span>
+            </div>
+
+            <div class="pur-sticky-actions">
+                <button type="button" onclick="addmore()" class="btn-pur-secondary">
+                    <i class="fa fa-plus"></i> Add Row
+                </button>
+                <button type="button" onclick="goBack()" class="btn-pur-secondary">
+                    <i class="fa fa-times"></i> Cancel
+                </button>
+                <button type="submit" class="btn-pur-primary" onclick="return validateBeforeSubmit();">
+                    <i class="fa fa-save"></i> Update Purchase Entry
+                </button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
 <script>
-    var rowcount = <?= count($data) ?>;
-    function addmore() {
-        rowcount++;
-        var therow = " <tr class=\"rowline\" onkeyup=\"get_history(this)\" onfocus=\"get_history(this)\" onclick=\"get_history(this)\" onmouseout=\"hide_history()\">\r\n<td><span>" + rowcount + "<\/span>\n\
-<a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"><\/td>\r\n  \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_hsn[]\" style=\"width:40px;\"><\/td>\r\n      \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_storage[]\" style=\"width:60px;\"><\/td>\r\n      \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
-  <td><input required=\"required\"  type=\"number\" name=\"purchase_quantity[]\" onkeyup=\"gst_calculation(this)\" value=\"1\" style=\"width:40px;\"><\/td>\r\n    \n\
-  <td><input required=\"required\"  type=\"number\" name=\"purchase_free_quantity[]\"  value=\"0\" style=\"width:40px;\"><\/td>\r\n    \n\
-    <td><input required=\"required\"  type=\"number\" name=\"purchase_unit[]\" style=\"width:40px;\"><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"purchase_batch[]\" style=\"width: 90px;\"><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"purchase_expire_month[]\" style=\"width: 20px;margin: 0;padding: 0;float: left;\">\n\
-    <span style=\"margin: 0;padding: 0;float: left;\">/<\/span><input required=\"required\" type=\"text\" name=\"purchase_expire_year[]\" style=\"width: 20px;margin: 0;padding: 0;float: left;\"> <\/td>\r\n  \n\
-      <td><input required=\"required\" type=\"text\" name=\"purchase_mrp[]\" value=\"0.00\" style=\"width: 50px;\"><\/td>\r\n    \n\
-    <td><input required=\"required\" type=\"text\" name=\"purchase_rate[]\" onkeyup=\"gst_calculation(this)\"  value=\"0.00\" style=\"width: 50px;\"><\/td>\r\n      \n\
-  <td><input required=\"required\" type=\"text\" name=\"purchase_discount_percent[]\" onkeyup=\"gst_calculation(this)\" value=\"0\"  style=\"width: 25px;\"><\/td>\r\n     \n\
-    <td><input required=\"required\" readonly=\"readonly\" type=\"text\" name=\"purchase_taxable[]\" style=\"width: 50px;\"> <\/td>\r\n    \n\   \n\
-<td><input required=\"required\" type=\"text\" name=\"purchase_cgst_percent[]\" value=\"0\" onkeyup=\"gst_calculation(this)\" style=\"width: 25px;\"><\/td>\r\n    \n\
-   <td><input required=\"required\" readonly=\"readonly\" type=\"text\" name=\"purchase_cgst[]\" style=\"width: 50px;\"><\/td>\r\n    \n\
-   <td><input required=\"required\" readonly=\"readonly\" type=\"text\" name=\"purchase_sgst_percent[]\" value=\"0\" onkeyup=\"gst_calculation(this)\" style=\"width: 25px;\"><\/td>\r\n    \n\
-   <td><input required=\"required\" readonly=\"readonly\" type=\"text\" name=\"purchase_sgst[]\" style=\"width: 50px;\"><\/td>\r\n    \n\
-    <td><input required=\"required\" readonly=\"readonly\" type=\"text\" name=\"purchase_total[]\" style=\"width: 50px;\"><\/td>\r\n    <\/tr>";
-        $('.appendHere').append(therow);
-<?php if (isset($this->page_config['autocomplete'])): ?>
-            var autoComplete = $.parseJSON('<?= json_encode($this->page_config['autocomplete']); ?>');
-            $.each(autoComplete, function (targetField, value) {
-                $.each(value, function (model, fieldToSearch) {
-                    $('.rowline').find('[name^="' + targetField + '[]"]').autocomplete({
-                        /*source: page_url + "autocomplete/" + model + '/' + fieldToSearch,*/
-                        source: '/search.php?table=' + model + '&fieldToSearch=' + fieldToSearch,
-                        minLength: 1, select: function (event, ui) {
-                            targetRow = $(this).parents('tr');
-                            $.each(ui.item.complete, function (populate_field, populate_value) { //console.log(populate_field);
-                                $(targetRow).find('[name^="' + populate_field + '"').val(populate_value);
-                            });
-                        }
+    var rowcount = <?= !empty($data) ? count($data) : 0 ?>;
+    var baseAppUrl = '<?= base_url() ?>';
+    var searchUrl = baseAppUrl + 'search.php';
 
-
-
-                    });
-                });
-            });
-<?php endif; ?>
-        $("[name^='purchase_total[]']").focus(function () {
-            addmore();
-        });
-        $(".rowline:last").find('[name^="product_name[]"]').focus();
-
+    function goBack() {
+        if (confirm("Are you sure you want to discard your changes?")) {
+            window.location.href = '<?= console_url() ?>purchase';
+        }
     }
-    $("[name^='purchase_total[]']").focus(function () {
-        addmore();
-    });
-    $(".rowline:last").find('[name^="product_name[]"]').focus();
-    function removeRow(targetObj) {
-        $(targetObj).parents('.rowline').remove();
+
+    function reindexRows() {
+        var idx = 1;
+        $('.rowline').each(function () {
+            $(this).find('.pur-row-idx').text(idx);
+            idx++;
+        });
         calculateTotal();
     }
 
+    function removeRow(targetObj) {
+        if ($('.rowline').length <= 1) {
+            if (typeof toastr !== 'undefined') {
+                toastr.warning('At least one item row is required in the purchase entry.');
+            } else {
+                alert('At least one item row is required.');
+            }
+            return;
+        }
+        $(targetObj).closest('.rowline').remove();
+        reindexRows();
+    }
+
+    function addmore() {
+        rowcount++;
+        var therow = '<tr class="rowline">' +
+            '<td><div class="pur-row-actions">' +
+                '<span class="pur-row-idx">' + rowcount + '</span>' +
+                '<button type="button" class="btn-remove-row" onclick="removeRow(this);" title="Remove Row"><i class="fa fa-trash"></i></button>' +
+            '</div></td>' +
+            '<td><input required="required" type="text" name="medicine_name[]" class="pur-cell-input med-name-input" placeholder="Type medicine..." onfocus="get_history(this)" autocomplete="off"></td>' +
+            '<td><input required="required" type="text" name="medicine_hsn[]" class="pur-cell-input text-center"></td>' +
+            '<td><input required="required" type="text" name="medicine_storage[]" class="pur-cell-input text-center"></td>' +
+            '<td><input type="text" name="medicine_category[]" class="pur-cell-input text-center"></td>' +
+            '<td><input type="text" name="medicine_schedule[]" class="pur-cell-input text-center"></td>' +
+            '<td><input required="required" type="text" name="medicine_manufacturer[]" class="pur-cell-input"></td>' +
+            '<td><input required="required" type="number" name="purchase_quantity[]" step="0.01" min="0.01" oninput="gst_calculation(this)" value="1" class="pur-cell-input text-right" style="font-weight:700;"></td>' +
+            '<td><input required="required" type="number" name="purchase_free_quantity[]" step="0.01" value="0" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" type="number" name="medicine_unit[]" class="pur-cell-input text-center" value="10"></td>' +
+            '<td><input required="required" type="text" name="purchase_batch[]" pattern="^\\S+$" class="pur-cell-input text-center"></td>' +
+            '<td>' +
+                '<div class="pur-exp-wrap">' +
+                    '<input required="required" type="text" name="purchase_expire_month[]" maxlength="2" placeholder="MM" class="pur-exp-input exp-m" oninput="handleExpMonth(this)">' +
+                    '<span class="pur-exp-sep">/</span>' +
+                    '<input required="required" type="text" name="purchase_expire_year[]" maxlength="2" placeholder="YY" class="pur-exp-input exp-y" oninput="handleExpYear(this)">' +
+                '</div>' +
+            '</td>' +
+            '<td><input required="required" type="text" name="purchase_mrp[]" value="0.00" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" type="text" name="purchase_rate[]" oninput="gst_calculation(this)" value="0.00" class="pur-cell-input text-right" style="font-weight:700; color:#4338ca;"></td>' +
+            '<td><input required="required" type="text" name="purchase_discount_percent[]" oninput="gst_calculation(this)" value="0" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" type="number" name="purchase_bonus[]" oninput="gst_calculation(this)" value="0.00" step="0.01" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" readonly="readonly" type="text" name="purchase_taxable[]" value="0.00" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" type="text" name="purchase_cgst_percent[]" value="0" oninput="gst_calculation(this)" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" readonly="readonly" type="text" name="purchase_cgst[]" value="0.00" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" readonly="readonly" type="text" name="purchase_sgst_percent[]" value="0" oninput="gst_calculation(this)" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" readonly="readonly" type="text" name="purchase_sgst[]" value="0.00" class="pur-cell-input text-right"></td>' +
+            '<td><input required="required" readonly="readonly" type="text" name="purchase_total[]" value="0.00" class="pur-cell-input text-right highlight-total"></td>' +
+        '</tr>';
+
+        $('.appendHere').append(therow);
+        var $newRow = $('.rowline:last');
+
+        // Auto-add new row when pressing Tab on the total field
+        $newRow.find('input[name="purchase_total[]"]').on('keydown', function (e) {
+            if (e.which === 9 && !e.shiftKey) { // Tab key
+                e.preventDefault();
+                addmore();
+            }
+        });
+
+        reindexRows();
+        bindMedicineAutocomplete($newRow.find('.med-name-input'));
+        $newRow.find('input[name="medicine_name[]"]').focus();
+    }
+
+    // Centralized Autocomplete Delegation for Medicines (Works across loaded and new rows)
+    function bindMedicineAutocomplete($el) {
+        if ($el.data('autocomplete-bound')) return;
+        $el.data('autocomplete-bound', true);
+
+        var ac = $el.autocomplete({
+            source: searchUrl + '?table=medicines&fieldToSearch=medicine_name',
+            minLength: 1,
+            select: function (event, ui) {
+                var targetRow = $(this).closest('tr');
+                if (ui.item && ui.item.complete) {
+                    var c = ui.item.complete;
+                    targetRow.find('input[name="medicine_name[]"]').val(ui.item.value || c.medicine_name);
+                    targetRow.find('input[name="medicine_hsn[]"]').val(c.medicine_hsn || '');
+                    targetRow.find('input[name="medicine_storage[]"]').val(c.medicine_storage || '');
+                    targetRow.find('input[name="medicine_category[]"]').val(c.medicine_category || '');
+                    targetRow.find('input[name="medicine_schedule[]"]').val(c.medicine_schedule || '');
+                    targetRow.find('input[name="medicine_manufacturer[]"]').val(c.medicine_manufacturer || '');
+                    targetRow.find('input[name="medicine_unit[]"]').val(c.medicine_unit || '10');
+                    if (c.medicine_gst && parseFloat(c.medicine_gst) > 0) {
+                        var halfGst = (parseFloat(c.medicine_gst) / 2).toFixed(2);
+                        targetRow.find('input[name="purchase_cgst_percent[]"]').val(halfGst);
+                        targetRow.find('input[name="purchase_sgst_percent[]"]').val(halfGst);
+                    }
+                    gst_calculation(targetRow.find('input[name="purchase_rate[]"]'));
+                    setTimeout(function() {
+                        targetRow.find('input[name="purchase_quantity[]"]').focus().select();
+                    }, 50);
+                }
+                return false;
+            }
+        });
+
+        var widget = ac.data("ui-autocomplete") || ac.data("autocomplete");
+        if (widget) {
+            widget._renderItem = function(ul, item) {
+                var c = item.complete || {};
+                var subParts = [];
+                if (c.medicine_manufacturer) subParts.push(c.medicine_manufacturer);
+                if (c.medicine_storage) subParts.push('Rack: ' + c.medicine_storage);
+                if (c.medicine_unit) subParts.push('Pack: ' + c.medicine_unit);
+                var subHtml = subParts.length > 0 ? '<div style="font-size: 11px; color: #64748b; margin-top: 2px;">' + subParts.join(' &bull; ') + '</div>' : '';
+                return $("<li>")
+                    .append('<div style="padding: 6px 12px; cursor: pointer; border-bottom: 1px solid #f1f5f9;"><div style="font-weight: 700; color: #0f172a; font-size: 12px;">' + item.label + '</div>' + subHtml + '</div>')
+                    .appendTo(ul);
+            };
+        }
+    }
+
+    $(document).on('focus', '.med-name-input', function () {
+        bindMedicineAutocomplete($(this));
+    });
+
+    // Manufacturer Autocomplete
+    $(document).on('focus', 'input[name="medicine_manufacturer[]"]', function () {
+        if ($(this).data('autocomplete-bound')) return;
+        $(this).data('autocomplete-bound', true);
+        $(this).autocomplete({
+            source: searchUrl + '?table=medicines&fieldToSearch=medicine_manufacturer',
+            minLength: 1
+        });
+    });
+
+    // Batch Autocomplete
+    $(document).on('focus', 'input[name="purchase_batch[]"]', function () {
+        if ($(this).data('autocomplete-bound')) return;
+        $(this).data('autocomplete-bound', true);
+        $(this).autocomplete({
+            source: searchUrl + '?table=purchases&fieldToSearch=purchase_batch',
+            minLength: 1
+        });
+    });
+
+    function handleExpMonth(elem) {
+        var val = $(elem).val().replace(/[^0-9]/g, '');
+        $(elem).val(val);
+        if (parseInt(val, 10) > 12) {
+            $(elem).val('12');
+            val = '12';
+        }
+        if (val.length === 2) {
+            $(elem).closest('.pur-exp-wrap').find('.exp-y').focus().select();
+        }
+        checkRowExpiry($(elem).closest('tr'));
+    }
+
+    function handleExpYear(elem) {
+        var val = $(elem).val().replace(/[^0-9]/g, '');
+        $(elem).val(val);
+        checkRowExpiry($(elem).closest('tr'));
+    }
+
+    function checkRowExpiry($row) {
+        var m = $row.find('.exp-m').val();
+        var y = $row.find('.exp-y').val();
+        if (m && y && m.length > 0 && y.length > 0) {
+            if (isExpiryLessThan30Days(m, y)) {
+                $row.addClass('expiry-warning');
+            } else {
+                $row.removeClass('expiry-warning');
+            }
+        } else {
+            $row.removeClass('expiry-warning');
+        }
+    }
+
+    function isExpiryLessThan30Days(monthStr, yearStr) {
+        var month = parseInt(monthStr, 10);
+        var year = parseInt(yearStr, 10);
+        if (!month || !year) return false;
+        if (year < 100) year += 2000;
+        var expiryDate = new Date(year, month, 0); // last day of that month
+        var today = new Date();
+        var diffDays = (expiryDate - today) / (1000 * 60 * 60 * 24);
+        return diffDays < 30;
+    }
+
     function gst_calculation(targetObject) {
-        var cgst = parseFloat($(targetObject).parent().parent().find('[name^="purchase_cgst_percent[]"]').val());
-        $(targetObject).parent().parent().find('[name^="purchase_sgst_percent[]"]').val(cgst);// as gst rates are same
-        var sgst = parseFloat($(targetObject).parent().parent().find('[name^="purchase_sgst_percent[]"]').val());
-        var rate = parseFloat($(targetObject).parent().parent().find('[name^="purchase_rate[]"]').val());
-        var qty = parseFloat($(targetObject).parent().parent().find('[name^="purchase_quantity[]"]').val());
-        var discount_percent = parseFloat($(targetObject).parent().parent().find('[name^="purchase_discount_percent[]"]').val());
+        var $row = $(targetObject).closest('tr');
+        var cgst = parseFloat($row.find('input[name="purchase_cgst_percent[]"]').val()) || 0;
+        $row.find('input[name="purchase_sgst_percent[]"]').val(cgst); // SGST matches CGST
+        var sgst = cgst;
+        var rate = parseFloat($row.find('input[name="purchase_rate[]"]').val()) || 0;
+        var qty = parseFloat($row.find('input[name="purchase_quantity[]"]').val()) || 0;
+        var discount_percent = parseFloat($row.find('input[name="purchase_discount_percent[]"]').val()) || 0;
+        var purchase_bonus = parseFloat($row.find('input[name="purchase_bonus[]"]').val()) || 0;
+
         var total = (rate * qty);
         var total_discount = (total * discount_percent / 100);
         var taxable_cost = (total - total_discount);
         var total_cgst = (taxable_cost * cgst / 100);
         var total_sgst = (taxable_cost * sgst / 100);
-        var grandtotal = total_sgst + total_cgst + taxable_cost;
-        console.log(grandtotal);
-        $(targetObject).parent().parent().find('[name^="purchase_taxable[]"]').val(taxable_cost.toFixed(2));
-        $(targetObject).parent().parent().find('[name^="purchase_cgst[]"]').val(total_cgst.toFixed(2));
-        $(targetObject).parent().parent().find('[name^="purchase_sgst[]"]').val(total_sgst.toFixed(2));
-        $(targetObject).parent().parent().find('[name^="purchase_total[]"]').val(grandtotal.toFixed(2));
+        var bonus_total = (total_sgst + total_cgst + taxable_cost) * (purchase_bonus / 100);
+        var grandtotal = (total_sgst + total_cgst + taxable_cost) - bonus_total;
+
+        $row.find('input[name="purchase_taxable[]"]').val(taxable_cost.toFixed(2));
+        $row.find('input[name="purchase_cgst[]"]').val(total_cgst.toFixed(2));
+        $row.find('input[name="purchase_sgst[]"]').val(total_sgst.toFixed(2));
+        $row.find('input[name="purchase_total[]"]').val(grandtotal.toFixed(2));
+
         calculateTotal();
     }
+
     function calculateTotal() {
         var totalItem = $('.rowline').length;
+        var totalTaxable = 0;
         var totalCgst = 0;
         var totalSgst = 0;
         var totalTotal = 0;
+
         $('.rowline').each(function () {
-            totalCgst += parseFloat($(this).find('[name="purchase_cgst[]"]').val());
-            totalSgst += parseFloat($(this).find('[name="purchase_sgst[]"]').val());
-            totalTotal += parseFloat($(this).find('[name="purchase_total[]"]').val());
+            totalTaxable += parseFloat($(this).find('input[name="purchase_taxable[]"]').val()) || 0;
+            totalCgst += parseFloat($(this).find('input[name="purchase_cgst[]"]').val()) || 0;
+            totalSgst += parseFloat($(this).find('input[name="purchase_sgst[]"]').val()) || 0;
+            totalTotal += parseFloat($(this).find('input[name="purchase_total[]"]').val()) || 0;
         });
-        $('.totalItem').html(totalItem.toFixed(2));
+
+        $('.totalItem').html(totalItem);
+        $('.totalTaxable').html(totalTaxable.toFixed(2));
         $('.totalCgst').html(totalCgst.toFixed(2));
         $('.totalSgst').html(totalSgst.toFixed(2));
         $('.totalgst').html((totalSgst + totalCgst).toFixed(2));
         $('.totalAmount').html(totalTotal.toFixed(2));
     }
 
-    $(document).ready(function () {
-        calculateTotal();
-        setTimeout(function () {
-            $('.alert').remove()
-        }, '2000');
-        $("[name='purchase_date']").datepicker();
-        $("[name='purchase_date']").datepicker("option", "dateFormat", 'dd-MM-yy');
-<?php if (isset($this->page_config['autocomplete'])): ?>
-            var autoComplete = $.parseJSON('<?= json_encode($this->page_config['autocomplete']); ?>');
-            $.each(autoComplete, function (targetField, value) {
-                $.each(value, function (model, fieldToSearch) {
-                    $('[name="' + targetField + '"]').autocomplete({
-                        /*source: page_url + "autocomplete/" + model + '/' + fieldToSearch,*/
-                        source: '/search.php?table=' + model + '&fieldToSearch=' + fieldToSearch,
-                        minLength: 1, select: function (event, ui) {
-                            $.each(ui.item.complete, function (populate_field, populate_value) {
-                                $('[name="' + populate_field + '"]').val(populate_value);
-                            });
-                        }
+    function check_invoice() {
+        var inv = $('input[name="purchase_invoice"]').val();
+        var supp = $('input[name="supplier_name"]').val();
+        if (!inv || inv.trim() === '') {
+            $('#invoice_warning').hide();
+            return;
+        }
+        var targetUrl = (typeof page_url !== 'undefined' ? page_url : '<?= console_url() ?>purchase/') + 'check_duplicate_invoice';
+        $.post(targetUrl, {
+            purchase_invoice: inv,
+            supplier_name: supp
+        }, function (resp) {
+            if (resp && resp.invoice_count > 0) {
+                $('#invoice_warning').fadeIn(150);
+            } else {
+                $('#invoice_warning').fadeOut(150);
+            }
+        }, 'json');
+    }
 
-                    });
-                });
-            });
-<?php endif; ?>
-    });
-    function get_history(targetObj){
-               
-        $.post('/console/purchase/purchase_history',{product:$(targetObj).find('[name^="product_name[]"]').val()},function(resp){
-             $('#history').html('');
-        $('#history').html(resp);
+    function get_history(targetObj) {
+        var medName = $(targetObj).val();
+        if (!medName || medName.trim().length < 2) return;
+        $.post('<?= console_url() ?>purchase/purchase_history', { medicine: medName }, function (resp) {
+            if (resp && resp.trim() !== '') {
+                $('#history_content').html(resp);
+                $('#history_modal').fadeIn(200);
+            }
         });
     }
-    function hide_history(){
-           $('#history').html('');
+
+    function hide_history() {
+        $('#history_modal').fadeOut(150);
     }
-    function saveTheData(targetObj) {
-        $.post(page_url + 'edit_detail', $(targetObj).serialize(), function (resp) {
-            console.log(resp);
+
+    $(document).keyup(function(e) {
+        if (e.keyCode === 27) { // Escape key closes history
+            hide_history();
+        }
+    });
+
+    function validateBeforeSubmit() {
+        if ($('.rowline').length === 0) {
+            if (typeof toastr !== 'undefined') {
+                toastr.error('Please add at least one medicine item before saving.');
+            } else {
+                alert('Please add at least one medicine item before saving.');
+            }
             return false;
-        })
-        return false;
-    }    
-    
+        }
+        return true;
+    }
+
+    $(document).ready(function () {
+        // Initialize Datepicker
+        if ($.fn.datepicker) {
+            $("[name='purchase_date']").datepicker({
+                dateFormat: 'dd-M-yy',
+                changeMonth: true,
+                changeYear: true
+            });
+        }
+
+        // Supplier Autocomplete
+        var suppAc = $('input[name="supplier_name"]').autocomplete({
+            source: searchUrl + '?table=suppliers&fieldToSearch=supplier_name',
+            minLength: 1,
+            select: function (event, ui) {
+                if (ui.item && ui.item.complete) {
+                    var c = ui.item.complete;
+                    $('input[name="supplier_name"]').val(ui.item.value || c.supplier_name);
+                    if (c.supplier_address) $('input[name="supplier_address"]').val(c.supplier_address);
+                    if (c.supplier_gst) $('input[name="supplier_gst"]').val(c.supplier_gst);
+                    if (c.supplier_contact) $('input[name="supplier_contact"]').val(c.supplier_contact);
+                    check_invoice();
+                    setTimeout(function() {
+                        $('input[name="purchase_invoice"]').focus();
+                    }, 50);
+                }
+                return false;
+            }
+        });
+
+        var suppWidget = suppAc.data("ui-autocomplete") || suppAc.data("autocomplete");
+        if (suppWidget) {
+            suppWidget._renderItem = function(ul, item) {
+                var c = item.complete || {};
+                var subParts = [];
+                if (c.supplier_contact) subParts.push('Tel: ' + c.supplier_contact);
+                if (c.supplier_gst) subParts.push('GST: ' + c.supplier_gst);
+                var subHtml = subParts.length > 0 ? '<div style="font-size: 11px; color: #64748b; margin-top: 2px;">' + subParts.join(' &bull; ') + '</div>' : '';
+                return $("<li>")
+                    .append('<div style="padding: 6px 12px; cursor: pointer; border-bottom: 1px solid #f1f5f9;"><div style="font-weight: 700; color: #0f172a; font-size: 12px;">' + item.label + '</div>' + subHtml + '</div>')
+                    .appendTo(ul);
+            };
+        }
+
+        // Bind autocomplete on already rendered medicine rows
+        $('.rowline').each(function () {
+            bindMedicineAutocomplete($(this).find('.med-name-input'));
+            checkRowExpiry($(this));
+        });
+
+        // Calculate initial total
+        calculateTotal();
+    });
 </script>

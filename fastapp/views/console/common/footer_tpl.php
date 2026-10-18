@@ -136,7 +136,7 @@
 <script src="<?= cdn_url(); ?>js/jquery.cookie.js"></script>
 
 <!-- FastApp Application Console Scripts -->
-<script src="<?= cdn_url(); ?>assets/custom/fastapp.js"></script>
+<script src="<?= cdn_url(); ?>assets/custom/fastapp.js?v=<?= time() ?>"></script>
 
 <script type="text/javascript">
     $(function () {

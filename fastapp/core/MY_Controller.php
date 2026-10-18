@@ -113,32 +113,50 @@ class MY_Controller extends CI_Controller
      *  */
     private function is_capabale()
     {
-        if ($this->current_user_session['user_type_super'] == 1) {
+        $is_admin = (!empty($this->current_user_session['user_type_super']) && $this->current_user_session['user_type_super'] == 1) || (isset($this->current_user_session['user_type_id']) && $this->current_user_session['user_type_id'] == 1);
+        if ($is_admin) {
             return true;
         }
+
         $controller = empty($this->uri->segment(2)) ? 'dashboard' : $this->uri->segment(2);
-        $capability_list = json_decode(get_option('capability_' . $controller), true);
-        $this->allowed_action = array_keys($capability_list['capability'][$controller][$this->current_user_session['user_type_id']]);
+        $verify_capable_action = isset($this->uri->segments[3]) ? $this->uri->segments[3] : (isset($this->uri->rsegments[2]) ? $this->uri->rsegments[2] : 'index');
+
+        // Allow public access actions (e.g., login, forgot_password)
+        if (isset($this->publicAccess) && is_array($this->publicAccess) && in_array($verify_capable_action, $this->publicAccess)) {
+            return true;
+        }
+
+        if ($verify_capable_action == "login" || $verify_capable_action == "logout") {
+            return true;
+        }
+
+        // Management controllers are strictly for admin only
+        $mgmt_controllers = array('user', 'user_type', 'activity_log', 'module', 'permission', 'capability', 'option', 'menu');
+        if (in_array($controller, $mgmt_controllers)) {
+            $message = 'Access Denied: Only administrators have permission to access the management section.<br><br><a href="' . console_url('dashboard') . '" style="display:inline-block;padding:8px 16px;background:#6366f1;color:#fff;border-radius:6px;text-decoration:none;">Return to Dashboard</a>';
+            show_error($message, '403', 'Not Authorised - Admin Only');
+            return FALSE;
+        }
+
+        // Allowed dashboard for all authenticated users
+        if ($controller == "dashboard") {
+            return TRUE;
+        }
+
         if (isset($this->uri->segments[1]) && $this->uri->segments[1] == 'console') {
-            $verify_capable_action = isset($this->uri->segments[3]) ? $this->uri->segments[3] : $this->uri->rsegments[2];
-
-            if (in_array($verify_capable_action, $this->publicAccess)) {
-                return true;
+            if ($verify_capable_action == 'capability_list') {
+                return false;
             }
 
-            if ($verify_capable_action == 'capability_list')
-                return true;
-
-            if ($capability_list['capability'][$controller][$this->current_user_session['user_type_id']][$verify_capable_action] == 'true') {
-                return TRUE;
+            $capability_list = json_decode(get_option('capability_' . $controller), true);
+            $user_type_id = isset($this->current_user_session['user_type_id']) ? $this->current_user_session['user_type_id'] : 0;
+            if (!empty($capability_list['capability'][$controller][$user_type_id])) {
+                $this->allowed_action = array_keys($capability_list['capability'][$controller][$user_type_id]);
             }
-            if ($controller == "dashboard" || $verify_capable_action == "login" || $verify_capable_action == "logout") {
-                //allowed dashboard for all users
+
+            if (!empty($capability_list['capability'][$controller][$user_type_id][$verify_capable_action]) && $capability_list['capability'][$controller][$user_type_id][$verify_capable_action] == 'true') {
                 return TRUE;
             } else {
-                // pr($capability_list['capability']);
-                // pr($controller);
-                // pr($verify_capable_action);
                 $message = '<script>window.location="' . console_url() . 'user/login"</script>Please Wait...';
                 show_error($message, '403', 'Not Authorised!! Please wait...');
 
@@ -153,39 +171,57 @@ class MY_Controller extends CI_Controller
     {
         $this->page_config['use_dropdown_columns_options']['capability_user_type'] = $this->user_types_model->get_list_for_dropdown('user_type_name');
         $this->page_config['use_dropdown_columns_options']['capability_controller'] = $this->get_controllers();
-        if (!$this->current_user_session['user_type_super']) {
+        $is_admin = (!empty($this->current_user_session['user_type_super']) && $this->current_user_session['user_type_super'] == 1) || (isset($this->current_user_session['user_type_id']) && $this->current_user_session['user_type_id'] == 1);
+        if (!$is_admin) {
             $message = '<script>window.location="' . console_url() . 'user/login"</script>Please Wait...';
             show_error($message, '403', 'Not Authorised!! Please wait...');
         }
+
+        $target_controller = $this->input->get('controller') ? clean($this->input->get('controller')) : $this->uri->segment(2);
+
         if ($this->input->post()) {
             $postedData = $this->input->post();
-            set_option('capability_' . key($postedData['capability']), json_encode($postedData));
+            if (!empty($postedData['capability'])) {
+                $postedCtrl = key($postedData['capability']);
+                set_option('capability_' . $postedCtrl, json_encode($postedData));
+                $target_controller = $postedCtrl;
+            }
         }
-        $choosenData = json_decode(get_option('capability_' . $this->uri->segment(2)), true);
-        $this->render(array('choosenData' => $choosenData), 'capability_list_tpl');
-        //pr($viewData);
-        // $this->render(array('viewData' => $viewData));
+        $choosenData = json_decode(get_option('capability_' . $target_controller), true);
+        $this->render(array(
+            'choosenData' => $choosenData,
+            'target_controller' => $target_controller,
+            'available_controllers' => $this->get_controllers()
+        ), 'capability_list_tpl');
     }
 
     private function get_controllers()
     {
-        /*         * default controllers* */
-        $files = get_dir_file_info(APPPATH . 'controllers', FALSE);
-        $modules = $this->get_modules();
+        /* default controllers */
+        $files = get_dir_file_info(APPPATH . 'controllers/console', FALSE) ?: array();
+        $baseFiles = get_dir_file_info(APPPATH . 'controllers', FALSE) ?: array();
+        $files = array_merge($files, $baseFiles);
 
-        foreach ($modules as $module) {
-            if ($module != 'Default')
-                $files = array_merge($files, get_dir_file_info(ROOTPATH . 'modules/' . $module . '/controllers', FALSE));
-        }
-        $controllers = NULL;
-        // Loop through file names removing .php extension
-        foreach (array_keys($files) as $file) {
-            if ($file != 'index.html') {
-                $controller = str_replace(EXT, '', $file);
-                $controllers[$controller] = $controller;
+        $modules = $this->get_modules();
+        if (!empty($modules)) {
+            foreach ($modules as $module) {
+                if ($module != 'Default') {
+                    $mConsole = get_dir_file_info(ROOTPATH . 'modules/' . $module . '/controllers/console', FALSE) ?: array();
+                    $mRoot = get_dir_file_info(ROOTPATH . 'modules/' . $module . '/controllers', FALSE) ?: array();
+                    $files = array_merge($files, $mConsole, $mRoot);
+                }
             }
         }
-
+        $controllers = array();
+        if (!empty($files)) {
+            foreach (array_keys($files) as $file) {
+                if ($file != 'index.html' && strpos($file, '.php') !== false) {
+                    $controller = str_replace('.php', '', $file);
+                    $controllers[$controller] = $controller;
+                }
+            }
+        }
+        ksort($controllers);
         return $controllers;
     }
 
@@ -877,18 +913,37 @@ class MY_Controller extends CI_Controller
     {
         $config = $this->auto_fieldtype_detect(NULL);
         $posted = $this->input->post();
-        $likeCondition = NULL;
-        if (isset($config['use_status_columns'])) {
+        if (empty($posted) || !is_array($posted)) {
+            return NULL;
+        }
+        unset($posted['dummy'], $posted['load_add_entry'], $posted['entry'], $posted['search']);
+
+        if (isset($config['use_status_columns']) && is_array($config['use_status_columns'])) {
             foreach ($config['use_status_columns'] as $statusColumn) {
-                unset($posted[$statusColumn]); //$posted[$statusColumn] = isset($posted[$statusColumn]) ? 1 : 0;
+                unset($posted[$statusColumn]);
             }
         }
+
+        // Validate that fields actually belong to the table or searchFields
+        $validFields = array();
+        if (isset($this->page_config['searchFields']) && !empty($this->page_config['searchFields'])) {
+            $sf = is_array($this->page_config['searchFields']) ? $this->page_config['searchFields'] : explode(',', $this->page_config['searchFields']);
+            $validFields = array_map('trim', $sf);
+        }
+        if (isset($this->targetModel) && isset($this->{$this->targetModel})) {
+            $fieldList = $this->{$this->targetModel}->get_field_list();
+            if (!empty($fieldList) && is_array($fieldList)) {
+                $tableCols = array_keys($fieldList[0]);
+                $validFields = !empty($validFields) ? array_merge($validFields, $tableCols) : $tableCols;
+            }
+        }
+
         foreach ($posted as $k => $p) {
-            if (empty($p)) {
+            if ($p === '' || $p === null || (!empty($validFields) && !in_array($k, $validFields))) {
                 unset($posted[$k]);
             }
         }
-        return $posted;
+        return !empty($posted) ? $posted : NULL;
     }
 
     public function chooseUpload()

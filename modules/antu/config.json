@@ -429,8 +429,41 @@
             "menu_link": "activity_log",
             "menu_hint": "System and User Audit Activity Logs",
             "menu_icon_class": "icon icon-black icon-clock",
-            "menu_user_type_id": 2,
-            "user_type_ID": 2,
+            "menu_user_type_id": 1,
+            "user_type_ID": 1,
+            "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "module",
+            "menu_name": "Modules",
+            "menu_parent_id": "1",
+            "menu_link": "module",
+            "menu_hint": "System Modules Management",
+            "menu_icon_class": "icon icon-black icon-folder",
+            "menu_user_type_id": 1,
+            "user_type_ID": 1,
+            "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "permission",
+            "menu_name": "Permissions",
+            "menu_parent_id": "1",
+            "menu_link": "permission",
+            "menu_hint": "User Access Permissions",
+            "menu_icon_class": "icon icon-black icon-key",
+            "menu_user_type_id": 1,
+            "user_type_ID": 1,
+            "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "capability",
+            "menu_name": "Capabilities",
+            "menu_parent_id": "1",
+            "menu_link": "capability",
+            "menu_hint": "Role Capabilities and Permissions Matrix",
+            "menu_icon_class": "icon icon-black icon-locked",
+            "menu_user_type_id": 1,
+            "user_type_ID": 1,
             "user_type_name": "admin"
         }
     ]

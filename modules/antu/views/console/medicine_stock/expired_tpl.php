@@ -128,6 +128,22 @@
     }
 
     $(document).ready(function() {
+        var expTimer = null;
+        $('#medicine_name').on('input keyup search', function(e) {
+            if (e.which === 13 || e.keyCode === 13) {
+                e.preventDefault();
+                clearTimeout(expTimer);
+                pageCount = 1;
+                search();
+                return false;
+            }
+            clearTimeout(expTimer);
+            expTimer = setTimeout(function() {
+                pageCount = 1;
+                search();
+            }, 250);
+        });
+
         $("#searchform").submit(function() {
             pageCount = 1;
             search();

@@ -71,10 +71,16 @@ usort($topNavTree, function($a, $b) use ($orderWeights) {
 
 $cur_seg2 = $this->uri->segment(2);
 $cur_seg3 = $this->uri->segment(3);
+
+$current_user_session = !empty($current_user_session) ? $current_user_session : $this->session->userdata('current_user_session');
+$is_admin = (!empty($current_user_session['user_type_super']) && $current_user_session['user_type_super'] == 1) || (isset($current_user_session['user_type_id']) && $current_user_session['user_type_id'] == 1);
 ?>
 <div class="top-header-navigation-wrapper hidden-xs">
     <ul class="nav navbar-nav top-med-nav">
         <?php foreach ($topNavTree as $rootItem): 
+            if (!$is_admin && ($rootItem['menu_ID'] == '1' || strtolower($rootItem['menu_name']) == 'management')) {
+                continue;
+            }
             $rootIcon = getMenuFAIcon($rootItem['menu_icon_class'], $rootItem['menu_ID']);
             $hasChildren = !empty($rootItem['children']);
         ?>

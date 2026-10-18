@@ -2,29 +2,23 @@
 
     <?php
     $config['num_links'] = 2;
-
-    $config['cur_tag_open'] = '<li><a class="active" href="#">';
+    $config['cur_tag_open'] = '<li class="active ss-page-item"><a href="javascript:void(0);" class="active">';
     $config['cur_tag_close'] = '</a></li>';
-
-    $config['num_tag_open'] = '<li>';
+    $config['num_tag_open'] = '<li class="ss-page-item">';
     $config['num_tag_close'] = '</li>';
-
-    $config['prev_link'] = '&lsaquo; Previous';
-
-    $config['next_link'] = 'Next &rsaquo;';
-    $config['next_tag_open'] = '<li>';
-    $config['next_tag_close'] = '</li>';
-
-
-    $config['last_link'] = 'Last &raquo;';
-    $config['last_tag_open'] = '<li>';
-    $config['last_tag_close'] = '</li>';
-
-    $config['first_link'] = '&laquo; First';
-    $config['first_tag_open'] = '<li>';
+    $config['first_link'] = '<i class="fa fa-angle-double-left"></i> First';
+    $config['first_tag_open'] = '<li class="ss-page-item first">';
     $config['first_tag_close'] = '</li>';
-
-    $config['full_tag_open'] = '<ul>';
+    $config['prev_link'] = '<i class="fa fa-angle-left"></i> Prev';
+    $config['prev_tag_open'] = '<li class="ss-page-item prev">';
+    $config['prev_tag_close'] = '</li>';
+    $config['next_link'] = 'Next <i class="fa fa-angle-right"></i>';
+    $config['next_tag_open'] = '<li class="ss-page-item next">';
+    $config['next_tag_close'] = '</li>';
+    $config['last_link'] = 'Last <i class="fa fa-angle-double-right"></i>';
+    $config['last_tag_open'] = '<li class="ss-page-item last">';
+    $config['last_tag_close'] = '</li>';
+    $config['full_tag_open'] = '<ul class="pagination ss-pagination">';
     $config['full_tag_close'] = '</ul>';
 
     $config = array_merge($config, $table_meta['config']);
@@ -214,10 +208,9 @@
                                                     <span style="cursor: pointer; width: 100%; display: block; min-height: 32px; border-radius: 4px; vertical-align: middle; background-color: wheat;" relId="<?= $table_tr[$config['tablePrimaryKey']]; ?>" relfield = "<?= $t_key ?>" onclick="quickEdit(this)" id="<?= $t_key . '-' . $table_tr[$config['tablePrimaryKey']] ?>" title="Click To Quick Edit"   style="cursor: pointer">
                                                         <?= strip_tags($table_td) ?>
                                                     </span>
-                                                    <? } else{?>
+                                                    <?php } else { ?>
                                                          <?= strip_tags($table_td); ?>
-                                                    <?}
-                                                    
+                                                    <?php } 
                                                     } ?>
                                                 </td>
 

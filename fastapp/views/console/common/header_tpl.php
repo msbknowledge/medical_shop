@@ -27,7 +27,7 @@
 
     <!-- jQuery & Core FastApp Scripts -->
     <script src="<?= cdn_url(); ?>assets/custom/jquery.min.js"></script>
-    <script src="<?= cdn_url(); ?>assets/custom/fastapp.js"></script>
+    <script src="<?= cdn_url(); ?>assets/custom/fastapp.js?v=<?= time() ?>"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
 
     <!-- Favicon -->

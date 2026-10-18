@@ -1,20 +1,22 @@
 <div class="table_view_wrapper">
     <?php
     $config['num_links'] = 2;
-    $config['cur_tag_open'] = '<li class="active"><a href="#">';
+    $config['cur_tag_open'] = '<li class="active ss-page-item"><a href="javascript:void(0);" class="active">';
     $config['cur_tag_close'] = '</a></li>';
-    $config['num_tag_open'] = '<li>';
+    $config['num_tag_open'] = '<li class="ss-page-item">';
     $config['num_tag_close'] = '</li>';
-    $config['prev_link'] = '&lsaquo; Previous';
-    $config['next_link'] = 'Next &rsaquo;';
-    $config['next_tag_open'] = '<li>';
-    $config['next_tag_close'] = '</li>';
-    $config['last_link'] = 'Last &raquo;';
-    $config['last_tag_open'] = '<li>';
-    $config['last_tag_close'] = '</li>';
-    $config['first_link'] = '&laquo; First';
-    $config['first_tag_open'] = '<li>';
+    $config['first_link'] = '<i class="fa fa-angle-double-left"></i> First';
+    $config['first_tag_open'] = '<li class="ss-page-item first">';
     $config['first_tag_close'] = '</li>';
+    $config['prev_link'] = '<i class="fa fa-angle-left"></i> Prev';
+    $config['prev_tag_open'] = '<li class="ss-page-item prev">';
+    $config['prev_tag_close'] = '</li>';
+    $config['next_link'] = 'Next <i class="fa fa-angle-right"></i>';
+    $config['next_tag_open'] = '<li class="ss-page-item next">';
+    $config['next_tag_close'] = '</li>';
+    $config['last_link'] = 'Last <i class="fa fa-angle-double-right"></i>';
+    $config['last_tag_open'] = '<li class="ss-page-item last">';
+    $config['last_tag_close'] = '</li>';
     $config['full_tag_open'] = '<ul class="pagination ss-pagination">';
     $config['full_tag_close'] = '</ul>';
     $config['base_url'] = base_url() . $this->uri->segment(1) . '/' . $this->uri->segment(2) . '/index/'; 

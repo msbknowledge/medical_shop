@@ -56,7 +56,12 @@ class Purchase extends MY_Controller {
             $purchase = null;
             $stock = 0;
             $unit = 0;
-            for ($i = 0; $i < count($this->input->post('product_name')); $i++) {
+            $prodNames = $this->input->post('product_name') ? $this->input->post('product_name') : $this->input->post('medicine_name');
+            $prodUnits = $this->input->post('purchase_unit') ? $this->input->post('purchase_unit') : $this->input->post('medicine_unit');
+            $prodMfgs = $this->input->post('product_manufacturer') ? $this->input->post('product_manufacturer') : $this->input->post('medicine_manufacturer');
+            $prodHsns = $this->input->post('product_hsn') ? $this->input->post('product_hsn') : $this->input->post('medicine_hsn');
+            $prodStorages = $this->input->post('product_storage') ? $this->input->post('product_storage') : $this->input->post('medicine_storage');
+            for ($i = 0; $i < count($prodNames); $i++) {
                 $purchase[$i]['purchase_invoice'] = $this->input->post('purchase_invoice');
                 $purchase[$i]['purchase_date'] = date('Y-m-d', strtotime($this->input->post('purchase_date')));
                 $purchase[$i]['purchase_supplier'] = $supplier_id;
@@ -64,14 +69,14 @@ class Purchase extends MY_Controller {
 
                 $purchase[$i]['purchase_quantity'] = $this->input->post('purchase_quantity')[$i];
                 $purchase[$i]['purchase_free_quantity'] = $this->input->post('purchase_free_quantity')[$i];
-                $purchase[$i]['purchase_unit'] = $this->input->post('purchase_unit')[$i];
+                $purchase[$i]['purchase_unit'] = isset($prodUnits[$i]) ? $prodUnits[$i] : 10;
                 $product = null;
-                $product['product_name'] = trim($this->input->post('product_name')[$i]);
+                $product['product_name'] = trim($prodNames[$i]);
                 $data = $this->products_model->get_list($product);
-                $product['product_unit'] = ($this->input->post('purchase_unit')[$i]);
-                $product['product_manufacturer'] = ($this->input->post('product_manufacturer')[$i]);
-                $product['product_hsn'] = $this->input->post('product_hsn')[$i];
-                $product['product_storage'] = $this->input->post('product_storage')[$i];
+                $product['product_unit'] = isset($prodUnits[$i]) ? $prodUnits[$i] : 10;
+                $product['product_manufacturer'] = isset($prodMfgs[$i]) ? $prodMfgs[$i] : '';
+                $product['product_hsn'] = isset($prodHsns[$i]) ? $prodHsns[$i] : '';
+                $product['product_storage'] = isset($prodStorages[$i]) ? $prodStorages[$i] : '';
                 $product_id = null;
                 if (empty($data)) {
                     $data = $this->products_model->insert_data($product);

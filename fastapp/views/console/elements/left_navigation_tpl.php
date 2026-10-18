@@ -25,8 +25,11 @@ $is_reports_active = $is_purchase_reports_active || $is_sale_reports_active ||
     ($current_controller == 'medicine_stock' && in_array($current_action, array('shortage_view', 'stock_view', 'stock', 'stock_amount', 'medicine_history', 'expiring_view', 'expired_view')));
 
 $is_help_active = ($current_controller == 'help');
-$is_mgmt_active = in_array($current_controller, array('user', 'user_type', 'option', 'activity_log'));
+$is_mgmt_active = in_array($current_controller, array('user', 'user_type', 'option', 'activity_log', 'module', 'permission', 'capability'));
 $is_dash_active = ($current_controller == 'dashboard' || empty($current_controller));
+
+$current_user_session = !empty($current_user_session) ? $current_user_session : $this->session->userdata('current_user_session');
+$is_admin = (!empty($current_user_session['user_type_super']) && $current_user_session['user_type_super'] == 1) || (isset($current_user_session['user_type_id']) && $current_user_session['user_type_id'] == 1);
 ?>
 <aside class="main-sidebar" id="alert2">
     <!-- Search Form (Mobile & Small screens) -->
@@ -236,7 +239,8 @@ $is_dash_active = ($current_controller == 'dashboard' || empty($current_controll
                 </ul>
             </li>
 
-            <!-- 6. Management -->
+            <!-- 6. Management (Admin Only) -->
+            <?php if ($is_admin): ?>
             <li class="treeview <?= $is_mgmt_active ? 'active menu-open' : '' ?>">
                 <a href="#">
                     <i class="fa fa-briefcase ftlayer" style="color:#ec4899;"></i>
@@ -253,8 +257,18 @@ $is_dash_active = ($current_controller == 'dashboard' || empty($current_controll
                     <li class="<?= ($current_controller == 'activity_log') ? 'active' : '' ?>">
                         <a href="<?= console_url('activity_log') ?>"><i class="fa fa-history" style="color:#6366f1;"></i> Activity Logs</a>
                     </li>
+                    <li class="<?= ($current_controller == 'module') ? 'active' : '' ?>">
+                        <a href="<?= console_url('module') ?>"><i class="fa fa-cubes" style="color:#0ea5e9;"></i> Modules</a>
+                    </li>
+                    <li class="<?= ($current_controller == 'permission') ? 'active' : '' ?>">
+                        <a href="<?= console_url('permission') ?>"><i class="fa fa-key" style="color:#f59e0b;"></i> Permissions</a>
+                    </li>
+                    <li class="<?= ($current_controller == 'capability') ? 'active' : '' ?>">
+                        <a href="<?= console_url('capability') ?>"><i class="fa fa-shield" style="color:#10b981;"></i> Capabilities</a>
+                    </li>
                 </ul>
             </li>
+            <?php endif; ?>
         </ul>
     </section>
 </aside>
