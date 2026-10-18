@@ -1,0 +1,1 @@
+{"textarea_columns":["activity_data","activity_url"],"datetimepicker_columns":null,"datepicker_columns":null,"use_status_columns":null,"tablePrimaryKey":"activity_ID","generalInput":["activity_user","activity","activity_timestamp"]}

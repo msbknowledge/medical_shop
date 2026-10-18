@@ -25,7 +25,7 @@ $is_reports_active = $is_purchase_reports_active || $is_sale_reports_active ||
     ($current_controller == 'medicine_stock' && in_array($current_action, array('shortage_view', 'stock_view', 'stock', 'stock_amount', 'medicine_history', 'expiring_view', 'expired_view')));
 
 $is_help_active = ($current_controller == 'help');
-$is_mgmt_active = in_array($current_controller, array('user', 'user_type', 'option'));
+$is_mgmt_active = in_array($current_controller, array('user', 'user_type', 'option', 'activity_log'));
 $is_dash_active = ($current_controller == 'dashboard' || empty($current_controller));
 ?>
 <aside class="main-sidebar" id="alert2">
@@ -249,6 +249,9 @@ $is_dash_active = ($current_controller == 'dashboard' || empty($current_controll
                     </li>
                     <li class="<?= ($current_controller == 'user_type') ? 'active' : '' ?>">
                         <a href="<?= console_url('user_type') ?>"><i class="fa fa-users"></i> User Type</a>
+                    </li>
+                    <li class="<?= ($current_controller == 'activity_log') ? 'active' : '' ?>">
+                        <a href="<?= console_url('activity_log') ?>"><i class="fa fa-history" style="color:#6366f1;"></i> Activity Logs</a>
                     </li>
                 </ul>
             </li>

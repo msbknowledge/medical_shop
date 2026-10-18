@@ -421,6 +421,17 @@
              "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "activity_log",
+            "menu_name": "Activity Logs",
+            "menu_parent_id": "1",
+            "menu_link": "activity_log",
+            "menu_hint": "System and User Audit Activity Logs",
+            "menu_icon_class": "icon icon-black icon-clock",
+            "menu_user_type_id": 2,
+            "user_type_ID": 2,
+            "user_type_name": "admin"
         }
     ]
 }

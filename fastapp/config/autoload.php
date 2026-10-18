@@ -121,8 +121,8 @@ $autoload['model'] = array(
     'menus_model',
     'user_types_model',
     'options_model',
-    'enquiry_model'
-
+    'enquiry_model',
+    'activity_logs_model'
 );
 
 
