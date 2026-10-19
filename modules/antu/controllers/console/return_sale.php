@@ -79,17 +79,24 @@ class Return_sale extends MY_Controller
                 $return_sale[$i]['return_sale_ref'] = $this->input->post('return_sale_ref');
                 $return_sale[$i]['return_sale_HSN'] = $this->input->post('return_sale_HSN')[$i];
                 $return_sale[$i]['return_sale_Batch'] = $this->input->post('return_sale_Batch')[$i];
-                //  pr($return_sale,1);
+                
+                // Update stock: increase stock for returned medicines
+                medicine_stock_update(
+                    $return_sale[$i]['return_sale_Batch'],
+                    $medicine_id,
+                    $return_sale[$i]['return_sale_strip'],
+                    0,
+                    '+',
+                    $return_sale[$i]['return_sale_mrp'],
+                    $return_sale[$i]['return_sale_expire_month'],
+                    $return_sale[$i]['return_sale_expire_year']
+                );
             }
-            //pr($return_sale, 1);
             $data = $this->return_sale_model->insert_data($return_sale, true);
             increase_expiry_number();
             $customer_data = $this->customers_model->get_list();
             $this->render(array('customer' => $customer_data, 'status' => 'success', 'message' => '<strong>Well done!</strong> Data Save.'), 'add_detail');
         } else {
-            //$customer_data =$this->db->query("select customer_ID,customer_name from customers ORDER BY customer_name")->result_array();
-            // $customer_data = $this->customers_model->get_list();
-            //pr($customer_data);
             $this->render(null, 'add_detail');
         }
     }
@@ -106,7 +113,6 @@ class Return_sale extends MY_Controller
         $likeCondition = $this->generate_search_like_condition();
 
         $allData = $this->{$this->targetModel}->get_list_for_tables(NULL, FALSE, $this->current_site_settings['site_setting_record_per_page'], NULL, $likeCondition, $orderBy, 'return_sale_entry_number');
-        //pr($this->db->last_query());
         foreach ($allData['current_paged_list'] as $key => $value) {
             $totalSum = $this->db->query('select sum(return_sale_total) as sum_total from returns_sales where return_sale_entry_number= "' . $value['return_sale_entry_number'] . '"')->result_array();;
             $allData['current_paged_list'][$key]['return_sale_sum_total'] = round($totalSum[0]['sum_total']);
@@ -147,24 +153,33 @@ class Return_sale extends MY_Controller
     
         foreach ($dataFull as $key => $value) {
             $sale_data = $this->sales_model->get_list(array('sale_invoice' => $value['return_sale_invoice'], 'sale_medicine_id' => $value['return_sale_medicine_id'], 'sale_batch' => $value['return_sale_Batch']));
-            $dataFull[$key]['max_strip_limit'] = $sale_data[0]['sale_strip_quantity'];
+            $dataFull[$key]['max_strip_limit'] = !empty($sale_data) ? $sale_data[0]['sale_strip_quantity'] : 0;
         }
 
         if ($this->input->post()) {
             $customer = ($this->input->post());
-
             $customer_ID = $customer['customer_ID'];
-            $this->db->query('DELETE FROM `returns_sales` WHERE return_sale_entry_number =' . $this->input->post('return_sale_entry_number'));
+            $entry_no = $this->input->post('return_sale_entry_number');
+
+            // Rollback old return quantities: subtract from stock since previous return is being replaced
+            $old_returns = $this->return_sale_model->get_list(array('return_sale_entry_number' => $entry_no));
+            if (!empty($old_returns)) {
+                foreach ($old_returns as $old_item) {
+                    medicine_stock_update(
+                        $old_item['return_sale_Batch'],
+                        $old_item['return_sale_medicine_id'],
+                        $old_item['return_sale_strip'],
+                        0,
+                        '-'
+                    );
+                }
+            }
+
+            $this->db->query('DELETE FROM `returns_sales` WHERE return_sale_entry_number =' . $this->db->escape($entry_no));
             $return_sale = null;
-            $stock = 0;
-            $unit = 0;
             for ($i = 0; $i < count($this->input->post('return_sale_mrp')); $i++) {
-               
                 $medicine = null;
                 $medicine['medicine_name'] = trim($this->input->post('medicine_name')[$i]);
-                $data = $this->medicines_model->get_list($medicine);
-                $medicine_id = null;
-
                 $data = $this->medicines_model->get_list($medicine);
                 $medicine_id = null;
                 if (empty($data)) {
@@ -174,32 +189,41 @@ class Return_sale extends MY_Controller
                     $medicine_id = $data[0]['medicine_id'];
                 }
 
-                $return_sale['return_sale_date'] = date('Y-m-d', strtotime($this->input->post('expiry_date')));
-                $return_sale['return_sale_medicine_id'] = $medicine_id;
-                $return_sale['return_sale_medicine'] = trim($this->input->post('medicine_name')[$i]);
-
-                $return_sale['return_sale_customer'] = $customer_ID;
-                $return_sale['return_sale_entry_number'] = $this->input->post('return_sale_entry_number');
-                $return_sale['return_sale_strip'] = $this->input->post('return_sale_strip')[$i];
-
-                $return_sale['return_sale_expire_month'] = $this->input->post('return_sale_expire_month')[$i];
-                $return_sale['return_sale_expire_year'] = $this->input->post('return_sale_expire_year')[$i];
-                $return_sale['return_sale_mrp'] = $this->input->post('return_sale_mrp')[$i];
-                $return_sale['return_sale_total'] = $this->input->post('return_sale_total')[$i];
-                $return_sale['return_sale_invoice'] = $this->input->post('return_sale_invoice');
-                $return_sale['return_sale_ref'] = $this->input->post('return_sale_ref');
-                $return_sale['return_sale_HSN'] = $this->input->post('return_sale_HSN')[$i];
-                $return_sale['return_sale_Batch'] = $this->input->post('return_sale_Batch')[$i];
+                $return_sale = array(
+                    'return_sale_date'         => date('Y-m-d', strtotime($this->input->post('expiry_date'))),
+                    'return_sale_medicine_id'  => $medicine_id,
+                    'return_sale_medicine'     => trim($this->input->post('medicine_name')[$i]),
+                    'return_sale_customer'     => $customer_ID,
+                    'return_sale_entry_number' => $this->input->post('return_sale_entry_number'),
+                    'return_sale_strip'        => $this->input->post('return_sale_strip')[$i],
+                    'return_sale_expire_month' => $this->input->post('return_sale_expire_month')[$i],
+                    'return_sale_expire_year'  => $this->input->post('return_sale_expire_year')[$i],
+                    'return_sale_mrp'          => $this->input->post('return_sale_mrp')[$i],
+                    'return_sale_total'        => $this->input->post('return_sale_total')[$i],
+                    'return_sale_invoice'      => $this->input->post('return_sale_invoice'),
+                    'return_sale_ref'          => $this->input->post('return_sale_ref'),
+                    'return_sale_HSN'          => $this->input->post('return_sale_HSN')[$i],
+                    'return_sale_Batch'        => $this->input->post('return_sale_Batch')[$i]
+                );
 
                 $this->return_sale_model->insert_data($return_sale);
-            }
 
-            //increase_expiry_number();
+                // Add newly returned items to stock
+                medicine_stock_update(
+                    $return_sale['return_sale_Batch'],
+                    $medicine_id,
+                    $return_sale['return_sale_strip'],
+                    0,
+                    '+',
+                    $return_sale['return_sale_mrp'],
+                    $return_sale['return_sale_expire_month'],
+                    $return_sale['return_sale_expire_year']
+                );
+            }
 
             redirect(console_url('return_sale'));
         } else {
             $customer_data = $this->customers_model->get_list(array('customer_ID' => $dataFull[0]['return_sale_customer']));
-
             $this->render(array('customer' => $customer_data, 'data' => $dataFull), 'edit_detail_tpl');
         }
     }
@@ -216,14 +240,48 @@ class Return_sale extends MY_Controller
             }
             $this->medical_stock_rollback($postedData['selectedItem']);
 
-            $this->{$this->targetModel}->delete(array('return_perche_entry_number' => $postedData['selectedItem']), TRUE);
+            $this->{$this->targetModel}->delete(array('return_sale_entry_number' => $postedData['selectedItem']), TRUE);
         }
 
         if (isset($postedData['entry'])) {
-            // $this->medical_stock_rollback(base64_decode($postedData['entry']));
-            $this->{$this->targetModel}->delete(array('return_sale_entry_number' => base64_decode($postedData['entry'])));
+            $entry = base64_decode($postedData['entry']);
+            $this->medical_stock_rollback($entry);
+            $this->{$this->targetModel}->delete(array('return_sale_entry_number' => $entry));
         }
         echo json_encode(array('status' => 'success'));
+    }
+
+    private function medical_stock_rollback($items)
+    {
+        if (is_array($items)) {
+            foreach ($items as $entry_num) {
+                $dataFull = $this->return_sale_model->get_list(array('return_sale_entry_number' => $entry_num));
+                if (!empty($dataFull)) {
+                    foreach ($dataFull as $val) {
+                        medicine_stock_update(
+                            $val['return_sale_Batch'],
+                            $val['return_sale_medicine_id'],
+                            $val['return_sale_strip'],
+                            0,
+                            '-'
+                        );
+                    }
+                }
+            }
+        } else {
+            $dataFull = $this->return_sale_model->get_list(array('return_sale_entry_number' => $items));
+            if (!empty($dataFull)) {
+                foreach ($dataFull as $val) {
+                    medicine_stock_update(
+                        $val['return_sale_Batch'],
+                        $val['return_sale_medicine_id'],
+                        $val['return_sale_strip'],
+                        0,
+                        '-'
+                    );
+                }
+            }
+        }
     }
 
     public function sale_report()

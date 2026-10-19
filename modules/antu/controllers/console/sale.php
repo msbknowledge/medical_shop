@@ -135,7 +135,7 @@ class Sale extends MY_Controller
                 $sale[$i]['sale_medicine_id'] = $medicine_id;
                 $sale[$i]['sale_discount_percent'] = $this->input->post('sale_discount_percent')[$i];
                 $sale[$i]['sale_taxable'] = $this->input->post('sale_taxable')[$i];
-                $sale[$i]['sale_new_mrp'] = $this->input->post('sale_new_mrp')[$i];
+                $sale[$i]['sale_new_mrp'] = !empty($this->input->post('sale_new_mrp')[$i]) ? $this->input->post('sale_new_mrp')[$i] : $sale[$i]['sale_mrp'];
                 $sale[$i]['sale_sgst_percent'] = $this->input->post('sale_sgst_percent')[$i];
                 $sale[$i]['sale_sgst'] = $this->input->post('sale_sgst')[$i];
                 $sale[$i]['sale_cgst_percent'] = $this->input->post('sale_cgst_percent')[$i];
@@ -425,6 +425,7 @@ class Sale extends MY_Controller
                 $sale[$i]['sale_expire_month'] = $this->input->post('sale_expire_month')[$i];
                 $sale[$i]['sale_expire_year'] = $this->input->post('sale_expire_year')[$i];
                 $sale[$i]['sale_mrp'] = $this->input->post('sale_mrp')[$i];
+                $sale[$i]['sale_new_mrp'] = !empty($this->input->post('sale_new_mrp')[$i]) ? $this->input->post('sale_new_mrp')[$i] : $sale[$i]['sale_mrp'];
                 $sale[$i]['sale_rate'] = $this->input->post('sale_rate')[$i];
                 $sale[$i]['sale_discount_percent'] = $this->input->post('sale_discount_percent')[$i];
                 $sale[$i]['sale_taxable'] = $this->input->post('sale_taxable')[$i];
@@ -440,6 +441,21 @@ class Sale extends MY_Controller
                 $sale[$i]['sale_paid_by'] = $this->input->post('sale_paid_by');
                 $sale[$i]['sale_note'] = $this->input->post('sale_note');
                 medicine_stock_update($sale[$i]['sale_batch'], $medicine_id, $sale[$i]['sale_strip_quantity'], $sale[$i]['sale_loose_quantity'], '-');
+            }
+
+            $old_invoice = $this->input->post('invoice_number');
+            $old_sales = $this->sales_model->get_list(array('sale_invoice' => $old_invoice));
+            if (!empty($old_sales)) {
+                foreach ($old_sales as $old_item) {
+                    $rollback_type = (!empty($old_item['sale_return'])) ? '-' : '+';
+                    medicine_stock_update(
+                        $old_item['sale_batch'],
+                        $old_item['sale_medicine_id'],
+                        $old_item['sale_strip_quantity'],
+                        $old_item['sale_loose_quantity'],
+                        $rollback_type
+                    );
+                }
             }
 
             $this->sales_model->delete(array('sale_invoice' => $this->input->post('invoice_number')));
@@ -492,13 +508,17 @@ class Sale extends MY_Controller
 
     private function medical_stock_update($old, $new)
     {
-        $toupdate = null;
-        $updatewith = null;
-        foreach ($old as $key => $value) {
-            medicine_stock_update($value['sale_batch'], $value['sale_medicine_id'], $value['sale_strip_quantity'], $value['sale_loose_quantity'], '+');
+        if (!empty($old) && is_array($old)) {
+            foreach ($old as $key => $value) {
+                $type = (!empty($value['sale_return'])) ? '-' : '+';
+                medicine_stock_update($value['sale_batch'], $value['sale_medicine_id'], $value['sale_strip_quantity'], $value['sale_loose_quantity'], $type);
+            }
         }
-        foreach ($new as $key => $value) {
-            medicine_stock_update($value['sale_batch'], $value['sale_medicine_id'], $value['sale_strip_quantity'], $value['sale_loose_quantity'], '-');
+        if (!empty($new) && is_array($new)) {
+            foreach ($new as $key => $value) {
+                $type = (!empty($value['sale_return'])) ? '+' : '-';
+                medicine_stock_update($value['sale_batch'], $value['sale_medicine_id'], $value['sale_strip_quantity'], $value['sale_loose_quantity'], $type);
+            }
         }
     }
 
@@ -519,81 +539,167 @@ class Sale extends MY_Controller
 
     public function sale_return()
     {
-
         if ($this->input->post()) {
             $invoice = base64_decode($this->uri->segment(4));
             $dataFull = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice));
-            $dataReturn = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice, 'sale_return' => TRUE));
-            $dataFinal = $this->sale_return_stocks($dataFull, $dataReturn);
 
             $customer['customer_name'] = strtoupper($this->input->post('customer_name'));
             $customer['customer_address'] = strtoupper($this->input->post('customer_address'));
             $customer['customer_gst'] = strtoupper($this->input->post('customer_gst'));
             $customer['customer_contact'] = $this->input->post('customer_contact');
             $data = $this->customers_model->get_list($customer);
-            $customer_ID = $data[0]['customer_ID'];
-            $sale = null;
-            $stock = 0;
-            if (empty($this->input->post('medicine_hsn'))) {
-                foreach ($dataReturn as $value) {
-                    medicine_stock_update($value['sale_batch'], $value['sale_medicine_id'], $value['sale_strip_quantity'], $value['sale_loose_quantity'], '-');
-                    $this->db->query('delete from sales where sale_return = true and sale_ID = "' . $value['sale_ID'] . '"');
-                }
+            $customer_ID = !empty($data) ? $data[0]['customer_ID'] : $this->customers_model->insert_data($customer);
 
-                //pr($data);
-                //$this->medical_stock_update($dataFull, $sale);
-            } else {
-                for ($i = 0; $i < count($this->input->post('sale_total')); $i++) {
-                    if ($this->input->post('sale_returned')[$i] == 'true') {
-                        continue;
+            $doctor_ID = null;
+            if ($this->input->post('doctor_name')) {
+                $doctor['doctor_name'] = strtoupper($this->input->post('doctor_name'));
+                $ddata = $this->doctors_model->get_list($doctor);
+                $doctor_ID = !empty($ddata) ? $ddata[0]['doctor_ID'] : $this->doctors_model->insert_data($doctor);
+            }
+
+            $sale = array();
+            $invoice_num = $this->input->post('sale_invoice') ? $this->input->post('sale_invoice') : $invoice;
+            $sale_date = date('Y-m-d H:i:s', strtotime($this->input->post('sale_date')));
+
+            // 1. Process New Items (Exchange Sales)
+            $new_totals = $this->input->post('sale_total');
+            $has_return_items = !empty($this->input->post('sale_total_R'));
+
+            if (!empty($new_totals) && is_array($new_totals)) {
+                for ($i = 0; $i < count($new_totals); $i++) {
+                    $med_name = trim($this->input->post('medicine_name')[$i] ?? '');
+                    if (empty($med_name)) continue;
+
+                    $medicine = array('medicine_name' => strtoupper($med_name));
+                    $mdata = $this->medicines_model->get_list($medicine);
+                    if (empty($mdata)) {
+                        $medicine['medicine_unit'] = !empty($this->input->post('medicine_unit')[$i]) ? $this->input->post('medicine_unit')[$i] : 10;
+                        $medicine_id = $this->medicines_model->insert_data($medicine);
+                    } else {
+                        $medicine_id = $mdata[0]['medicine_id'];
                     }
-                    $sale[$i]['sale_invoice'] = $this->input->post('sale_invoice');
-                    $sale[$i]['sale_return_date'] = date('Y-m-d', strtotime($this->input->post('sale_return_date')));
-                    $sale[$i]['sale_date'] = date('Y-m-d', strtotime($this->input->post('sale_date')));
-                    $sale[$i]['sale_customer'] = $customer_ID;
-                    $sale[$i]['sale_quantity'] = $this->input->post('sale_quantity')[$i];
-                    $medicine['medicine_name'] = strtoupper($this->input->post('medicine_name')[$i]);
-                    $medicine['medicine_manufacturer'] = strtoupper($this->input->post('medicine_manufacturer')[$i]);
-                    $medicine['medicine_hsn'] = $this->input->post('medicine_hsn')[$i];
 
+                    $strip = intval($this->input->post('sale_strip_quantity')[$i] ?? 0);
+                    $loose = intval($this->input->post('sale_loose_quantity')[$i] ?? 0);
+                    $batch = trim($this->input->post('sale_batch')[$i] ?? '');
 
-                    $medicine_id = null;
-                    $data = $this->medicines_model->get_list($medicine);
+                    // If no _R items were submitted, then the items in sale_total are the returned items
+                    $is_return = !$has_return_items ? 1 : 0;
+                    $stock_type = $is_return ? '+' : '-';
 
-                    $medicine_id = $data[0]['medicine_id'];
-                    $stock = (int) $data[0]['medicine_stock'] + (int) $sale[$i]['sale_quantity'];
-                    $sale[$i]['sale_medicine_id'] = $medicine_id;
-                    $sale[$i]['sale_batch'] = $this->input->post('sale_batch')[$i];
-                    $sale[$i]['sale_expire_month'] = $this->input->post('sale_expire_month')[$i];
-                    $sale[$i]['sale_expire_year'] = $this->input->post('sale_expire_year')[$i];
-                    $sale[$i]['sale_mrp'] = $this->input->post('sale_mrp')[$i];
-                    $sale[$i]['sale_rate'] = $this->input->post('sale_rate')[$i];
-                    $sale[$i]['sale_discount_percent'] = $this->input->post('sale_discount_percent')[$i];
-                    $sale[$i]['sale_taxable'] = $this->input->post('sale_taxable')[$i];
-                    $sale[$i]['sale_sgst_percent'] = $this->input->post('sale_sgst_percent')[$i];
-                    $sale[$i]['sale_sgst'] = $this->input->post('sale_sgst')[$i];
-                    $sale[$i]['sale_cgst_percent'] = $this->input->post('sale_cgst_percent')[$i];
-                    $sale[$i]['sale_cgst'] = $this->input->post('sale_cgst')[$i];
-                    $sale[$i]['sale_total'] = $this->input->post('sale_total')[$i];
-                    $sale[$i]['sale_return'] = true;
-                    $sale[$i]['sale_total_previous_due'] = $this->input->post('sale_total_previous_due');
-                    $sale[$i]['sale_total_paid'] = $this->input->post('sale_total_paid')[$i];
-                    $sale[$i]['sale_total_current_due'] = $this->input->post('sale_total_current_due');
-                    $sale[$i]['sale_paid_by'] = $this->input->post('sale_paid_by');
-                    $sale[$i]['sale_note'] = $this->input->post('sale_note');
+                    $item = array(
+                        'sale_invoice'             => $invoice_num,
+                        'sale_date'                => $sale_date,
+                        'sale_return_date'         => $is_return ? date('Y-m-d', strtotime($this->input->post('sale_date'))) : null,
+                        'sale_customer'            => $customer_ID,
+                        'sale_doctor'              => $doctor_ID,
+                        'sale_strip_quantity'      => $strip,
+                        'sale_loose_quantity'      => $loose,
+                        'sale_medicine_id'         => $medicine_id,
+                        'sale_batch'               => $batch,
+                        'sale_expire_month'        => intval($this->input->post('sale_expire_month')[$i] ?? 0),
+                        'sale_expire_year'         => intval($this->input->post('sale_expire_year')[$i] ?? 0),
+                        'sale_mrp'                 => floatval($this->input->post('sale_mrp')[$i] ?? 0),
+                        'sale_new_mrp'             => floatval($this->input->post('sale_new_mrp')[$i] ?? ($this->input->post('sale_mrp')[$i] ?? 0)),
+                        'sale_rate'                => floatval($this->input->post('sale_rate')[$i] ?? 0),
+                        'sale_discount_percent'    => floatval($this->input->post('sale_discount_percent')[$i] ?? 0),
+                        'sale_taxable'             => floatval($this->input->post('sale_taxable')[$i] ?? 0),
+                        'sale_sgst_percent'        => floatval($this->input->post('sale_sgst_percent')[$i] ?? 0),
+                        'sale_sgst'                => floatval($this->input->post('sale_sgst')[$i] ?? 0),
+                        'sale_cgst_percent'        => floatval($this->input->post('sale_cgst_percent')[$i] ?? 0),
+                        'sale_cgst'                => floatval($this->input->post('sale_cgst')[$i] ?? 0),
+                        'sale_total'               => floatval($this->input->post('sale_total')[$i] ?? 0),
+                        'sale_return'              => $is_return,
+                        'sale_total_previous_due'  => floatval($this->input->post('sale_total_previous_due') ?? 0),
+                        'sale_total_paid'          => floatval($this->input->post('sale_total_paid') ?? 0),
+                        'sale_total_current_due'   => floatval($this->input->post('sale_total_current_due') ?? 0),
+                        'sale_paid_by'             => $this->input->post('sale_paid_by') ?? 'Cash',
+                        'sale_note'                => $this->input->post('sale_note') ?? ''
+                    );
+                    $sale[] = $item;
 
-                    if (!empty($sale)) {
-                        medicine_stock_update($sale[$i]['sale_batch'], $medicine_id, $sale[$i]['sale_strip_quantity'], $sale[$i]['sale_loose_quantity'], '+');
-                    }
-                }
-
-                //$this->sales_model->delete(array('sale_invoice' => $this->input->post('invoice_number')));
-                if (!empty($sale)) {
-                    $data = $this->sales_model->insert_data($sale, true);
+                    medicine_stock_update(
+                        $batch,
+                        $medicine_id,
+                        $strip,
+                        $loose,
+                        $stock_type,
+                        $item['sale_mrp'],
+                        $item['sale_expire_month'],
+                        $item['sale_expire_year']
+                    );
                 }
             }
+
+            // 2. Process Return Items (_R)
+            $ret_totals = $this->input->post('sale_total_R');
+            if (!empty($ret_totals) && is_array($ret_totals)) {
+                for ($i = 0; $i < count($ret_totals); $i++) {
+                    $med_name = trim($this->input->post('medicine_name_R')[$i] ?? '');
+                    if (empty($med_name)) continue;
+
+                    $medicine = array('medicine_name' => strtoupper($med_name));
+                    $mdata = $this->medicines_model->get_list($medicine);
+                    if (empty($mdata)) {
+                        $medicine['medicine_unit'] = !empty($this->input->post('medicine_unit_R')[$i]) ? $this->input->post('medicine_unit_R')[$i] : 10;
+                        $medicine_id = $this->medicines_model->insert_data($medicine);
+                    } else {
+                        $medicine_id = $mdata[0]['medicine_id'];
+                    }
+
+                    $strip = intval($this->input->post('sale_strip_quantity_R')[$i] ?? 0);
+                    $loose = intval($this->input->post('sale_loose_quantity_R')[$i] ?? 0);
+                    $batch = trim($this->input->post('sale_batch_R')[$i] ?? '');
+
+                    $item = array(
+                        'sale_invoice'             => $invoice_num,
+                        'sale_date'                => $sale_date,
+                        'sale_return_date'         => date('Y-m-d', strtotime($this->input->post('sale_date'))),
+                        'sale_customer'            => $customer_ID,
+                        'sale_doctor'              => $doctor_ID,
+                        'sale_strip_quantity'      => $strip,
+                        'sale_loose_quantity'      => $loose,
+                        'sale_medicine_id'         => $medicine_id,
+                        'sale_batch'               => $batch,
+                        'sale_expire_month'        => intval($this->input->post('sale_expire_month_R')[$i] ?? 0),
+                        'sale_expire_year'         => intval($this->input->post('sale_expire_year_R')[$i] ?? 0),
+                        'sale_mrp'                 => floatval($this->input->post('sale_mrp_R')[$i] ?? 0),
+                        'sale_new_mrp'             => floatval($this->input->post('sale_new_mrp_R')[$i] ?? ($this->input->post('sale_mrp_R')[$i] ?? 0)),
+                        'sale_rate'                => floatval($this->input->post('sale_rate_R')[$i] ?? 0),
+                        'sale_discount_percent'    => floatval($this->input->post('sale_discount_percent_R')[$i] ?? 0),
+                        'sale_taxable'             => floatval($this->input->post('sale_taxable_R')[$i] ?? 0),
+                        'sale_sgst_percent'        => floatval($this->input->post('sale_sgst_percent_R')[$i] ?? 0),
+                        'sale_sgst'                => floatval($this->input->post('sale_sgst_R')[$i] ?? 0),
+                        'sale_cgst_percent'        => floatval($this->input->post('sale_cgst_percent_R')[$i] ?? 0),
+                        'sale_cgst'                => floatval($this->input->post('sale_cgst_R')[$i] ?? 0),
+                        'sale_total'               => floatval($this->input->post('sale_total_R')[$i] ?? 0),
+                        'sale_return'              => 1,
+                        'sale_total_previous_due'  => floatval($this->input->post('sale_total_previous_due') ?? 0),
+                        'sale_total_paid'          => floatval($this->input->post('sale_total_paid') ?? 0),
+                        'sale_total_current_due'   => floatval($this->input->post('sale_total_current_due') ?? 0),
+                        'sale_paid_by'             => $this->input->post('sale_paid_by') ?? 'Cash',
+                        'sale_note'                => $this->input->post('sale_note') ?? ''
+                    );
+                    $sale[] = $item;
+
+                    medicine_stock_update(
+                        $batch,
+                        $medicine_id,
+                        $strip,
+                        $loose,
+                        '+',
+                        $item['sale_mrp'],
+                        $item['sale_expire_month'],
+                        $item['sale_expire_year']
+                    );
+                }
+            }
+
+            if (!empty($sale)) {
+                $this->sales_model->insert_data($sale, true);
+            }
+
             $dataFull = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice));
-            $onlysale = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice, 'sale_return' => false));
             $dataReturn = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice, 'sale_return' => TRUE));
             $dataFinal = $this->sale_return_stocks($dataFull, $dataReturn);
             $this->render(array(
@@ -605,7 +711,6 @@ class Sale extends MY_Controller
             $dataFull = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice));
             $dataReturn = $this->{$this->targetModel}->get_list(array('sale_invoice' => $invoice, 'sale_return' => TRUE));
             $dataFinal = $this->sale_return_stocks($dataFull, $dataReturn);
-            // pr($dataFinal);
             $this->render(array('data' => $dataFinal));
         }
     }

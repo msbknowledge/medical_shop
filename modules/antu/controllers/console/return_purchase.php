@@ -74,7 +74,17 @@ class Return_purchase extends MY_Controller {
                 $return_purchase[$i]['return_purchase_ref'] = $this->input->post('return_purchase_ref');
                 $return_purchase[$i]['return_purchase_HSN'] = $this->input->post('medicine_hsn')[$i];
                 $return_purchase[$i]['return_purchase_Batch'] = $this->input->post('return_purchase_Batch')[$i];
-                //  pr($return_purchase,1);
+
+                medicine_stock_update(
+                    $return_purchase[$i]['return_purchase_Batch'],
+                    $medicine_id,
+                    $return_purchase[$i]['return_purchase_strip'],
+                    0,
+                    '-',
+                    $return_purchase[$i]['return_purchase_mrp'],
+                    $return_purchase[$i]['return_purchase_expire_month'],
+                    $return_purchase[$i]['return_purchase_expire_year']
+                );
 				}
             // print_r($return_purchase);
             // die();

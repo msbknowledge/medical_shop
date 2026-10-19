@@ -5,12 +5,21 @@
 // define('DB_USER', 'simplebillings');
 // define('DB_PASSWORD', '66Od1IK8cIIEMkTgCKv7');
 // define('DB_NAME', $node);
-$nodeSegment = explode('.',$_SERVER['SERVER_NAME']);
-$node = 'u188759301_'.$nodeSegment[0];
+if (isset($_SERVER['SERVER_NAME']) && in_array($_SERVER['SERVER_NAME'], array('localhost', '127.0.0.1'))) {
+    $db_user = 'root';
+    $db_pass = '';
+    $db_name = 'antu';
+} else {
+    $nodeSegment = explode('.', isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : 'antu.localhost');
+    $node = 'u404684354_' . $nodeSegment[0];
+    $db_user = $node;
+    $db_pass = 'BR66MK55@msb';
+    $db_name = $node;
+}
 define('DB_SERVER', 'localhost');
-define('DB_USER',$node);
-define('DB_PASSWORD', 'BR66MK55@msb');
-define('DB_NAME', $node);
+define('DB_USER', $db_user);
+define('DB_PASSWORD', $db_pass);
+define('DB_NAME', $db_name);
 if (isset($_GET['medicine_id'])) {
     $return_arr = array();
 
@@ -42,7 +51,7 @@ if (isset($_GET['medicine_id'])) {
 			//if($row['medicine_unit']==0)
 			//$row['medicine_unit'] = $row['purchase_unit'];
 			$search['sale_mrp'] = $row['medicine_mrp'];
-			if($search['medicine_strip_stock']==0 && $search['medicine_loose_stock'])
+			if ($search['medicine_strip_stock'] <= 0 && $search['medicine_loose_stock'] <= 0)
 				continue;
             $responce[] = array('id' => '', 'label' => $search['medicine_stock_batch'].' [S:'.$search['medicine_strip_stock'].'|L:'.$search['medicine_loose_stock'].']('.$search['sale_expire_month'].'/'.$search['sale_expire_year'].') |'.$search['medicine_mrp'], 'value' => $search['medicine_stock_batch'], 'complete' => $search);
 			
