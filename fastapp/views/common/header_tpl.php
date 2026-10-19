@@ -80,6 +80,9 @@
                     <!-- reminder bell widget starts -->
                     <? $this->load->view('console/elements/reminder_bell_tpl'); ?>
                     <!-- reminder bell widget ends -->
+                    <!-- language switcher starts -->
+                    <? $this->load->view('console/elements/language_switcher_tpl'); ?>
+                    <!-- language switcher ends -->
                     <!--/.nav-collapse -->
                 </div>
             </div>

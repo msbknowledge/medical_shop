@@ -3672,3 +3672,37 @@ a.btn-round,
     border: none !important;
     overflow: hidden !important;
 }
+
+/* ==========================================================================
+   MULTI-LANGUAGE TRANSLATOR STYLING & BANNER SUPPRESSION (EN, HI, BN)
+   ========================================================================== */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame,
+.goog-te-balloon-frame,
+#goog-gt-tt {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    opacity: 0 !important;
+}
+body {
+    top: 0px !important;
+    position: static !important;
+}
+.goog-text-highlight {
+    background: none !important;
+    box-shadow: none !important;
+}
+#google_translate_element {
+    display: none !important;
+}
+.lang-switcher-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.lang-dropdown-menu > li > a:hover {
+    background: #eef2ff !important;
+    color: #4338ca !important;
+}
+
