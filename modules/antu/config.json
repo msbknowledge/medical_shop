@@ -8,7 +8,7 @@
             "menu_link": "",
             "menu_hint": "Manage Your Billing",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -19,7 +19,7 @@
             "menu_link": "purchase",
             "menu_hint": "Purchase List",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -30,7 +30,7 @@
             "menu_link": "sale",
             "menu_hint": "Sale List",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -41,7 +41,7 @@
             "menu_link": "payments",
             "menu_hint": "Payments",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -54,16 +54,16 @@
             "menu_icon_class": "icon icon-black icon-document",
             "menu_user_type_id": 2,
             "user_type_ID": 2,
-            "user_type_name": "admin" 
+            "user_type_name": "admin"
         },
-         {
+        {
             "menu_ID": "sale return",
             "menu_name": "Sale Return",
             "menu_parent_id": "billing",
             "menu_link": "return_sale",
             "menu_hint": "Return Sale",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -74,7 +74,7 @@
             "menu_link": "return_purchase",
             "menu_hint": "Return purchase",
             "menu_icon_class": "icon icon-black icon-document",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -87,10 +87,9 @@
             "menu_icon_class": "icon icon-black icon-calendar",
             "menu_user_type_id": 2,
             "user_type_ID": 2,
-            "user_type_name": "admin" 
+            "user_type_name": "admin"
         },
-        
-         {
+        {
             "menu_ID": "report_purchase",
             "menu_name": "Purchase Reports",
             "menu_parent_id": "medicine_report",
@@ -99,28 +98,27 @@
             "menu_icon_class": "icon icon-black icon-calendar",
             "menu_user_type_id": 2,
             "user_type_ID": 2,
-            "user_type_name": "admin" 
+            "user_type_name": "admin"
         },
         {
             "menu_ID": "return purchase",
             "menu_name": "Return Purchase",
             "menu_parent_id": "report_purchase",
-            "menu_link": "return_purchase/purchases_report",
+            "menu_link": "return_purchase\/purchases_report",
             "menu_hint": "Show your purchase report",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
-        
-		{
+        {
             "menu_ID": "purchase report gstin wise",
             "menu_name": "Purchase Report GSTIN Wise",
             "menu_parent_id": "report_purchase",
-            "menu_link": "purchase/report_gstin_wise",
+            "menu_link": "purchase\/report_gstin_wise",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -128,21 +126,21 @@
             "menu_ID": "purchase report daywise",
             "menu_name": "Purchase Report Daywise",
             "menu_parent_id": "report_purchase",
-            "menu_link": "purchase/report_daily_wise",
+            "menu_link": "purchase\/report_daily_wise",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
-         {
+        {
             "menu_ID": "purchase medicine report daywise",
             "menu_name": "Purchase Medicine Report Daywise",
             "menu_parent_id": "report_purchase",
-            "menu_link": "purchase/daily_purchase_medicine",
+            "menu_link": "purchase\/daily_purchase_medicine",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -150,10 +148,10 @@
             "menu_ID": "supplier balance sheet",
             "menu_name": "Supplier Balance Sheet",
             "menu_parent_id": "report_purchase",
-            "menu_link": "sale/supplier_medicine_details",
+            "menu_link": "sale\/supplier_medicine_details",
             "menu_hint": "Show supplier medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -166,27 +164,27 @@
             "menu_icon_class": "icon icon-black icon-calendar",
             "menu_user_type_id": 2,
             "user_type_ID": 2,
-            "user_type_name": "admin" 
+            "user_type_name": "admin"
         },
         {
             "menu_ID": "return sale",
             "menu_name": "Return Sale",
             "menu_parent_id": "report_sale",
-            "menu_link": "return_sale/sale_report",
+            "menu_link": "return_sale\/sale_report",
             "menu_hint": "Show your sale report",
             "menu_icon_class": "icon icon-black icon-calendar",
             "menu_user_type_id": 2,
             "user_type_ID": 2,
-            "user_type_name": "admin" 
+            "user_type_name": "admin"
         },
-		{
+        {
             "menu_ID": "sale report gstin wise",
             "menu_name": "Sale Report GSTIN Wise",
             "menu_parent_id": "report_sale",
-            "menu_link": "sale/report_gstin_wise",
+            "menu_link": "sale\/report_gstin_wise",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -194,10 +192,10 @@
             "menu_ID": "sale report daywise",
             "menu_name": "Sale Report Daywise",
             "menu_parent_id": "report_sale",
-            "menu_link": "sale/report_daily_wise",
+            "menu_link": "sale\/report_daily_wise",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -205,10 +203,10 @@
             "menu_ID": "sale medicine report daywise",
             "menu_name": "Sale Medicine Report Daywise",
             "menu_parent_id": "report_sale",
-            "menu_link": "sale/daily_sale_medicine",
+            "menu_link": "sale\/daily_sale_medicine",
             "menu_hint": "Show your Daywise Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -216,21 +214,21 @@
             "menu_ID": "due report sheet",
             "menu_name": "Due Report Sheet",
             "menu_parent_id": "report_sale",
-            "menu_link": "payments/due_report",
+            "menu_link": "payments\/due_report",
             "menu_hint": "Due Balance",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
-         {
+        {
             "menu_ID": "customer payment report",
             "menu_name": "Customer Payment Report",
             "menu_parent_id": "report_sale",
-            "menu_link": "sale/customer_payment_report",
+            "menu_link": "sale\/customer_payment_report",
             "menu_hint": "Balance",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -241,7 +239,7 @@
             "menu_link": "profit_loss",
             "menu_hint": "Show Profit loss Reports",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -249,10 +247,10 @@
             "menu_ID": "shortage report",
             "menu_name": "Shortage Report",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/shortage_view",
+            "menu_link": "medicine_stock\/shortage_view",
             "menu_hint": "Show Shortage of medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -260,10 +258,10 @@
             "menu_ID": "stock report",
             "menu_name": "Stock Report",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/stock_view",
+            "menu_link": "medicine_stock\/stock_view",
             "menu_hint": "Show stock of medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -271,10 +269,10 @@
             "menu_ID": "stock_amount_report",
             "menu_name": "Stock MRP Amount Report",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/stock_amount",
+            "menu_link": "medicine_stock\/stock_amount",
             "menu_hint": "Show stock of medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -282,21 +280,21 @@
             "menu_ID": "medicine history",
             "menu_name": "Medicine History",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/medicine_history",
+            "menu_link": "medicine_stock\/medicine_history",
             "menu_hint": "Purchase Sale History",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
-        }, 
+        },
         {
             "menu_ID": "upcomming expire report",
             "menu_name": "Upcomming Expire Report",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/expiring_view",
+            "menu_link": "medicine_stock\/expiring_view",
             "menu_hint": "Show Upcomming Expire of medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -304,14 +302,13 @@
             "menu_ID": "expired",
             "menu_name": "Expired",
             "menu_parent_id": "medicine_report",
-            "menu_link": "medicine_stock/expired_view",
+            "menu_link": "medicine_stock\/expired_view",
             "menu_hint": "Show Already Expired medicine",
             "menu_icon_class": "icon icon-black icon-calendar",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
-         
         {
             "menu_ID": "help",
             "menu_name": "Help",
@@ -341,7 +338,7 @@
             "menu_link": "",
             "menu_icon_class": "icon icon-black icon-edit",
             "menu_hint": "Cable billings panel",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -352,7 +349,7 @@
             "menu_link": "medicine",
             "menu_hint": "Medicine details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -363,7 +360,7 @@
             "menu_link": "medicine_category",
             "menu_hint": "Medicine details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -374,7 +371,7 @@
             "menu_link": "manufacturer",
             "menu_hint": "Medicine manufacturer details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -385,7 +382,7 @@
             "menu_link": "supplier",
             "menu_hint": "Medicine supplier details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -396,7 +393,7 @@
             "menu_link": "doctor",
             "menu_hint": "Doctor details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -407,7 +404,7 @@
             "menu_link": "customer",
             "menu_hint": "Customer details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -415,10 +412,10 @@
             "menu_ID": "fast stock update",
             "menu_name": "Fast Stock Update",
             "menu_parent_id": "entry",
-            "menu_link": "medicine_stock/fast_update",
+            "menu_link": "medicine_stock\/fast_update",
             "menu_hint": "Fast Update Medicine details",
             "menu_icon_class": "icon icon-black icon-edit",
-             "menu_user_type_id": 2,
+            "menu_user_type_id": 2,
             "user_type_ID": 2,
             "user_type_name": "admin"
         },
@@ -464,6 +461,28 @@
             "menu_icon_class": "icon icon-black icon-locked",
             "menu_user_type_id": 1,
             "user_type_ID": 1,
+            "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "reminders",
+            "menu_name": "Automatic Reminders",
+            "menu_parent_id": "billing",
+            "menu_link": "reminder",
+            "menu_hint": "Payment and Medicine Expired Automatic Reminders",
+            "menu_icon_class": "icon icon-black icon-clock",
+            "menu_user_type_id": 2,
+            "user_type_ID": 2,
+            "user_type_name": "admin"
+        },
+        {
+            "menu_ID": "medicine_reminders",
+            "menu_name": "Auto Reminders Center",
+            "menu_parent_id": "medicine_report",
+            "menu_link": "reminder",
+            "menu_hint": "Medicine Expiry & Payment Reminders",
+            "menu_icon_class": "icon icon-black icon-calendar",
+            "menu_user_type_id": 2,
+            "user_type_ID": 2,
             "user_type_name": "admin"
         }
     ]

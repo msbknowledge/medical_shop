@@ -77,6 +77,9 @@
                     <!-- user dropdown starts -->
                     <? $this->load->view('console/elements/user_dropdown_tpl'); ?>
                     <!-- user dropdown ends -->
+                    <!-- reminder bell widget starts -->
+                    <? $this->load->view('console/elements/reminder_bell_tpl'); ?>
+                    <!-- reminder bell widget ends -->
                     <!--/.nav-collapse -->
                 </div>
             </div>

@@ -226,8 +226,12 @@ function get_pharmacy_graph_data()
 function medicine_reminder()
 {
     $CI = &get_instance();
-    $count = $CI->db->query('SELECT sale_date,customer_address,customer_name,customer_contact FROM sales join customers on customer_ID = sale_customer')->result_array();
-    return $count;
+    try {
+        $cust = $CI->db->query('SELECT customer_ID, customer_name, customer_contact, customer_due, customer_address FROM customers WHERE customer_due > 0 ORDER BY customer_due DESC')->result_array();
+        return $cust;
+    } catch (Exception $e) {
+        return array();
+    }
 }
 function medicine_count()
 {
@@ -323,8 +327,12 @@ function expired()
     $CI = &get_instance();
     try {
         $cur_ym = (int)date('ym');
-        $res = $CI->db->query("SELECT COUNT(*) as cnt FROM purchases WHERE CONCAT(purchase_expire_year, LPAD(purchase_expire_month, 2, '0')) < $cur_ym AND purchase_expire_year > 0")->row_array();
-        return !empty($res['cnt']) ? (int)$res['cnt'] : 0;
+        $res = $CI->db->query("SELECT COUNT(*) as cnt FROM medicine_stocks WHERE (medicine_strip_stock > 0 OR medicine_loose_stock > 0) AND CONCAT(medicine_expire_year, LPAD(medicine_expire_month, 2, '0')) <= $cur_ym AND medicine_expire_year > 0")->row_array();
+        if (!empty($res['cnt'])) {
+            return (int)$res['cnt'];
+        }
+        $res_pur = $CI->db->query("SELECT COUNT(*) as cnt FROM purchases WHERE CONCAT(purchase_expire_year, LPAD(purchase_expire_month, 2, '0')) <= $cur_ym AND purchase_expire_year > 0")->row_array();
+        return !empty($res_pur['cnt']) ? (int)$res_pur['cnt'] : 0;
     } catch (Exception $e) {
         return 0;
     }

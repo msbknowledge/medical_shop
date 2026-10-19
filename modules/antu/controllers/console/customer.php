@@ -227,4 +227,48 @@ class Customer extends MY_Controller {
         }
     }
 
+    /**
+     * Get customer balance / due amount (used by POS/Sales billing auto-lookup)
+     */
+    public function customer_balance($customer_id = 0) {
+        $customer_id = intval($customer_id);
+        if ($customer_id <= 0) {
+            header('Content-Type: application/json');
+            echo json_encode(array('status' => 'error', 'balance' => 0.00, 'message' => 'Invalid customer ID'));
+            return;
+        }
+
+        $cust = $this->db->select('customer_ID, customer_name, customer_due, customer_contact')
+                         ->where('customer_ID', $customer_id)
+                         ->get('customers')
+                         ->row_array();
+
+        if (empty($cust)) {
+            header('Content-Type: application/json');
+            echo json_encode(array('status' => 'error', 'balance' => 0.00, 'message' => 'Customer not found'));
+            return;
+        }
+
+        $due = (float)$cust['customer_due'];
+
+        // Also check if there are unpaid sales invoices with current due
+        $sales_due = $this->db->select('SUM(sale_total_current_due) as total_unpaid')
+                              ->where('sale_customer', $customer_id)
+                              ->get('sales')
+                              ->row_array();
+
+        $unpaid_sales = !empty($sales_due['total_unpaid']) ? (float)$sales_due['total_unpaid'] : 0.0;
+        $final_balance = max($due, $unpaid_sales);
+
+        header('Content-Type: application/json');
+        echo json_encode(array(
+            'status' => 'success',
+            'customer_id' => $customer_id,
+            'customer_name' => $cust['customer_name'],
+            'customer_contact' => $cust['customer_contact'],
+            'balance' => number_format($final_balance, 2, '.', ''),
+            'customer_due' => number_format($due, 2, '.', '')
+        ));
+    }
+
 }
