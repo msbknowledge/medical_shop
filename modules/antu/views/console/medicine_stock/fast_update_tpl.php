@@ -55,10 +55,6 @@
     <div class="box span12 ss-card">
         <div class="box-header well ss-card-header" data-original-title="">
             <h2><i class="fa fa-refresh"></i> <span>Fast Stock Update</span></h2>
-            <div class="box-icon">
-                <a href="#" class="btn btn-minimize btn-round"><i class="fa fa-chevron-up"></i></a>
-                <a href="#" class="btn btn-close btn-round"><i class="fa fa-times"></i></a>
-            </div>
         </div>
         <div class="box-content ss-card-body">
             <div class="scrollgard" style="overflow: auto">

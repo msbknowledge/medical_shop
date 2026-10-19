@@ -97,10 +97,10 @@
                         <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
                     <td>
                         <input   type="hidden" value="false" name="sale_returned[]">
-                        <input required="required" readonly="readonly"  type="text" value="<?= $value['product_name'] ?>" name="product_name[]">
-                        Mfg:<input required="required" readonly="readonly"   type="text" value="<?= $value['product_manufacturer'] ?>" name="product_manufacturer[]" style="width:80px;">
+                        <input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_name'] ?>" name="medicine_name[]">
+                        Mfg:<input required="required" readonly="readonly"   type="text" value="<?= $value['medicine_manufacturer'] ?>" name="medicine_manufacturer[]" style="width:80px;">
                     </td>
-                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:80px;"></td>
+                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_hsn'] ?>" name="medicine_hsn[]" style="width:80px;"></td>
                     <td><input required="required"  type="text" value="<?= $value['sale_quantity'] ?>" name="sale_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
                     <td><input required="required" readonly="readonly" type="text" value="<?= $value['sale_batch'] ?>"  name="sale_batch[]" style="width: 90px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['sale_expire_month'] ?>" name="sale_expire_month[]" style="width: 20px;margin: 0;padding: 0;float: left;">
@@ -157,10 +157,10 @@
                     <td><span><?= $counter ?></span>
                     <td>
                         <input   type="hidden" value="true" name="sale_returned[]">
-                        <input required="required" readonly="readonly"  type="text" value="<?= $value['product_name'] ?>" name="product_name[]">
-                        Mfg:<input required="required" readonly="readonly"   type="text" value="<?= $value['product_manufacturer'] ?>" name="product_manufacturer[]" style="width:80px;">
+                        <input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_name'] ?>" name="medicine_name[]">
+                        Mfg:<input required="required" readonly="readonly"   type="text" value="<?= $value['medicine_manufacturer'] ?>" name="medicine_manufacturer[]" style="width:80px;">
                     </td>
-                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:80px;"></td>
+                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_hsn'] ?>" name="medicine_hsn[]" style="width:80px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['sale_quantity'] ?>" name="sale_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
                     <td><input required="required" readonly="readonly" type="text" value="<?= $value['sale_batch'] ?>"  name="sale_batch[]" style="width: 90px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['sale_expire_month'] ?>" name="sale_expire_month[]" style="width: 20px;margin: 0;padding: 0;float: left;">

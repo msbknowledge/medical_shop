@@ -87,9 +87,9 @@
                         <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
                     <td>
                         <input   type="hidden" value="false" name="purchase_returned[]">
-                        <input required="required" readonly="readonly"  type="text" value="<?= $value['product_name'] ?>" name="product_name[]"></td>
-                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:80px;"></td>
-                    <td><input required="required" readonly="readonly"   type="text" value="<?= $value['product_manufacturer'] ?>" name="product_manufacturer[]" style="width:80px;"></td>
+                        <input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_name'] ?>" name="medicine_name[]"></td>
+                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_hsn'] ?>" name="medicine_hsn[]" style="width:80px;"></td>
+                    <td><input required="required" readonly="readonly"   type="text" value="<?= $value['medicine_manufacturer'] ?>" name="medicine_manufacturer[]" style="width:80px;"></td>
                     <td><input required="required"  type="text" value="<?= $value['purchase_quantity'] ?>" name="purchase_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
                     <td><input required="required"  type="text" value="<?= $value['purchase_free_quantity'] ?>" name="purchase_free_quantity[]"  style="width:30px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['purchase_unit'] ?>" name="purchase_unit[]" style="width:30px;"></td>
@@ -167,9 +167,9 @@
                     <td><span><?= $counter ?></span>
                     <td>
                         <input   type="hidden" value="true" name="purchase_returned[]">
-                        <input required="required" readonly="readonly"  type="text" value="<?= $value['product_name'] ?>" name="product_name[]"></td>
-                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:80px;"></td>
-                    <td><input required="required" readonly="readonly"   type="text" value="<?= $value['product_manufacturer'] ?>" name="product_manufacturer[]" style="width:80px;"></td>
+                        <input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_name'] ?>" name="medicine_name[]"></td>
+                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_hsn'] ?>" name="medicine_hsn[]" style="width:80px;"></td>
+                    <td><input required="required" readonly="readonly"   type="text" value="<?= $value['medicine_manufacturer'] ?>" name="medicine_manufacturer[]" style="width:80px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['purchase_quantity'] ?>" name="purchase_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['purchase_free_quantity'] ?>" name="purchase_free_quantity[]"  style="width:30px;"></td>
                     <td><input required="required" readonly="readonly"  type="text" value="<?= $value['purchase_unit'] ?>" name="purchase_unit[]" style="width:30px;"></td>
@@ -219,9 +219,9 @@
         rowcount++;
         var therow = " <tr class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"><\/td>\r\n  \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"><\/td>\r\n  \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_quantity[]\" onkeyup=\"gst_calculation(this)\" value=\"1\" style=\"width:30px;\"><\/td>\r\n    \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_free_quantity[]\"  value=\"0\" style=\"width:30px;\"><\/td>\r\n    \n\
     <td><input required=\"required\"  type=\"text\" name=\"purchase_unit[]\" style=\"width:30px;\"><\/td>\r\n   \n\

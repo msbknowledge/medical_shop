@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" >
     <head>
         <meta charset="utf-8">
@@ -7,6 +7,9 @@
                     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
                         <link id="bs-css" href="/css/bootstrap-spacelab.css" rel="stylesheet">
                             <script>
                                 $(function () {
@@ -704,12 +707,15 @@
                                         margin:0.1in 0.1in 0in 0in;
                                     }
                                     @media print {
-                                        /* td{
-                                             border-color: black;
-                                             border-width: 2px;
-                                             background:#fff;
-                                         }
-                                        */
+                                        h1{
+                                    margin-left: 200px;
+                                    margin-bottom:50px;
+                                    line-height:1.2;
+                                    font-weight: bold;
+                                         /* border-color: black;
+                                         border-width: 2px;
+                                         background:#fff; */
+                                     }
                                     }
                                     .main+.main {
                                         page-break-before:always;
@@ -764,6 +770,7 @@
                                         border: medium none !important;
                                         height: auto;
                                         display: block;
+                                        
                                     }
                                     .main .calculation {
                                         border-top: 1px solid black;
@@ -787,32 +794,78 @@
                                     }
                                     td{font-size: 10px;}
                                     @media print{
-                                        .form_div{
+                                        .container{
                                             display:none;
                                         }
                                     }
                                     .ajax_resp{text-align:center}
                                 </style>
 
-                                <div class="main" style="page-break-after: always;">
-                                    <h1 style="color:black; text-align:center;">Sale Billing Sheet</h1>
-                                    <a href="/console/" >
+                        <div class="main" style="page-break-after: always;">
+                            <h1 style="color:black; text-align:center;">Sale Return Billing Sheet</h1>
+                                    <img src="/msb/msbbillingslogo.png" id="site_logo" style="position: absolute;top: 0;background-color: white; height: 50px">
 
-                                    </a><hr/>
-                                    <div class="form_div" style="margin-bottom: 10px;text-align: center;">
-                                        <form method="post" onsubmit="return false">
-                                            <input type="text" name="customer_name" id="customer_name"placeholder="Customer Name"/>
-                                            <input type="text" name="return_sale_product" id="return_sale_product" placeholder="Product"/>
-                                             <input type="text" name="return_sale_Batch" id="return_sale_product" placeholder="Batch"/>
-                                            <input type="text" name ="return_sale_ref"id="return_sale_ref" placeholder="Reference"/>
-                                            <input type="text" id="start_date" name="start" placeholder="Start Date" class="datepicker">
-                                                <input type="text" id="end_date" name="end" placeholder="End Date" class="datepicker">
-                                                    <button id="report_sub" class="btn btn-info" style=" margin-top: -9px;">SEARCH</button>
-                                                    </form>
-                                                    </div>
-                                                    <div class="ajax_resp">
-                                                        Choose Filter To Generate Data
-                                                    </div>
-                                                    </div>                                                
-                                                    </body>
-                                                    </html>
+                            <!-- <div class="form_div form-group" style="margin-bottom: 10px;text-align: center;"> -->
+                            <div class="container">
+                                <div class="form-group">
+                                    <form method="post" onsubmit="return false">
+                                        <div class="row form-row">
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="customer_name">Customer Name:</label>
+                                            <input type="text" name="customer_name" id="customer_name" placeholder="customer name" class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="return_sale_medicine">Medicine:</label>
+                                            <input type="text" name="return_sale_medicine" id="return_sale_medicine" placeholder="medicine name" class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="return_sale_Batch">Batch:</label>
+                                            <input type="text" name="return_sale_Batch" id="return_sale_medicine" placeholder="return sale batch" class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="return_sale_ref">Reference:</label>
+                                            <input type="text" name ="return_sale_ref" id="return_sale_ref" placeholder="reference" class="return_sale_ref form-control"/>
+                                            </div>
+                                        </div>
+                                        <div class="row form-row">
+                                        
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="datepicker">Start Date:</label>
+                                            <input typex="text" type="date-local" value="<?=  date('Y-m-d',strtotime("-1 month")) ?>" id="start_date" name="start" class="datepicker form-control">
+                                            </div>
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <label for="end_date">End Date:</label>
+                                            <input typex="text" type="date-local" value="<?=  date('Y-m-d') ?>" id="end_date" name="end" class="datepicker form-control">
+                                            </div>
+                                            <div class="form-group col-sm-3 col-xs-3 col-md-3 col-lg-3">
+                                            <button id="report_sub" class="btn btn-info" style=" margin-top: 9%;">SEARCH</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="ajax_resp">Choose Filter To Generate Data</div>
+                            </div>                                                
+                        </body>
+                    </html>
+                    <div class="container-fluid" style="padding-right: 20px; padding-left: 20px;">
+                    <hr style="border-top: 1px solid #f5f5f5; border-bottom: 1px solid #cccccc;">                              
+                    <footer style="text-shadow: 0px 1px 9px #99B8C4;font-weight: bold;font-size: smaller;">
+                    <div class="row-fluid">
+                        <div class="span4">© <?=date('Y')?> MsbBillings - All Rights Reserved</div>
+                        <div class="span4" style="text-align: center;"><p class="center">Powered By <br> <a target="_blank" href="https://www.msbbillings.in"><img style="height: 50px;" src="<?= cdn_url() ?>msb/msbbillingslogo.png"/></a></p></div>
+                    <!-- <div id="google_translate_element" class="span4" style="text-align: right;"></div> -->
+                    </div>
+
+                    <script type="text/javascript">
+                     $("#site_logo").on("click",function(){
+                    window.location.href = "/console/";
+                })
+                    // function googleTranslateElementInit() {
+                    //   new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                    // }
+                    </script>
+
+                    <!-- <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script> -->
+                    </footer>
+                    </div>

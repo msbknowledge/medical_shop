@@ -138,8 +138,8 @@
 
                         <tr class="rowline"><td>
                                 <span><?= $counter ?></span></td>   
-                            <td><?= $value['product_name'] ?><br/>Mfg: <?= $value['product_manufacturer'] ?></td>  
-                            <td><?= $value['product_hsn'] ?></td>      
+                            <td><?= $value['medicine_name'] ?><br/>Mfg: <?= $value['medicine_manufacturer'] ?></td>  
+                            <td><?= $value['medicine_hsn'] ?></td>      
                             <td><?= $value['sale_strip_quantity'] ?></td>    
                             <td><?= $value['sale_loose_quantity'] ?></td>    
                             <td><?= $value['sale_batch'] ?></td>   
@@ -201,7 +201,7 @@
             </table>
             <p style="text-align: left;font-size: 15px;
                margin-top: 15px; margin-bottom: 0px;">Computer generated Invoice and requires no signature</p>
-            <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Simplebillings.com</p>
+            <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Msbbillings.com</p>
             <table>
                 <tr>
                     

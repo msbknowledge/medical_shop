@@ -39,15 +39,14 @@ $sgst = 0;
 
 <table style="border-top: 1px solid black; border-bottom: 1px solid black;">
     <thead>
-        <caption><h2>Purchase Items</h2></caption>
+        <caption><h2>Purchase Return Items</h2></caption>
         <tr>
             <th>Sr</th>
             <th>Product Name</th>
             <th>HSN</th>
             <th>Batch</th>
             <th>Strip</th>
-
-            <th>purchase date<br/>(MM/YY)</th>
+            <th>Exp Date<br/>(MM/YY)</th>
             <th>MRP</th>
             <th>Total</th>
 
@@ -66,17 +65,32 @@ $sgst = 0;
 
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
-            <td><?= $value['return_purchase_product'] ?></td>  
+            <td><?= $value['return_purchase_medicine'] ?></td>  
                 <td><?= $value['return_purchase_HSN'] ?></td>  
                  <td><?= $value['return_purchase_Batch'] ?></td>  
             <td><?= $value['return_purchase_strip'] ?></td>   
             
             <td><?= $value['return_purchase_expire_month'] ?>/<?= $value['return_purchase_expire_year'] ?></td>  
             <td><?= (float)$value['return_purchase_mrp'] ?></td>  
-            <td><?= (float)$value['return_purchase_mrp']*(float)$value['return_purchase_strip'] ?></td>    
+            <td><?= (float)$value['return_purchase_mrp']*(float)$value['return_purchase_strip'];
+                    $total += (float)$value['return_purchase_mrp']*(float)$value['return_purchase_strip'];
+             ?></td>    
              </tr>
     <?php } ?>
 </tbody>
+</table>
+<table style="border: 1px solid black;margin-top: 75px;">
+
+    <tr>
+        <th>Items</th>
+        <th>Grand Total</th>
+        <th>Round Total</th>
+    </tr>
+    <tr>
+        <td class="totalItem"><?= $counter ?></td>
+        <td class="totalAmount"><?= $total; ?></td>
+        <td class="totalAmount"><?= round($total); ?></td>
+    </tr>
 </table>
 
 <?php

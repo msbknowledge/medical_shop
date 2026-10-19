@@ -85,11 +85,6 @@ body {
                     <tr>
                         <th  style=" border: none;width:25%;">
                                     <h5><?= $data[0]['supplier_name'] ?><br/><?= $data[0]['supplier_address'] ?><br/></h5>
-                               
-                               
-
-
-
                         </th>
                         <th  style=" border: none; width: 45%;">
                             <p style=" font-size: 28px; text-align: center; margin: 0px;"><?= strip_tags(get_option('provider_name')) ?></p>
@@ -120,8 +115,8 @@ body {
 
             <table style="border-top: 1px solid black; border-bottom: 1px solid black;">
     <thead>
-        <caption><h3>Purchase Return </h3> </caption>
-        <h5>Items Ref:[<?=$data[0]['return_purchase_ref']?>]</h5>
+        <caption><h3>Purchase <?= $this->page_config['use_dropdown_columns_options']['return_purchase_type'][$data[0]['return_purchase_type']]?> Return #<?= $data[0]['return_purchase_entry_number']?> on <?= date('d/m/Y',strtotime($data[0]['return_purchase_date']))?> </h3> </caption>
+        <h5>Items Ref:<?= $data[0]['return_purchase_ref']?> </h5>
         <tr>
             <th>Sr</th>
             <th>Product Name</th>
@@ -148,7 +143,7 @@ body {
 
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
-            <td ><?= $value['return_purchase_product'] ?></td> 
+            <td ><?= $value['return_purchase_medicine'] ?></td> 
               <td ><?= $value['return_purchase_HSN'] ?></td> 
                 <td ><?= $value['return_purchase_Batch'] ?></td> 
             <td><?= $value['return_purchase_strip'] ?></td>   

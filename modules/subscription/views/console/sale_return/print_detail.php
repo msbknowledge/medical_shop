@@ -173,10 +173,10 @@
 
                             <tr class="rowline"><td>
                                     <span><?= $counter ?></span></td>   
-                                <td><?= $value['product_name'] ?><br/>Mfg: <?= $value['product_manufacturer'] ?> HSN:<?= $value['product_hsn'] ?></td> 
+                                <td><?= $value['medicine_name'] ?><br/>Mfg: <?= $value['medicine_manufacturer'] ?> HSN:<?= $value['medicine_hsn'] ?></td> 
                                 <td><b><?= $value['sale_strip_quantity'] ?></b></td>    
                                 <td><b><?= $value['sale_loose_quantity'] ?></b></td>
-                                <td><b><?= $value['product_unit'] ?></b></td>     
+                                <td><b><?= $value['medicine_unit'] ?></b></td>     
                                 <td><?= $value['sale_batch'] ?></td>   
                                 <td><b><?= $value['sale_expire_month'] ?>/<?= $value['sale_expire_year'] ?></b></td>  
                                 <td><b><?=
@@ -196,7 +196,7 @@
                                     $sgst += $value['sale_sgst'];
                                     ?></td>    
                                 <td><?php
-                                    $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['product_unit']) * $value['sale_loose_quantity']);
+                                    $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['medicine_unit']) * $value['sale_loose_quantity']);
                                     $full_discount_price = ($full_mrp_price * $value['sale_discount_percent']) / 100;
                                     $final_total = $full_mrp_price - $full_discount_price;
                                     printf('%.2f', $final_total);
@@ -239,7 +239,7 @@
                     </table>
                     <p style="text-align: left;font-size: 15px;
                        margin-top: 15px; margin-bottom: 0px;">Computer generated Invoice and requires no signature</p>
-                    <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Simplebillings.com</p>
+                    <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Msbbillings.com</p>
                     <table>
                         <tr>
 

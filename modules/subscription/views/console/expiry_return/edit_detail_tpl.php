@@ -75,7 +75,7 @@
                 <tr class="rowline">
                     <td><span><?= $k + 1 ?></span>
                         <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
-                    <td><input required="required" type="text" value="<?=$value['expiry_return_product']?>" name="product_name[]"></td>
+                    <td><input required="required" type="text" value="<?=$value['expiry_return_medicine']?>" name="medicine_name[]"></td>
                      <td><input required="required" type="text" value="<?= $value['expiry_return_HSN'] ?>" name="expiry_return_HSN[]"></td>
                       <td><input required="required" type="text" value="<?= $value['expiry_return_Batch'] ?>" name="expiry_return_Batch[]"></td>
                     <td><input required="required"  type="text" value="<?=$value['expiry_return_strip'] ?>" name="expiry_return_strip[]" style="width:80px;"></td>
@@ -108,7 +108,7 @@
         rowcount++;
         var therow = " <tr id=\"rowID" + rowcount + " \" class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"style=\"width:210px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"style=\"width:210px;\"><\/td>\r\n      \n\
 <td><input required=\"required\" type=\"number\" name=\"expiry_return_HSN[]\"style=\"width:210px;\"><\/td>\r\n      \n\
  <td><input required=\"required\" type=\"text\" name=\"expiry_return_Batch[]\"style=\"width:210px;\"><\/td>\r\n      \n\
      <td><input required=\"required\" type=\"number\" name=\"expiry_return_strip[]\"style=\"width:80px;\"><\/td>\r\n      \n\
@@ -153,7 +153,7 @@
             }
 
         });
-        $(".rowline:last").find('[name^="product_name[]"]').focus();
+        $(".rowline:last").find('[name^="medicine_name[]"]').focus();
     }
     function removeRow(targetObj) {
         $(targetObj).parents('.rowline').remove();

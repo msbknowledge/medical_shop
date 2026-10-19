@@ -150,7 +150,7 @@ body {
 
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
-            <td ><?= $value['expiry_return_product'] ?></td> 
+            <td ><?= $value['expiry_return_medicine'] ?></td> 
              <td><?= $value['expiry_return_HSN'] ?></td> 
               <td><?= $value['expiry_return_Batch'] ?></td> 
             <td><?= $value['expiry_return_strip'] ?></td>   

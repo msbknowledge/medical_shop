@@ -39,12 +39,14 @@ $sgst = 0;
 
 <table style="border-top: 1px solid black; border-bottom: 1px solid black;">
     <thead>
-    <caption><h2>Purchased Items</h2></caption>
+    <caption><h2>Purchased Items1</h2></caption>
     <tr>
         <th>Sr</th>
         <th>Product Name</th>
         <th>HSN</th>
         <th>Manufacturer</th>
+        <th>Category</th>
+        <th>Schedule</th>
         <th>Qty</th>
         <th>Free Qty</th>
         <th>Unit</th>
@@ -53,6 +55,7 @@ $sgst = 0;
         <th>MRP</th>
         <th>Rate</th>
         <th>Disc<br/>%</th>
+        <th>Bonus<br/>%</th>
         <th>Taxable</th>
         <th>CGST<br/>%</th>
         <th>CGST</th>
@@ -73,9 +76,11 @@ $sgst = 0;
 
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
-            <td><?= $value['product_name'] ?></td>  
-            <td><?= $value['product_hsn'] ?></td>      
-            <td><?= $value['product_manufacturer'] ?></td>      
+            <td><?= $value['medicine_name'] ?></td>  
+            <td><?= $value['medicine_hsn'] ?></td>      
+            <td><?= $value['medicine_manufacturer'] ?></td>   
+            <td><?= $value['medicine_schedule'] ?></td>  
+            <td><?= $value['medicine_category'] ?></td>  
             <td><?= $value['purchase_quantity'] ?></td>    
             <td><?= $value['purchase_free_quantity'] ?></td>    
             <td><?= $value['purchase_unit'] ?></td>   
@@ -83,7 +88,8 @@ $sgst = 0;
             <td><?= $value['purchase_expire_month'] ?>/<?= $value['purchase_expire_year'] ?></td>  
             <td><?= $value['purchase_mrp'] ?></td>    
             <td><?= $value['purchase_rate'] ?></td>      
-            <td><?= $value['purchase_discount_percent'] ?></td>     
+            <td><?= $value['purchase_discount_percent'] ?></td>   
+            <td><?= $value['purchase_bonus'] ?></td> 
             <td><?= $value['purchase_taxable'] ?></td>       
             <td><?= $value['purchase_cgst_percent'] ?></td>    
             <td><?=
@@ -164,12 +170,12 @@ $sgst = 0;
         <tr class="rowline"><td>
                 <span><?= $counterx ?></span></td>   
             <td><?= $value['purchase_return_date'] ?></td>  
-            <td><?= $value['product_name'] ?></td>  
-            <td><?= $value['product_hsn'] ?></td>      
-            <td><?= $value['product_manufacturer'] ?></td>      
+            <td><?= $value['medicine_name'] ?></td>  
+            <td><?= $value['medicine_hsn'] ?></td>      
+            <td><?= $value['medicine_manufacturer'] ?></td>      
             <td><?= $value['purchase_quantity'] ?></td>    
             <td><?= $value['purchase_free_quantity'] ?></td>    
-            <td><?= $value['product_unit'] ?></td>   
+            <td><?= $value['medicine_unit'] ?></td>   
             <td><?= $value['purchase_batch'] ?></td>   
             <td><?= $value['purchase_expire_month'] ?>/<?= $value['purchase_expire_year'] ?></td>  
             <td><?= $value['purchase_mrp'] ?></td>    

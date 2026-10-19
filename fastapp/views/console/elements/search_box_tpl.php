@@ -118,10 +118,6 @@
                 <h2 style="font-size: 12.5px; font-weight: 700; color: #1e293b; margin: 0; display: inline-flex; align-items: center; gap: 6px; font-family: 'Plus Jakarta Sans', sans-serif;">
                     <i class="fa fa-filter" style="color: #6366f1; font-size: 11.5px;"></i> Filter & Search Records
                 </h2>
-                <div class="box-icon" style="display: flex; gap: 5px;">
-                    <a href="#" class="btn btn-minimize btn-round" style="width: 22px; height: 22px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #fff; color: #64748b; padding: 0;"><i class="fa fa-chevron-up" style="font-size: 9px;"></i></a>
-                    <a href="#" class="btn btn-close btn-round" style="width: 22px; height: 22px; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #e2e8f0; background: #fff; color: #64748b; padding: 0;"><i class="fa fa-times" style="font-size: 9px;"></i></a>
-                </div>
             </div>
             <div class="box-content" style="padding: 10px 16px;">
                 <form class="search-table-form" method="post" onsubmit="return false;">

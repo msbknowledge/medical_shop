@@ -34,11 +34,13 @@
         margin-bottom: 16px;
         padding: 4px 0;
     }
+
     .purchase-title-wrap {
         display: flex;
         align-items: center;
         gap: 12px;
     }
+
     .purchase-title-icon {
         width: 38px;
         height: 38px;
@@ -51,6 +53,7 @@
         font-size: 17px;
         box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
     }
+
     .purchase-title {
         font-size: 19px;
         font-weight: 800;
@@ -58,6 +61,7 @@
         margin: 0;
         line-height: 1.2;
     }
+
     .purchase-subtitle {
         font-size: 12px;
         color: var(--pur-text-muted);
@@ -69,10 +73,11 @@
         background: var(--pur-card);
         border: 1px solid var(--pur-border);
         border-radius: 10px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
         margin-bottom: 16px;
         overflow: hidden;
     }
+
     .pur-card-header {
         background: #ffffff;
         padding: 10px 16px;
@@ -82,6 +87,7 @@
         justify-content: space-between;
         gap: 10px;
     }
+
     .pur-card-title {
         font-size: 13px;
         font-weight: 700;
@@ -91,10 +97,12 @@
         align-items: center;
         gap: 7px;
     }
+
     .pur-card-title i {
         color: var(--pur-primary);
         font-size: 13px;
     }
+
     .pur-card-body {
         padding: 14px 16px;
     }
@@ -105,13 +113,16 @@
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 12px 16px;
     }
+
     .pur-form-group {
         display: flex;
         flex-direction: column;
     }
+
     .pur-form-group.col-span-2 {
         grid-column: span 2;
     }
+
     .pur-form-label {
         font-size: 11px;
         font-weight: 700;
@@ -123,14 +134,17 @@
         align-items: center;
         gap: 4px;
     }
+
     .pur-form-label .req {
         color: var(--pur-danger);
     }
+
     .pur-input-wrap {
         position: relative;
         display: flex;
         align-items: center;
     }
+
     .pur-input-icon {
         position: absolute !important;
         left: 11px !important;
@@ -141,11 +155,13 @@
         pointer-events: none !important;
         z-index: 5 !important;
     }
+
     .pur-input-wrap input,
     .pur-input-wrap input[type="text"],
     .pur-input-wrap .pur-control {
         padding-left: 36px !important;
     }
+
     .pur-control {
         width: 100% !important;
         height: 32px !important;
@@ -162,10 +178,12 @@
         box-sizing: border-box !important;
         transition: border-color 0.15s ease !important;
     }
+
     .pur-control:focus {
         border-color: var(--pur-border-focus) !important;
         box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
     }
+
     .pur-control[readonly] {
         background: #f8fafc !important;
         color: #64748b !important;
@@ -179,12 +197,14 @@
         overflow-x: auto;
         background: #ffffff;
     }
+
     .pur-items-table {
         width: 100%;
         border-collapse: collapse;
         font-size: 11.5px;
         margin-bottom: 0;
     }
+
     .pur-items-table thead th {
         background: #f1f5f9 !important;
         color: #334155 !important;
@@ -198,21 +218,26 @@
         text-align: center !important;
         vertical-align: middle !important;
     }
+
     .pur-items-table tbody td {
         padding: 2px 2px !important;
         border: 1px solid #e2e8f0 !important;
         vertical-align: middle !important;
         background: #ffffff;
     }
+
     .pur-items-table tbody tr.rowline:hover td {
         background: #faf5ff !important;
     }
+
     .pur-items-table tbody tr.rowline:focus-within td {
         background: #f0fdf4 !important;
     }
+
     .pur-items-table tbody tr.expiry-warning td {
         background: #fff1f2 !important;
     }
+
     .pur-items-table tbody tr.expiry-warning td:first-child {
         border-left: 3px solid #ef4444 !important;
     }
@@ -236,6 +261,7 @@
         outline: none !important;
         line-height: normal !important;
     }
+
     .pur-items-table input.pur-cell-input:focus,
     .pur-items-table input[type="text"]:focus,
     .pur-items-table input[type="number"]:focus {
@@ -243,18 +269,22 @@
         box-shadow: 0 0 0 1px #4f46e5 !important;
         background: #ffffff !important;
     }
+
     .pur-cell-input.text-right {
         text-align: right !important;
     }
+
     .pur-cell-input.text-center {
         text-align: center !important;
     }
+
     .pur-cell-input[readonly] {
         background: #f8fafc !important;
         color: #475569 !important;
         border-color: #e2e8f0 !important;
         font-weight: 600 !important;
     }
+
     .pur-cell-input.highlight-total {
         background: #ecfdf5 !important;
         color: #065f46 !important;
@@ -278,10 +308,12 @@
         box-sizing: border-box !important;
         margin: 0 !important;
     }
+
     .pur-exp-wrap:focus-within {
         border-color: #4f46e5 !important;
         box-shadow: 0 0 0 1px #4f46e5 !important;
     }
+
     .pur-exp-wrap input.pur-exp-input {
         width: 22px !important;
         min-width: 22px !important;
@@ -301,6 +333,7 @@
         background: transparent !important;
         box-shadow: none !important;
     }
+
     .pur-exp-sep {
         color: #94a3b8 !important;
         font-weight: 700 !important;
@@ -318,6 +351,7 @@
         gap: 3px;
         padding: 0 2px;
     }
+
     .pur-row-idx {
         font-size: 11px;
         font-weight: 700;
@@ -325,6 +359,7 @@
         min-width: 14px;
         text-align: center;
     }
+
     .btn-remove-row {
         width: 20px !important;
         height: 20px !important;
@@ -343,6 +378,7 @@
         line-height: 1 !important;
         transition: all 0.15s ease !important;
     }
+
     .btn-remove-row:hover {
         background: #ef4444 !important;
         color: #ffffff !important;
@@ -356,6 +392,7 @@
         gap: 12px;
         margin-top: 16px;
     }
+
     .pur-kpi-card {
         background: #ffffff;
         border: 1px solid var(--pur-border);
@@ -365,10 +402,12 @@
         align-items: center;
         justify-content: space-between;
     }
+
     .pur-kpi-info {
         display: flex;
         flex-direction: column;
     }
+
     .pur-kpi-label {
         font-size: 10.5px;
         font-weight: 700;
@@ -377,12 +416,14 @@
         color: #64748b;
         margin-bottom: 2px;
     }
+
     .pur-kpi-value {
         font-size: 17px;
         font-weight: 800;
         color: #0f172a;
         line-height: 1.1;
     }
+
     .pur-kpi-icon {
         width: 34px;
         height: 34px;
@@ -392,15 +433,18 @@
         justify-content: center;
         font-size: 14px;
     }
+
     .pur-kpi-grand {
         background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
         border: none;
         color: #ffffff;
         box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
     }
+
     .pur-kpi-grand .pur-kpi-label {
         color: rgba(255, 255, 255, 0.85);
     }
+
     .pur-kpi-grand .pur-kpi-value {
         color: #ffffff;
         font-size: 20px;
@@ -424,12 +468,14 @@
         box-shadow: 0 -3px 12px rgba(15, 23, 42, 0.04);
         z-index: 999;
     }
+
     .pur-sticky-left {
         display: flex;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
     }
+
     .pur-sticky-badge {
         background: #f1f5f9;
         color: #334155;
@@ -441,9 +487,11 @@
         align-items: center;
         gap: 5px;
     }
+
     .pur-sticky-badge strong {
         color: #0f172a;
     }
+
     .pur-sticky-actions {
         display: flex;
         align-items: center;
@@ -466,10 +514,12 @@
         cursor: pointer !important;
         text-shadow: none !important;
     }
+
     .btn-pur-primary:hover {
         background: #059669 !important;
         color: #ffffff !important;
     }
+
     .btn-pur-secondary {
         background: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
@@ -484,10 +534,12 @@
         cursor: pointer !important;
         text-shadow: none !important;
     }
+
     .btn-pur-secondary:hover {
         background: #f8fafc !important;
         color: #1e293b !important;
     }
+
     .btn-pur-add {
         background: rgba(99, 102, 241, 0.08) !important;
         border: 1px solid rgba(99, 102, 241, 0.25) !important;
@@ -501,6 +553,7 @@
         gap: 5px !important;
         cursor: pointer !important;
     }
+
     .btn-pur-add:hover {
         background: #4f46e5 !important;
         color: #ffffff !important;
@@ -512,7 +565,7 @@
         position: absolute !important;
         background: #ffffff !important;
         border: 1px solid #cbd5e1 !important;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.18) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18) !important;
         border-radius: 6px !important;
         max-height: 280px !important;
         overflow-y: auto !important;
@@ -523,11 +576,13 @@
         list-style: none !important;
         margin: 0 !important;
     }
+
     .ui-autocomplete .ui-menu-item {
         list-style: none !important;
         padding: 0 !important;
         margin: 0 !important;
     }
+
     .ui-autocomplete .ui-menu-item a,
     .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper {
         display: block !important;
@@ -540,6 +595,7 @@
         transition: background 0.1s ease !important;
         border: none !important;
     }
+
     .ui-autocomplete .ui-menu-item a.ui-state-focus,
     .ui-autocomplete .ui-menu-item a.ui-state-hover,
     .ui-autocomplete .ui-menu-item .ui-menu-item-wrapper.ui-state-active,
@@ -599,7 +655,7 @@
 
         <!-- Top Information Cards Grid -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; margin-bottom: 16px;">
-            
+
             <!-- Card 1: Supplier Details -->
             <div class="pur-card" style="margin-bottom: 0;">
                 <div class="pur-card-header">
@@ -752,7 +808,7 @@
                     </button>
                     <span style="font-size: 11px; color: var(--pur-text-muted);">
                         <i class="fa fa-info-circle text-primary"></i> Expiring items (< 30 days) are highlighted in soft red.
-                    </span>
+                            </span>
                 </div>
             </div>
         </div>
@@ -863,7 +919,7 @@
 
     function reindexRows() {
         var idx = 1;
-        $('.rowline').each(function () {
+        $('.rowline').each(function() {
             $(this).find('.pur-row-idx').text(idx);
             idx++;
         });
@@ -887,8 +943,8 @@
         rowcount++;
         var therow = '<tr class="rowline">' +
             '<td><div class="pur-row-actions">' +
-                '<span class="pur-row-idx">' + rowcount + '</span>' +
-                '<button type="button" class="btn-remove-row" onclick="removeRow(this);" title="Remove Row"><i class="fa fa-trash"></i></button>' +
+            '<span class="pur-row-idx">' + rowcount + '</span>' +
+            '<button type="button" class="btn-remove-row" onclick="removeRow(this);" title="Remove Row"><i class="fa fa-trash"></i></button>' +
             '</div></td>' +
             '<td><input required="required" type="text" name="medicine_name[]" class="pur-cell-input med-name-input" placeholder="Type medicine..." onfocus="get_history(this)" autocomplete="off"></td>' +
             '<td><input required="required" type="text" name="medicine_hsn[]" class="pur-cell-input text-center"></td>' +
@@ -901,11 +957,11 @@
             '<td><input required="required" type="number" name="medicine_unit[]" class="pur-cell-input text-center" value="10"></td>' +
             '<td><input required="required" type="text" name="purchase_batch[]" pattern="^\\S+$" class="pur-cell-input text-center"></td>' +
             '<td>' +
-                '<div class="pur-exp-wrap">' +
-                    '<input required="required" type="text" name="purchase_expire_month[]" maxlength="2" placeholder="MM" class="pur-exp-input exp-m" oninput="handleExpMonth(this)">' +
-                    '<span class="pur-exp-sep">/</span>' +
-                    '<input required="required" type="text" name="purchase_expire_year[]" maxlength="2" placeholder="YY" class="pur-exp-input exp-y" oninput="handleExpYear(this)">' +
-                '</div>' +
+            '<div class="pur-exp-wrap">' +
+            '<input required="required" type="text" name="purchase_expire_month[]" maxlength="2" placeholder="MM" class="pur-exp-input exp-m" oninput="handleExpMonth(this)">' +
+            '<span class="pur-exp-sep">/</span>' +
+            '<input required="required" type="text" name="purchase_expire_year[]" maxlength="2" placeholder="YY" class="pur-exp-input exp-y" oninput="handleExpYear(this)">' +
+            '</div>' +
             '</td>' +
             '<td><input required="required" type="text" name="purchase_mrp[]" value="0.00" class="pur-cell-input text-right"></td>' +
             '<td><input required="required" type="text" name="purchase_rate[]" oninput="gst_calculation(this)" value="0.00" class="pur-cell-input text-right" style="font-weight:700; color:#4338ca;"></td>' +
@@ -917,13 +973,13 @@
             '<td><input required="required" readonly="readonly" type="text" name="purchase_sgst_percent[]" value="0" oninput="gst_calculation(this)" class="pur-cell-input text-right"></td>' +
             '<td><input required="required" readonly="readonly" type="text" name="purchase_sgst[]" value="0.00" class="pur-cell-input text-right"></td>' +
             '<td><input required="required" readonly="readonly" type="text" name="purchase_total[]" value="0.00" class="pur-cell-input text-right highlight-total"></td>' +
-        '</tr>';
+            '</tr>';
 
         $('.appendHere').append(therow);
         var $newRow = $('.rowline:last');
 
         // Auto-add new row when pressing Tab on the total field
-        $newRow.find('input[name="purchase_total[]"]').on('keydown', function (e) {
+        $newRow.find('input[name="purchase_total[]"]').on('keydown', function(e) {
             if (e.which === 9 && !e.shiftKey) { // Tab key
                 e.preventDefault();
                 addmore();
@@ -943,7 +999,7 @@
         var ac = $el.autocomplete({
             source: searchUrl + '?table=medicines&fieldToSearch=medicine_name',
             minLength: 1,
-            select: function (event, ui) {
+            select: function(event, ui) {
                 var targetRow = $(this).closest('tr');
                 if (ui.item && ui.item.complete) {
                     var c = ui.item.complete;
@@ -984,12 +1040,12 @@
         }
     }
 
-    $(document).on('focus', '.med-name-input', function () {
+    $(document).on('focus', '.med-name-input', function() {
         bindMedicineAutocomplete($(this));
     });
 
     // Manufacturer Autocomplete
-    $(document).on('focus', 'input[name="medicine_manufacturer[]"]', function () {
+    $(document).on('focus', 'input[name="medicine_manufacturer[]"]', function() {
         if ($(this).data('autocomplete-bound')) return;
         $(this).data('autocomplete-bound', true);
         $(this).autocomplete({
@@ -999,7 +1055,7 @@
     });
 
     // Batch Autocomplete
-    $(document).on('focus', 'input[name="purchase_batch[]"]', function () {
+    $(document).on('focus', 'input[name="purchase_batch[]"]', function() {
         if ($(this).data('autocomplete-bound')) return;
         $(this).data('autocomplete-bound', true);
         $(this).autocomplete({
@@ -1054,6 +1110,49 @@
 
     function gst_calculation(targetObject) {
         var $row = $(targetObject).closest('tr');
+
+        var rate = parseFloat($row.find('[name="purchase_rate[]"]').val()) || 0;
+        var qty = parseFloat($row.find('[name="purchase_quantity[]"]').val()) || 0;
+        var discount = parseFloat($row.find('[name="purchase_discount_percent[]"]').val()) || 0;
+        var bonusPercent = parseFloat($row.find('[name="purchase_bonus[]"]').val()) || 0;
+        var cgstRate = parseFloat($row.find('[name="purchase_cgst_percent[]"]').val()) || 0;
+
+        // CGST and SGST rates should match for intra-state purchases
+        var sgstRate = cgstRate;
+        $row.find('[name="purchase_sgst_percent[]"]').val(sgstRate.toFixed(2));
+
+        // Validate percentages
+        discount = Math.min(100, Math.max(0, discount));
+        bonusPercent = Math.min(100, Math.max(0, bonusPercent));
+        cgstRate = Math.max(0, cgstRate);
+        sgstRate = cgstRate;
+
+        // Calculate taxable value after discount
+        var gross = rate * qty;
+        var discountAmount = gross * discount / 100;
+        var taxable = Math.round((gross - discountAmount) * 100) / 100;
+
+        // Round each GST amount to 2 decimals
+        var cgst = Math.round(taxable * cgstRate / 100 * 100) / 100;
+        var sgst = Math.round(taxable * sgstRate / 100 * 100) / 100;
+
+        // Total is calculated from the displayed rounded values
+        var totalBeforeBonus = Math.round((taxable + cgst + sgst) * 100) / 100;
+
+        // This assumes Bonus field means Bonus % discount.
+        var bonusAmount = Math.round(totalBeforeBonus * bonusPercent / 100 * 100) / 100;
+        var grandTotal = Math.round((totalBeforeBonus - bonusAmount) * 100) / 100;
+
+        $row.find('[name="purchase_taxable[]"]').val(taxable.toFixed(2));
+        $row.find('[name="purchase_cgst[]"]').val(cgst.toFixed(2));
+        $row.find('[name="purchase_sgst[]"]').val(sgst.toFixed(2));
+        $row.find('[name="purchase_total[]"]').val(grandTotal.toFixed(2));
+
+        calculateTotal();
+    }
+
+    function gst_calculation1(targetObject) {
+        var $row = $(targetObject).closest('tr');
         var cgst = parseFloat($row.find('input[name="purchase_cgst_percent[]"]').val()) || 0;
         $row.find('input[name="purchase_sgst_percent[]"]').val(cgst); // SGST matches CGST
         var sgst = cgst;
@@ -1085,7 +1184,7 @@
         var totalSgst = 0;
         var totalTotal = 0;
 
-        $('.rowline').each(function () {
+        $('.rowline').each(function() {
             totalTaxable += parseFloat($(this).find('input[name="purchase_taxable[]"]').val()) || 0;
             totalCgst += parseFloat($(this).find('input[name="purchase_cgst[]"]').val()) || 0;
             totalSgst += parseFloat($(this).find('input[name="purchase_sgst[]"]').val()) || 0;
@@ -1111,7 +1210,7 @@
         $.post(targetUrl, {
             purchase_invoice: inv,
             supplier_name: supp
-        }, function (resp) {
+        }, function(resp) {
             if (resp && resp.invoice_count > 0) {
                 $('#invoice_warning').fadeIn(150);
             } else {
@@ -1123,7 +1222,9 @@
     function get_history(targetObj) {
         var medName = $(targetObj).val();
         if (!medName || medName.trim().length < 2) return;
-        $.post('<?= console_url() ?>purchase/purchase_history', { medicine: medName }, function (resp) {
+        $.post('<?= console_url() ?>purchase/purchase_history', {
+            medicine: medName
+        }, function(resp) {
             if (resp && resp.trim() !== '') {
                 $('#history_content').html(resp);
                 $('#history_modal').fadeIn(200);
@@ -1153,7 +1254,7 @@
         return true;
     }
 
-    $(document).ready(function () {
+    $(document).ready(function() {
         // Initialize Datepicker
         if ($.fn.datepicker) {
             $("[name='purchase_date']").datepicker({
@@ -1167,7 +1268,7 @@
         var suppAc = $('input[name="supplier_name"]').autocomplete({
             source: searchUrl + '?table=suppliers&fieldToSearch=supplier_name',
             minLength: 1,
-            select: function (event, ui) {
+            select: function(event, ui) {
                 if (ui.item && ui.item.complete) {
                     var c = ui.item.complete;
                     $('input[name="supplier_name"]').val(ui.item.value || c.supplier_name);

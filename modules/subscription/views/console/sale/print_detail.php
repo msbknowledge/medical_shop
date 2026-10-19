@@ -27,6 +27,7 @@
             }
             td{
                 border-left: 1px solid black;
+                font-size: 12px;
             }
             table{
                 width: 100%;
@@ -37,6 +38,7 @@
             th{
                 border: 1px solid black;
                 border-bottom: 1px solid black;
+                font-size: 12px;
             }
 
             td{
@@ -44,7 +46,7 @@
             }
 
             .page{
-                height: 1100px;
+                height: 510px;
                 margin-top:0in;
                 background-color: transparant;
 
@@ -92,7 +94,7 @@
                         <th  style=" border: none;width:25%;">
 
                             <p style=" font-size: 25px; text-align: left; margin: 0px; font-weight: bolder;"><i>Invoice No:<?= $data[0]['sale_invoice'] ?></i><br>
-                                Date:<?= date('d/m/Y', strtotime($data[0]['sale_date'])) ?></p>
+                                Date::<?= date('d/m/Y', strtotime($data[0]['sale_date'])) ?></p>
 
 
 
@@ -122,7 +124,7 @@
                             <th  style=" border: none; text-align: left; font-size: 20px"> Name: <?= $data[0]['customer_name'] ?></th>
                         <? endif; ?>  
                         <? if (!empty(trim($data[0]['doctor_name']))): ?>
-                            <!--th  style=" border: none; text-align: center;  font-size: 20px">Dr Name: <?= $data[0]['doctor_name'] ?></th-->
+                            <th  style=" border: none; text-align: center;  font-size: 20px">Dr Name: <?= $data[0]['doctor_name'] ?></th>
                         <? endif; ?>  
 
                         <? if (!empty(trim($data[0]['customer_contact']))): ?>
@@ -168,7 +170,7 @@
                     <tbody class="appendHere">
                         <?php 
                         //$counter = 0;
-                        //pr($data);
+                       // pr($data);
                         foreach ($data as $k => $value) {#pr($value);
                             if ((int) $value['sale_strip_quantity'] <= -1) {
                                 $hasreturn = true;
@@ -180,10 +182,10 @@
 
                             <tr class="rowline"><td>
                                     <span><?= $counter ?></span></td>   
-                                <td><?= $value['product_name'] ?><br/>Mfg: <?= $value['product_manufacturer'] ?> HSN:<?= $value['product_hsn'] ?></td> 
+                                <td><?= $value['medicine_name'] ?><br/>Mfg: <?= $value['medicine_manufacturer'] ?> HSN:<?= $value['medicine_hsn'] ?></td> 
                                 <td><b><?= $value['sale_strip_quantity'] ?></b></td>    
                                 <td><b><?= $value['sale_loose_quantity'] ?></b></td>
-                                <td><b><?= $value['product_unit'] ?></b></td>     
+                                <td><b><?= $value['medicine_unit'] ?></b></td>     
                                 <td><?= $value['sale_batch'] ?></td>   
                                 <td><b><?= $value['sale_expire_month'] ?>/<?= $value['sale_expire_year'] ?></b></td>  
                                 <td><b><?=
@@ -203,7 +205,7 @@
                                     $sgst += $value['sale_sgst'];
                                     ?></td>    
                                 <td><?php
-                                    $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['product_unit']) * $value['sale_loose_quantity']);
+                                    $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['medicine_unit']) * $value['sale_loose_quantity']);
                                     //$full_discount_price = ($full_mrp_price * $value['sale_discount_percent']) / 100;
                                    // $final_total = $full_mrp_price - $full_discount_price;
                                     printf('%.2f', $value['sale_total']);
@@ -220,9 +222,6 @@
                         ?>
                     </tbody>
                 </table>
-
-
-
 
 
                 <?php
@@ -268,10 +267,10 @@
 
                                 <tr class="rowline"><td>
                                         <span><?= $counter ?></span></td>   
-                                    <td><?= $value['product_name'] ?><br/>Mfg: <?= $value['product_manufacturer'] ?> HSN:<?= $value['product_hsn'] ?></td> 
+                                    <td><?= $value['medicine_name'] ?><br/>Mfg: <?= $value['medicine_manufacturer'] ?> HSN:<?= $value['medicine_hsn'] ?></td> 
                                     <td><b><?= $value['sale_strip_quantity'] ?></b></td>    
                                     <td><b><?= $value['sale_loose_quantity'] ?></b></td>
-                                    <td><b><?= $value['product_unit'] ?></b></td>     
+                                    <td><b><?= $value['medicine_unit'] ?></b></td>     
                                     <td><?= $value['sale_batch'] ?></td>   
                                     <td><b><?= $value['sale_expire_month'] ?>/<?= $value['sale_expire_year'] ?></b></td>  
                                     <td><b><?=
@@ -291,7 +290,7 @@
                                         $sgst += $value['sale_sgst'];
                                         ?></td>    
                                     <td><?php
-                                        $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['product_unit']) * $value['sale_loose_quantity']);
+                                        $full_mrp_price = ($value['sale_mrp'] * $value['sale_strip_quantity']) + (($value['sale_mrp'] / $value['medicine_unit']) * $value['sale_loose_quantity']);
                                         $full_discount_price = ($full_mrp_price * $value['sale_discount_percent']) / 100;
                                         $final_total = $full_mrp_price - $full_discount_price;
                                         printf('%.2f', $final_total);
@@ -360,7 +359,7 @@
                             </table>
                             <p style="text-align: left;font-size: 15px;
                                margin-top: 15px; margin-bottom: 0px;">Computer generated Invoice and requires no signature</p>
-                            <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Simplebillings.com</p>
+                            <p style="text-align: right;font-size: 15px; margin-top: -19px;">Powered By Msbbillings.in</p>
                             <table>
                                 <tr>
 

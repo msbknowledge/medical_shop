@@ -93,7 +93,7 @@
         rowcount++;
         var therow = " <tr id=\"rowID" + rowcount + " \" class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"style=\"width:250px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"style=\"width:250px;\"><\/td>\r\n      \n\
 <td><input required=\"required\" type=\"number\" name=\"expiry_return_HSN[]\"style=\"width:50px;\"><\/td>\r\n      \n\
  <td><input required=\"required\" type=\"text\" name=\"expiry_return_Batch[]\"style=\"width:50px;\"><\/td>\r\n      \n\
      <td><input required=\"required\" type=\"number\" name=\"expiry_return_strip[]\"style=\"width:50px;\"><\/td>\r\n      \n\
@@ -138,7 +138,7 @@
             }
 
         });
-        $(".rowline:last").find('[name^="product_name[]"]').focus();
+        $(".rowline:last").find('[name^="medicine_name[]"]').focus();
     }
     function removeRow(targetObj) {
         $(targetObj).parents('.rowline').remove();

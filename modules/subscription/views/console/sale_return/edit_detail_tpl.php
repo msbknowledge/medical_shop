@@ -104,16 +104,16 @@
                     <td><span><?= $k + 1 ?></span>
                         <a href="javascript:void(0)" onclick="removeRow(this);"> <i class=" icon-minus-sign" style="font-size:30px;color:red"></i> </a></td>
                     <td>
-                        <input required="required" type="hidden" name="product_id[]" value="<?= $value['product_id'] ?>">
-                        <input required="required" type="text" name="product_name[]" value="<?= $value['product_name'] ?>"
+                        <input required="required" type="hidden" name="medicine_id[]" value="<?= $value['medicine_id'] ?>">
+                        <input required="required" type="text" name="medicine_name[]" value="<?= $value['medicine_name'] ?>"
                                class="ui-autocomplete-input" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true"> 
-                        Store:<input  readonly="readonly" value="<?= $value['product_storage'] ?>"  type="text" name="product_storage[]" style="width:50px;">
+                        Store:<input  readonly="readonly" value="<?= $value['medicine_storage'] ?>"  type="text" name="medicine_storage[]" style="width:50px;">
                     </td>
 
-                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['product_hsn'] ?>" name="product_hsn[]" style="width:40px;"></td>
+                    <td><input required="required" readonly="readonly"  type="text" value="<?= $value['medicine_hsn'] ?>" name="medicine_hsn[]" style="width:40px;"></td>
                     <td><input required="required"  type="text" value="<?= $value['sale_strip_quantity'] ?>" name="sale_strip_quantity[]" onkeyup="calculate_the_sale(this)" style="width:30px;"></td>
                     <td><input required="required"  type="text" value="<?= $value['sale_loose_quantity'] ?>" name="sale_loose_quantity[]" onkeyup="calculate_the_sale(this)" style="width:30px;"></td>
-                    <td><input required="required"  type="text" value="<?= $value['product_unit'] ?>" name="product_unit[]" style="width:30px;" onkeyup="calculate_the_sale(this)"></td>
+                    <td><input required="required"  type="text" value="<?= $value['medicine_unit'] ?>" name="medicine_unit[]" style="width:30px;" onkeyup="calculate_the_sale(this)"></td>
                     <td><input required="required"  type="text" value="<?= $value['sale_batch'] ?>"  name="sale_batch[]" style="width: 90px;" onkeyup="calculate_the_sale(this)"></td>
                     <td><input required="required"  type="text" value="<?= $value['sale_expire_month'] ?>" name="sale_expire_month[]" onkeyup="calculate_the_sale(this)" style="width: 20px;margin: 0;padding: 0;float: left;">
                         <span style="margin: 0;padding: 0;float: left;">/</span>
@@ -237,11 +237,11 @@
         rowcount++;
         var therow = " <tr class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> <i class=\" icon-minus-sign\" style=\"font-size:30px;color:red\"></i> <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"hidden\" name=\"product_id[]\"> <input required=\"required\" type=\"text\" name=\"product_name[]\"> Store:<input  readonly=\"readonly\"  type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\/td>\r\n  \n\
-      <td><input required=\"required\" readonly=\"readonly\"  type=\"text\" name=\"product_hsn[]\" style=\"width:40px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"hidden\" name=\"medicine_id[]\"> <input required=\"required\" type=\"text\" name=\"medicine_name[]\"> Store:<input  readonly=\"readonly\"  type=\"text\" name=\"medicine_storage[]\" style=\"width:50px;\"><\/td>\r\n  \n\
+      <td><input required=\"required\" readonly=\"readonly\"  type=\"text\" name=\"medicine_hsn[]\" style=\"width:40px;\"><\/td>\r\n      \n\
       <td><input required=\"required\" type=\"text\" name=\"sale_strip_quantity[]\" value=\"1\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n      \n\
       <td><input required=\"required\"  type=\"text\" name=\"sale_loose_quantity[]\" onkeyup=\"calculate_the_sale(this)\"  value=\"0\" style=\"width:30px;\"><\/td>\r\n    \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_unit[]\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n    \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_unit[]\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n    \n\
           <td><input onchange=\"calculate_the_sale(this)\"  type=\"text\" list name=\"sale_batch[]\" style=\"width: 90px;\"><\/td>\r\n   \n\
      <td><input required=\"required\"  type=\"text\" name=\"sale_expire_month[]\" max=\"31\" min=\"1\" maxlength=\"2\" onfocusout=\"focusvalidation(this)\"  style=\"width: 20px;margin: 0;padding: 0;float: left;\">\n\
     <span style=\"margin: 0;padding: 0;float: left;\">/<\/span><input   required=\"required\" type=\"text\" name=\"sale_expire_year[]\" onfocusout=\"focusvalidation(this)\" min=\"17\" maxlength=\"99\" maxlength=\"2\" style=\"width: 20px;margin: 0;padding: 0;float: left;\"> <\/td>\r\n  \n\
@@ -267,9 +267,9 @@
                             $.each(ui.item.complete, function (populate_field, populate_value) {
                                 $(targetRow).find('[name^="' + populate_field + '[]"').val('');
 
-                                 if (populate_field == 'product_name') {
-                                    $.get('/batch.php?product_id=' + ui.item.complete.product_id, function (resp) {
-                                        var batchchooser = $('<datalist id="list_' + ui.item.complete.product_id + '"></datalist>');
+                                 if (populate_field == 'medicine_name') {
+                                    $.get('/batch.php?medicine_id=' + ui.item.complete.medicine_id, function (resp) {
+                                        var batchchooser = $('<datalist id="list_' + ui.item.complete.medicine_id + '"></datalist>');
                                         $.each(resp, function (k, v) {
                                             $(batchchooser).append($('<option value="' + v.value + '" >' + v.label + '</option>'));
                                         });
@@ -277,12 +277,12 @@
                                         $(targetRow).find('[name^="sale_batch[]"').val('');
                                         $(targetRow).find('[name^="sale_batch[]"').parent().find('datalist').remove();
                                         $(targetRow).find('[name^="sale_batch[]"').parent().append(batchchooser);
-                                        $(targetRow).find('[name^="sale_batch[]"').attr('list', 'list_' + ui.item.complete.product_id);
+                                        $(targetRow).find('[name^="sale_batch[]"').attr('list', 'list_' + ui.item.complete.medicine_id);
 
                                     }, 'json');
                                 }
                                 $(targetRow).find('[name^="' + populate_field + '[]"').val(populate_value);
-                                $(targetRow).find('[name^="product_manufacturer[]"]').focus(function () {
+                                $(targetRow).find('[name^="medicine_manufacturer[]"]').focus(function () {
                                     $(targetRow).find('[name^="sale_strip_quantity[]"]').focus().select();
                                 });
 
@@ -292,7 +292,7 @@
 
                             $(targetRow).find('[name^="sale_batch[]"]').change(function () {
                                 targetRow = $(this).parents('tr');
-                                $.post('/batch.php?product_id=' + $(targetRow).find('[name^="product_id[]"').val() + '&term=' + $(this).val(), function (resp) {
+                                $.post('/batch.php?medicine_id=' + $(targetRow).find('[name^="medicine_id[]"').val() + '&term=' + $(this).val(), function (resp) {
                                     $.each(resp[0].complete, function (populate_fieldx, populate_valuex) {
                                         console.log(populate_fieldx);
                                         //targetRow = $(this).parents('tr');
@@ -338,22 +338,22 @@
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
             }
         });
-        $('[name^="product_manufacturer[]"]').focus(function () {
+        $('[name^="medicine_manufacturer[]"]').focus(function () {
             $(this).parent('.rowline').find('[name^="sale_strip_quantity[]"]').focus();
         });
-        $("[name^='product_name[]']").focus();
+        $("[name^='medicine_name[]']").focus();
 
     }
       function addmore_return() {
         returncount++;
         var therow = " <tr class=\"rowline_return\">\r\n<td><span>" +returncount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> <i class=\" icon-minus-sign\" style=\"font-size:30px;color:red\"></i> <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"hidden\" name=\"product_id[]\"> <input required=\"required\" type=\"text\" name=\"product_name[]\"> \n\
-Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\/td>\r\n  \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_hsn[]\" style=\"width:40px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"hidden\" name=\"medicine_id[]\"> <input required=\"required\" type=\"text\" name=\"medicine_name[]\"> \n\
+Store:<input   type=\"text\" name=\"medicine_storage[]\" style=\"width:50px;\"><\/td>\r\n  \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_hsn[]\" style=\"width:40px;\"><\/td>\r\n      \n\
       <td><input required=\"required\" type=\"text\" name=\"sale_strip_quantity[]\" value=\"1\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n      \n\
       <td><input required=\"required\"  type=\"text\" name=\"sale_loose_quantity[]\" onkeyup=\"calculate_the_sale(this)\"  value=\"0\" style=\"width:30px;\"><\/td>\r\n    \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_unit[]\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n    \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_unit[]\" onkeyup=\"calculate_the_sale(this)\" style=\"width:30px;\"><\/td>\r\n    \n\
           <td><input  type=\"text\" onchange=\"calculate_the_sale(this)\"  name=\"sale_batch[]\" style=\"width: 94PX;\"><\/td>\r\n   \n\
      <td><input required=\"required\"  type=\"text\" name=\"sale_expire_month[]\" max=\"31\" min=\"1\" maxlength=\"2\" onfocusout=\"focusvalidation(this)\"  style=\"width: 20px;margin: 0;padding: 0;float: left;\">\n\
     <span style=\"margin: 0;padding: 0;float: left;\">/<\/span><input   required=\"required\" type=\"text\" name=\"sale_expire_year[]\" onfocusout=\"focusvalidation(this)\" min=\"17\" maxlength=\"99\" maxlength=\"2\" style=\"width: 20px;margin: 0;padding: 0;float: left;\"> <\/td>\r\n  \n\
@@ -379,9 +379,9 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
                             $.each(ui.item.complete, function (populate_field, populate_value) {
                                 $(targetRow).find('[name^="' + populate_field + '[]"').val('');
 
-                                if (populate_field == 'product_name') {
-                                    $.get('/batch.php?product_id=' + ui.item.complete.product_id, function (resp) {
-                                        var batchchooser = $('<datalist id="list_' + ui.item.complete.product_id + '"></datalist>');
+                                if (populate_field == 'medicine_name') {
+                                    $.get('/batch.php?medicine_id=' + ui.item.complete.medicine_id, function (resp) {
+                                        var batchchooser = $('<datalist id="list_' + ui.item.complete.medicine_id + '"></datalist>');
                                         $.each(resp, function (k, v) {
                                             $(batchchooser).append($('<option value="' + v.value + '" >' + v.label + '</option>'));
                                         });
@@ -389,12 +389,12 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
                                         $(targetRow).find('[name^="sale_batch[]"').val('');
                                         $(targetRow).find('[name^="sale_batch[]"').parent().find('datalist').remove();
                                         $(targetRow).find('[name^="sale_batch[]"').parent().append(batchchooser);
-                                        $(targetRow).find('[name^="sale_batch[]"').attr('list', 'list_' + ui.item.complete.product_id);
+                                        $(targetRow).find('[name^="sale_batch[]"').attr('list', 'list_' + ui.item.complete.medicine_id);
 
                                     }, 'json');
                                 }
                                 $(targetRow).find('[name^="' + populate_field + '[]"').val(populate_value);
-                                $(targetRow).find('[name^="product_manufacturer[]"]').focus(function () {
+                                $(targetRow).find('[name^="medicine_manufacturer[]"]').focus(function () {
                                     $(targetRow).find('[name^="sale_strip_quantity[]"]').focus().select();
                                 });
 
@@ -404,7 +404,7 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
 
                             $(targetRow).find('[name^="sale_batch[]"]').change(function () {
                                 targetRow = $(this).parents('tr');
-                                $.post('/batch.php?product_id=' + $(targetRow).find('[name^="product_id[]"').val() + '&term=' + $(this).val(), function (resp) {
+                                $.post('/batch.php?medicine_id=' + $(targetRow).find('[name^="medicine_id[]"').val() + '&term=' + $(this).val(), function (resp) {
                                     $.each(resp[0].complete, function (populate_fieldx, populate_valuex) {
                                         console.log(populate_fieldx);
                                         //targetRow = $(this).parents('tr');
@@ -450,10 +450,10 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
                 $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
             }
         });
-        $('[name^="product_manufacturer[]"]').focus(function () {
+        $('[name^="medicine_manufacturer[]"]').focus(function () {
             $(this).parent('.rowline').find('[name^="sale_strip_quantity[]"]').focus();
         });
-        $("[name^='product_name[]']").focus();
+        $("[name^='medicine_name[]']").focus();
     }
     function removeRow(targetObj) {
         $(targetObj).parents('.rowline').remove();
@@ -526,7 +526,7 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
     function calculate_the_sale(targetObject) {
         var cgst = parseFloat($(targetObject).parents('tr').find('[name="sale_cgst_percent[]"]').val());
         var mrp = parseFloat($(targetObject).parents('tr').find('[name="sale_mrp[]"]').val());
-        var unit = parseFloat($(targetObject).parents('tr').find('[name="product_unit[]"]').val());
+        var unit = parseFloat($(targetObject).parents('tr').find('[name="medicine_unit[]"]').val());
         var rate = mrp2rate(mrp, cgst);
         $(targetObject).parents('tr').find('[name="sale_rate[]"]').val(rate.toFixed(3));
         $(targetObject).parent().parent().find('[name^="sale_sgst_percent[]"]').val(cgst);// as gst rates are same
@@ -535,7 +535,7 @@ Store:<input   type=\"text\" name=\"product_storage[]\" style=\"width:50px;\"><\
         var sale_loose_quantity = parseFloat($(targetObject).parent().parent().find('[name^="sale_loose_quantity[]"]').val());
 
         var qty = (sale_strip_quantity * unit) + sale_loose_quantity;
-        var unit = parseFloat($(targetObject).parent().parent().find('[name^="product_unit[]"]').val());
+        var unit = parseFloat($(targetObject).parent().parent().find('[name^="medicine_unit[]"]').val());
         var discount_percent = parseFloat($(targetObject).parent().parent().find('[name^="sale_discount_percent[]"]').val());
 
         var total = (rate * qty / unit);

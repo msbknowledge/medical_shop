@@ -77,16 +77,16 @@
                 <tr class="rowline">
                     <td><span><?=$k+1?></span>
                         <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
-                    <td><input required="required" type="text" value="<?=$value['product_name']?>" name="product_name[]"></td>
-                    <td><input required="required"  type="text" value="<?=$value['product_hsn']?>" name="product_hsn[]" style="width:80px;"></td>
-                    <td><input required="required"  type="text" value="<?=$value['product_manufacturer']?>" name="product_manufacturer[]" style="width:80px;"></td>
+                    <td><input required="required" type="text" value="<?=$value['medicine_name']?>" name="medicine_name[]"></td>
+                    <td><input required="required"  type="text" value="<?=$value['medicine_hsn']?>" name="medicine_hsn[]" style="width:80px;"></td>
+                    <td><input required="required"  type="text" value="<?=$value['medicine_manufacturer']?>" name="medicine_manufacturer[]" style="width:80px;"></td>
                     <td><input required="required"  type="text" value="<?=$value['purchase_quantity']?>" name="purchase_quantity[]" onkeyup="gst_calculation(this)" style="width:30px;"></td>
                     <td><input required="required"  type="text" value="<?=$value['purchase_free_quantity']?>" name="purchase_free_quantity[]"  style="width:30px;"></td>
                     <td><input required="required"  type="text" value="<?=$value['purchase_unit']?>" name="purchase_unit[]" style="width:30px;"></td>
-                    <td><input required="required" type="text" value="<?=$value['purchase_batch']?>"  name="purchase_batch[]" style="width: 90px;"></td>
-                    <td><input required="required" type="text" value="<?=$value['purchase_expire_month']?>" name="purchase_expire_month[]" style="width: 20px;margin: 0;padding: 0;float: left;">
+                    <td><input required="required" type="text" value="<?=$value['purchase_batch']?>"  name="purchase_batch[]" pattern="^[a-zA-Z0-9]+$" style="width: 90px;"></td>
+                    <td><input required="required" type="text" value="<?=$value['purchase_expire_month']?>" name="purchase_expire_month[]" pattern="^[a-zA-Z0-9]+$" style="width: 20px;margin: 0;padding: 0;float: left;">
                         <span style="margin: 0;padding: 0;float: left;">/</span>
-                        <input required="required" value="<?=$value['purchase_expire_year']?>" type="text" name="purchase_expire_year[]" style="width: 20px;margin: 0;padding: 0;float: left;"> </td>
+                        <input required="required" value="<?=$value['purchase_expire_year']?>" type="text" name="purchase_expire_year[]" pattern="^[a-zA-Z0-9]+$" style="width: 20px;margin: 0;padding: 0;float: left;"> </td>
                     <td><input required="required" value="<?=$value['purchase_mrp']?>" type="text" name="purchase_mrp[]"  style="width: 50px;"></td>
                     <td><input required="required" value="<?=$value['purchase_rate']?>" type="text" name="purchase_rate[]" onkeyup="gst_calculation(this)"  style="width: 50px;"></td>
                     <td><input required="required" value="<?=$value['purchase_discount_percent']?>" type="text" name="purchase_discount_percent[]" onkeyup="gst_calculation(this)"  style="width: 25px;"></td>
@@ -130,9 +130,9 @@
         rowcount++;
         var therow = " <tr class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"><\/td>\r\n  \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"><\/td>\r\n  \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_quantity[]\" onkeyup=\"gst_calculation(this)\" value=\"1\" style=\"width:30px;\"><\/td>\r\n    \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_free_quantity[]\"  value=\"0\" style=\"width:30px;\"><\/td>\r\n    \n\
     <td><input required=\"required\"  type=\"text\" name=\"purchase_unit[]\" style=\"width:30px;\"><\/td>\r\n   \n\

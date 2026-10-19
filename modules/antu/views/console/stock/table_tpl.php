@@ -38,8 +38,6 @@
                             <i class="fa fa-plus-circle"></i> Add Stock
                         </a>
                     <?php endif; ?>
-                    <a href="#" class="btn btn-minimize btn-round"><i class="fa fa-chevron-up"></i></a>
-                    <a href="#" class="btn btn-close btn-round"><i class="fa fa-times"></i></a>
                 </div>
             </div>
 

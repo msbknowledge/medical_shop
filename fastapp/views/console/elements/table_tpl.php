@@ -132,18 +132,10 @@
         transform: scale(0.9);
         cursor: pointer;
     }
-    .table_view_wrapper .box-icon a.btn-round {
-        width: 22px !important;
-        height: 22px !important;
-        border-radius: 9999px !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        border: 1px solid #e2e8f0 !important;
-        background: #fff !important;
-        color: #64748b !important;
-        padding: 0 !important;
-        font-size: 9px !important;
+    .table_view_wrapper .box-icon a.btn-round,
+    .table_view_wrapper .btn-minimize,
+    .table_view_wrapper .btn-close {
+        display: none !important;
     }
     .table_view_wrapper .ss-pagination-wrap {
         margin-top: 10px !important;
@@ -196,8 +188,6 @@
                             <i class="fa fa-plus-circle"></i> Add New
                         </a>
                     <?php endif; ?>
-                    <a href="#" class="btn btn-minimize btn-round"><i class="fa fa-chevron-up"></i></a>
-                    <a href="#" class="btn btn-close btn-round"><i class="fa fa-times"></i></a>
                 </div>
             </div>
 

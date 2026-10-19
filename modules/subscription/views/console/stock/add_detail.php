@@ -104,15 +104,15 @@
         rowcount++;
         var therow = " <tr class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"><\/td>\r\n  \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
-      <td><input required=\"required\"  type=\"text\" name=\"product_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"><\/td>\r\n  \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_hsn[]\" style=\"width:80px;\"><\/td>\r\n      \n\
+      <td><input required=\"required\"  type=\"text\" name=\"medicine_manufacturer[]\" style=\"width:80px;\"><\/td>\r\n      \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_quantity[]\" onkeyup=\"gst_calculation(this)\" value=\"1\" style=\"width:30px;\"><\/td>\r\n    \n\
   <td><input required=\"required\"  type=\"text\" name=\"purchase_free_quantity[]\"  value=\"0\" style=\"width:30px;\"><\/td>\r\n    \n\
     <td><input required=\"required\"  type=\"text\" name=\"purchase_unit[]\" style=\"width:30px;\"><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"purchase_batch[]\" style=\"width: 90px;\"><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"purchase_expire_month[]\" style=\"width: 20px;margin: 0;padding: 0;float: left;\">\n\
-    <span style=\"margin: 0;padding: 0;float: left;\">/<\/span><input required=\"required\" type=\"text\" name=\"purchase_expire_year[]\" style=\"width: 20px;margin: 0;padding: 0;float: left;\"> <\/td>\r\n  \n\
+     <td><input required=\"required\" type=\"text\" name=\"purchase_batch[]\" pattern=\"^[a-zA-Z0-9]+$\" style=\"width: 90px;\"><\/td>\r\n   \n\
+     <td><input required=\"required\" type=\"text\" name=\"purchase_expire_month[]\" pattern=\"^[a-zA-Z0-9]+$\" style=\"width: 20px;margin: 0;padding: 0;float: left;\">\n\
+    <span style=\"margin: 0;padding: 0;float: left;\">/<\/span><input required=\"required\" type=\"text\" name=\"purchase_expire_year[]\" pattern=\"^[a-zA-Z0-9]+$\" style=\"width: 20px;margin: 0;padding: 0;float: left;\"> <\/td>\r\n  \n\
       <td><input required=\"required\" type=\"text\" name=\"purchase_mrp[]\" value=\"0.00\" style=\"width: 50px;\"><\/td>\r\n    \n\
     <td><input required=\"required\" type=\"text\" name=\"purchase_rate[]\" onkeyup=\"gst_calculation(this)\"  value=\"0.00\" style=\"width: 50px;\"><\/td>\r\n      \n\
   <td><input required=\"required\" type=\"text\" name=\"purchase_discount_percent[]\" onkeyup=\"gst_calculation(this)\" value=\"0\"  style=\"width: 25px;\"><\/td>\r\n     \n\
@@ -145,7 +145,7 @@
 	$( "[name^='purchase_total[]']" ).focus(function() {
 	  addmore();
 	});
-		$( ".rowline:last" ).find('[name^="product_name[]"]').focus();
+		$( ".rowline:last" ).find('[name^="medicine_name[]"]').focus();
     }
     function removeRow(targetObj) {
         $(targetObj).parents('.rowline').remove();

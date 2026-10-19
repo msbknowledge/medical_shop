@@ -1,7 +1,7 @@
 <table class="calculation" style="width:100%;">
     <tr class="heading">
         <td width="" style="text-align:center; font-weight:bold;"><b>Customer name</b></td>
-        <td width="" style="text-align:center; font-weight:bold;"><b>product</b></td>
+        <td width="" style="text-align:center; font-weight:bold;"><b>medicine</b></td>
          <td width="" style="text-align:center; font-weight:bold;"><b>Batch</b></td>
          
         <td width="" style="text-align:center; font-weight:bold;"><b>reference</b></td>
@@ -16,7 +16,7 @@
             <tr>
                 
                 <td style="text-align:center;"><?= $value['customer_name'] ?><br/></td>
-                <td style="text-align:center;"><?= $value['return_sale_product'] ?></td>
+                <td style="text-align:center;"><?= $value['return_sale_medicine'] ?></td>
                  <td style="text-align:center;"><?= $value['return_sale_Batch'] ?></td>
                 <td style="text-align:center;"><?= $value['return_sale_ref'] ?></td>
                 <td style="text-align:center;"><?= $value['return_sale_date'] ?></td>

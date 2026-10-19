@@ -73,8 +73,8 @@ $sgst = 0;
 
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
-            <td><?= $value['product_name'] ?><br/>Mfg: <?= $value['product_manufacturer'] ?></td>  
-            <td><?= $value['product_hsn'] ?></td>      
+            <td><?= $value['medicine_name'] ?><br/>Mfg: <?= $value['medicine_manufacturer'] ?></td>  
+            <td><?= $value['medicine_hsn'] ?></td>      
             <td><?= $value['sale_strip_quantity'] ?></td>    
             <td><?= $value['sale_loose_quantity'] ?></td>    
             <td><?= $value['sale_batch'] ?></td>   
@@ -176,8 +176,8 @@ $sgst = 0;
         <tr class="rowline"><td>
                 <span><?= $counter ?></span></td>   
             <td><?= $value['sale_return_date'] ?></td>  
-            <td><?= $value['product_name'] ?><Br/>Mfg: <?= $value['product_manufacturer'] ?></td>  
-            <td><?= $value['product_hsn'] ?></td>      
+            <td><?= $value['medicine_name'] ?><Br/>Mfg: <?= $value['medicine_manufacturer'] ?></td>  
+            <td><?= $value['medicine_hsn'] ?></td>      
             <td><?= $value['sale_quantity'] ?></td>    
             <td><?= $value['sale_batch'] ?></td>   
             <td><?= $value['sale_expire_month'] ?>/<?= $value['sale_expire_year'] ?></td>  

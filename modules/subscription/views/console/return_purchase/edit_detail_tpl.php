@@ -47,6 +47,20 @@
                 </p><p style="text-align: left;">   Ref:<input value="<?= $data[0]['return_purchase_ref'] ?>" required="required" type="text" autocomplete="off" name="return_purchase_ref"/>
                 </p>
             </th>
+            <th  style=" border: none;">
+                <p style="text-align: left;">
+                    Return Type:
+                    <select name="return_purchase_type" required>
+                        <option value=''>--Choose one--</option>
+                       <?php
+                          foreach($return_purchase_type as $key=>$val){?>
+                        <option <?if($data[0]['return_purchase_type']==$key){ echo "selected";}
+                        ?> value="<?=$key?>"><?=$val?></option> 
+                           <?php }
+                        ?>
+                        </select>
+                </p>
+            </th>
             <th  style=" border: none;">DATE: <input type="text" value="<?= date('m/d/Y', strtotime($data[0]['return_purchase_date'])) ?>"  required="required" autocomplete="off" name="expiry_date"/></th>
         </tr>
     </table>  
@@ -58,7 +72,7 @@
 
     <table style="border-top: 1px solid black; border-bottom: 1px solid black;">
         <thead>
-        <caption><h2>Purchase Items</h2></caption>
+        <caption><h2>Purchase Return Items</h2></caption>
         <tr>
             <th>Sr</th>
             <th>Product Name</th>
@@ -76,13 +90,13 @@
                 <tr class="rowline">
                     <td><span><?= $k + 1 ?></span>
                         <a href="javascript:void(0)" onclick="removeRow(this);"> Remove </a></td>
-                    <td><input required="required" type="text" value="<?= $value['return_purchase_product'] ?>" name="product_name[]"></td>
+                    <td><input required="required" type="text" value="<?= $value['return_purchase_medicine'] ?>" name="medicine_name[]"></td>
                      <td><input required="required" type="text" value="<?= $value['return_purchase_HSN'] ?>" name="return_purchase_HSN[]"></td>
-                      <td><input required="required" type="text" value="<?= $value['return_purchase_Batch'] ?>" name="return_purchase_Batch[]"></td>
+                      <td><input required="required" type="text" value="<?= $value['return_purchase_Batch'] ?>" name="return_purchase_Batch[]" pattern="^\S+$"></td>
                     <td><input required="required"  type="text" value="<?= $value['return_purchase_strip'] ?>" name="return_purchase_strip[]" style="width:80px;"></td>
-                    <td><input required="required" type="text" value="<?= $value['return_purchase_expire_month'] ?>" name="return_purchase_expire_month[]" style="width: 20px;margin: 0;padding: 0;float: left;">
+                    <td><input required="required" type="text" value="<?= $value['return_purchase_expire_month'] ?>" name="return_purchase_expire_month[]" pattern="^[0-9]+$" style="width: 20px;margin: 0;padding: 0;float: left;">
                         <span style="margin: 0;padding: 0;float: left;">/</span>
-                        <input required="required" value="<?= $value['return_purchase_expire_year'] ?>" type="text" name="return_purchase_expire_year[]" style="width: 20px;margin: 0;padding: 0;float: left;"> </td>
+                        <input required="required" value="<?= $value['return_purchase_expire_year'] ?>" type="text" name="return_purchase_expire_year[]" pattern="^[0-9]+$" style="width: 20px;margin: 0;padding: 0;float: left;"> </td>
                     <td><input required="required" value="<?= $value['return_purchase_mrp'] ?>" onkeyup="calcualteTotal(this)" type="text" name="return_purchase_mrp[]"  style="width: 50px;"></td>
                     <td><input required="required" value="<?= $value['return_purchase_total'] ?>" readonly="readonly" type="text" name="return_purchase_total[]" style="width: 50px;"></td>
                 </tr>
@@ -90,9 +104,18 @@
 
         </tbody>
     </table>
-    <a href="javascript:void(0)" onclick="addmore()">Add More</a>
-
-    <div class="form-actions">
+    <a href="javascript:void(0)" onclick="addmore()" onmouseover="hide_history()">Add More</a>
+    <table style="border: 1px solid black;margin-top: 75px;" onmouseover="hide_history()">
+        <tr>
+            <th>Items</th>
+            <th>Grand Total</th>
+        </tr>
+        <tr>
+            <td class="totalItem">0</td>
+            <td class="totalAmount">0.00</td>
+        </tr>
+    </table>
+    <div class="form-actions" onmouseover="hide_history()">
         <button type="submit" class="btn btn-primary">Save changes</button>
         <button class="btn" onclick="goBack()">Cancel</button>
     </div>
@@ -102,15 +125,26 @@
     function calcualteTotal(theObject) {
         var qty = parseFloat($(theObject).parent().parent().find('[name^="return_purchase_strip[]"]').val());
         var mrp = parseFloat($(theObject).parent().parent().find('[name^="return_purchase_mrp[]"]').val());
-        $(theObject).parent().parent().find('[name^="return_purchase_total[]"]').val(mrp * qty);
+        var total = (mrp * qty);
+        $(theObject).parent().parent().find('[name^="return_purchase_total[]"]').val(total.toFixed(2));
+        calculate_amount();
+    }
+    function calculate_amount(){
+        var totalItem = $('.rowline').length;
+        var totalTotal = 0;
+        $('.rowline').each(function () {
+           totalTotal += parseFloat($(this).find('[name="return_purchase_total[]"]').val());
+        });
+        $('.totalItem').html(totalItem.toFixed(2));
+        $('.totalAmount').html(totalTotal.toFixed(2));
     }
     var rowcount = lenOF;
     function addmore() {
         rowcount++;
         var therow = " <tr id=\"rowID" + rowcount + " \" class=\"rowline\">\r\n<td><span>" + rowcount + "<\/span>\n\
 <a href=\"javascript:void(0)\" onclick=\"removeRow(this);\"> Remove <\/a><\/td>\r\n   \n\
-     <td><input required=\"required\" type=\"text\" name=\"product_name[]\"style=\"width:210px;\"><\/td>\r\n      \n\
-<td><input required=\"required\" type=\"number\" name=\"product_hsn[]\"style=\"width:210px;\"><\/td>\r\n      \n\
+     <td><input required=\"required\" type=\"text\" name=\"medicine_name[]\"style=\"width:210px;\"><\/td>\r\n      \n\
+<td><input required=\"required\" type=\"number\" name=\"medicine_hsn[]\"style=\"width:210px;\"><\/td>\r\n      \n\
  <td><input required=\"required\" type=\"text\" name=\"return_purchase_Batch[]\"style=\"width:210px;\"><\/td>\r\n      \n\
      <td><input required=\"required\" type=\"number\" name=\"return_purchase_strip[]\"style=\"width:80px;\"><\/td>\r\n      \n\
      <td><input required=\"required\" type=\"text\" name=\"return_purchase_expire_month[]\" max=\"31\" min=\"1\" maxlength=\"2\" onfocusout=\"focusvalidation(this)\" style=\"width: 20px;margin: 0;padding: 0;\">\n\
@@ -152,18 +186,27 @@
                 $('.addm').click();
                 // call custom function here
             }
-
         });
-        $(".rowline:last").find('[name^="product_name[]"]').focus();
+        $("[name^='return_purchase_total[]']").focus(function () {
+            addmore();
+        });
+        $(".rowline:last").find('[name^="medicine_name[]"]').focus();
+
     }
+    $("[name^='return_purchase_total[]']").focus(function () {
+        addmore();
+    });
+    $(".rowline:last").find('[name^="medicine_name[]"]').focus();
+    
     function removeRow(targetObj) {
         $(targetObj).parents('.rowline').remove();
+        calculate_amount();
     }
 
 
 
     $(document).ready(function () {
-
+        calculate_amount();
         setTimeout(function () {
             $('.alert').remove()
         }, '2000');

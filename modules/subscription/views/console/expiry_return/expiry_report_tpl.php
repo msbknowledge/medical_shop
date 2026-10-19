@@ -7,6 +7,9 @@
                     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
                         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
                         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+                        <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+                        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
                         <link id="bs-css" href="/css/bootstrap-spacelab.css" rel="stylesheet">
                             <script>
                                 $(function () {
@@ -159,7 +162,7 @@
                                         border-bottom: 1px dashed #CCC;
                                     }
                                 </style>
-                                <style>	
+                                <style> 
                                     /* http://meyerweb.com/eric/tools/css/reset/ 
                                        v2.0 | 20110126
                                        License: none (public domain)
@@ -334,7 +337,7 @@
 
                                     strong {
                                         font-weight: bold;
-                                    }	
+                                    }   
 
                                     /*__________________________________________________Banner Ad
                                     Banner AD
@@ -794,31 +797,72 @@
                                     .ajax_resp{text-align:center}
                                 </style>
 
-                                <div class="main" style="page-break-after: always;">
-                                    <h1 style="color:black; text-align:center;">Expiry Billing Sheet</h1>
-                                    <a href="/console/" >
-
-                                    </a><hr/>
-                                    <div class="form_div" style="margin-bottom: 10px;text-align: center;">
-                                        <form method="post" onsubmit="return false">
-                                            <select name="supplier_name">
-                                                <option value="">--Supplier--</option>
+                    <div class="main" style="page-break-after: always;">
+                        <h1 style="color:black; text-align:center;">Expiry Billing Sheet</h1>
+                        <a href="/console/" >
+                            <img src="/msb/msbbillingslogo.png" style="position: absolute;top: 0;background-color: white; height: 50px">
+                        </a><hr/>
+                        <!-- <div class="form_div" style="margin-bottom: 10px;text-align: center;"> -->
+                        <div class="container">
+                            <div class="row form-group">
+                                <form method="post" onsubmit="return false">
+                                    <div class="form-row">
+                                        <div class="form-group col-sm-3">
+                                            <label for="supplier_name">Supplier:</label>
+                                            <select name="supplier_name" class="form-control">
+                                                <option value="">--supplier name--</option>
                                                 <?php foreach ($supplier as $val) { ?>
                                                     <option value="<?= $val['supplier_name'] ?>"><?= $val['supplier_name'] ?></option> 
                                                 <?php }
                                                 ?>
                                             </select>
-                                            <input type="text" name="expiry_return_product" id="expiry_return_product" placeholder="Product"/>
-                                             <input type="text" name="expiry_return_Batch" id="expiry_return_Batch" placeholder="Batch"/>
-                                            <input type="text" name ="expiry_return_ref"id="expiry_return_ref" placeholder="reference"/>
-                                            <input type="text" id="start_date" name="start" placeholder="start date" class="datepicker">
-                                                <input type="text" id="end_date" name="end" placeholder="end date" class="datepicker">
-                                                    <button id="report_sub" class="btn btn-info" style=" margin-top: -9px;">SEARCH</button>
-                                                    </form>
-                                                    </div>
-                                                    <div class="ajax_resp">
-                                                        Choose Filter To Generate Data
-                                                    </div>
-                                                    </div>                                                
-                                                    </body>
-                                                    </html>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="expiry_return_medicine">Medicine:</label>
+                                            <input type="text" name="expiry_return_medicine" id="expiry_return_medicine" placeholder="medicine name" class="form-control"/>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="expiry_return_Batch">Batch:</label>
+                                             <input type="text" name="expiry_return_Batch" id="expiry_return_Batch" placeholder="expiry return batch" class="form-control"/>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                             <label for="expiry_return_ref">Reference:</label>
+                                            <input type="text" name ="expiry_return_ref" id="expiry_return_ref" placeholder="reference" class="form-control"/>
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="start_date">Start Date:</label>
+                                            <input typex="text" type="date-local" value="<?=  date('Y-m-d',strtotime("-1 month")) ?>" id="start_date" name="start" class="datepicker form-control">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <label for="end_date">End Date:</label>
+                                            <input typex="text" type="date-local" value="<?=  date('Y-m-d') ?>" id="end_date" name="end" class="datepicker form-control">
+                                        </div>
+                                        <div class="form-group col-sm-3">
+                                            <button id="report_sub" class="btn btn-info" style=" margin-top: 9%;">SEARCH</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="ajax_resp">Choose Filter To Generate Data</div>
+                        </div>                                                
+                    </body>
+                </html>
+                <div class="container-fluid" style="padding-right: 20px; padding-left: 20px;">
+                    <hr style="border-top: 1px solid #f5f5f5; border-bottom: 1px solid #cccccc;">   
+                <footer style="text-shadow: 0px 1px 9px #99B8C4;font-weight: bold;font-size: smaller;">
+                <div class="row-fluid">
+                    <div class="span4">© <?=date('Y')?> MsbBillings - All Rights Reserved</div>
+                    <div class="span4" style="text-align: center;"><p class="center">Powered By <br> <a target="_blank" href="https://www.logicmystery.com"><img style="height: 50px;" src="/img/logicmystery.png"/></a></p></div>
+                <div id="google_translate_element" class="span4" style="text-align: right;"></div>
+                </div>
+
+                <script type="text/javascript">
+                function googleTranslateElementInit() {
+                  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+                }
+                </script>
+
+                <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+                </footer>
+                </div>

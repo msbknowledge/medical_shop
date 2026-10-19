@@ -1185,23 +1185,28 @@ footer {
     box-shadow: var(--ss-shadow-lg) !important;
 }
 
-/* Box Control Icons */
-.box-icon .btn.btn-round {
-    border-radius: 9999px !important;
-    width: 28px !important;
-    height: 28px !important;
+/* Box Control Icons - Hidden Everywhere */
+.box-icon .btn.btn-round,
+.box-icon a.btn-round,
+.box-icon .btn-round,
+.box-header .box-icon .btn-round,
+.box-header .box-icon a.btn-round,
+.box-icon a.btn-minimize,
+.box-icon a.btn-close,
+.box-icon a.btn-setting,
+.btn-minimize,
+.btn-close,
+.btn-setting {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
     padding: 0 !important;
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border: 1px solid var(--ss-border) !important;
-    background: #ffffff !important;
-    color: var(--ss-text-muted) !important;
-}
-
-.box-icon .btn.btn-round:hover {
-    background: var(--ss-surface-hover) !important;
-    color: var(--ss-primary) !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
 }
 
 /* ==========================================================================
@@ -3628,4 +3633,42 @@ body.sidebar-collapse .sidebar-menu > li > a > i.ftlayer {
     .smart-actions-grid {
         grid-template-columns: 1fr 1fr !important;
     }
+}
+
+/* ==========================================================================
+   GLOBAL REMOVAL: Box Minimize & Close Buttons
+   ========================================================================== */
+.btn-minimize,
+.btn-close,
+.btn-setting,
+.btn-round,
+.box-icon .btn-round,
+.box-icon a.btn-round,
+.box-icon a.btn-minimize,
+.box-icon a.btn-close,
+.box-icon a.btn-setting,
+a.btn-minimize,
+a.btn-close,
+a.btn-setting,
+a.btn-round,
+.btn.btn-minimize,
+.btn.btn-close,
+.btn.btn-setting,
+.btn.btn-round,
+.box-header .box-icon .btn-minimize,
+.box-header .box-icon .btn-close,
+.box-header .box-icon .btn-round,
+.box-header .box-icon a.btn-minimize,
+.box-header .box-icon a.btn-close,
+.box-header .box-icon a.btn-round {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
 }
